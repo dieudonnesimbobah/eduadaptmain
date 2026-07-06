@@ -91,10 +91,12 @@ const showToast = (message, type = 'default') => {
 };
 
 // ─── Route Guards ─────────────────────────────────────────────────────────────
+// Auth uses httpOnly cookies — token is never readable by JS.
+// requireAuth only checks the cached user profile for role-based routing.
+// Real auth enforcement happens server-side on every API call.
 const requireAuth = (expectedRole) => {
-  const token = getToken();
   const user = getUser();
-  if (!token || !user) {
+  if (!user) {
     window.location.href = './login.html';
     return false;
   }
@@ -111,13 +113,8 @@ const requireAuth = (expectedRole) => {
 };
 
 const redirectIfLoggedIn = () => {
-  const token = getToken();
   const user = getUser();
-  
-  // Only redirect if both token and user exist
-  if (!token || !user) return;
-  
-  // If we have stored auth, try to use it
+  if (!user) return;
   if (user.role === 'admin') window.location.href = './admin-dashboard.html';
   else if (user.role === 'instructor') window.location.href = './instructor-dashboard.html';
   else window.location.href = './student-dashboard.html';
