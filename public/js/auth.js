@@ -177,8 +177,18 @@ const normalizeApiError = (data) => {
   return 'Request failed';
 };
 
+const handle401 = (res) => {
+  if (res.status === 401) {
+    clearAuth();
+    window.location.href = './login.html';
+    return true;
+  }
+  return false;
+};
+
 const apiGet = async (url) => {
   const res = await authFetch(url);
+  if (handle401(res)) return;
   const data = await parseResponse(res);
   if (!res.ok) throw new Error(normalizeApiError(data));
   return data;
@@ -189,6 +199,7 @@ const apiPost = async (url, body) => {
     method: 'POST',
     body: JSON.stringify(body),
   });
+  if (handle401(res)) return;
   const data = await parseResponse(res);
   if (!res.ok) throw new Error(normalizeApiError(data));
   return data;
@@ -199,6 +210,7 @@ const apiPatch = async (url, body = {}) => {
     method: 'PATCH',
     body: JSON.stringify(body),
   });
+  if (handle401(res)) return;
   const data = await parseResponse(res);
   if (!res.ok) throw new Error(normalizeApiError(data));
   return data;
@@ -209,6 +221,7 @@ const apiPatchForm = async (url, formData) => {
     method: 'PATCH',
     body: formData,
   });
+  if (handle401(res)) return;
   const data = await parseResponse(res);
   if (!res.ok) throw new Error(normalizeApiError(data));
   return data;
@@ -216,6 +229,7 @@ const apiPatchForm = async (url, formData) => {
 
 const apiDelete = async (url) => {
   const res = await authFetch(url, { method: 'DELETE' });
+  if (handle401(res)) return;
   const data = await parseResponse(res);
   if (!res.ok) throw new Error(normalizeApiError(data));
   return data;
