@@ -42,16 +42,18 @@ const startServer = async () => {
   app.use(helmet({
     contentSecurityPolicy: {
       directives: {
-        defaultSrc:  ["'self'"],
-        scriptSrc:   ["'self'", "'unsafe-inline'", 'cdnjs.cloudflare.com', 'fonts.googleapis.com'],
-        styleSrc:    ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com'],
-        fontSrc:     ["'self'", 'fonts.gstatic.com', 'fonts.googleapis.com'],
-        imgSrc:      ["'self'", 'data:', 'res.cloudinary.com', 'blob:'],
-        connectSrc:  ["'self'", 'res.cloudinary.com', 'api.assemblyai.com', 'api.anthropic.com',
-                      'api.fapshi.com', 'sandbox.fapshi.com'],
-        mediaSrc:    ["'self'", 'res.cloudinary.com', 'blob:'],
-        frameSrc:    ["'none'"],
-        objectSrc:   ["'none'"],
+        defaultSrc:    ["'self'"],
+        scriptSrc:     ["'self'", "'unsafe-inline'"],
+        scriptSrcAttr: null,    // remove directive — inline event handlers governed by script-src 'unsafe-inline'
+        styleSrc:      ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com'],
+        fontSrc:       ["'self'", 'fonts.gstatic.com', 'fonts.googleapis.com'],
+        imgSrc:        ["'self'", 'data:', 'res.cloudinary.com', 'blob:'],
+        connectSrc:    ["'self'", 'res.cloudinary.com', 'api.assemblyai.com', 'api.anthropic.com',
+                        'api.fapshi.com', 'sandbox.fapshi.com',
+                        'fonts.googleapis.com', 'fonts.gstatic.com'],
+        mediaSrc:      ["'self'", 'res.cloudinary.com', 'blob:'],
+        frameSrc:      ["'none'"],
+        objectSrc:     ["'none'"],
       },
     },
     crossOriginEmbedderPolicy: false,

@@ -793,21 +793,5 @@ function toggleCoursePricing() {
     });
   });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
-<script>
-  axe.run().then(results => {
-    if (results.violations.length) {
-      console.group('EduAdapt Accessibility Issues (instructor-dashboard):');
-      results.violations.forEach(v => {
-        console.warn(v.impact.toUpperCase() + ': ' + v.description);
-        console.log('Fix:', v.help);
-        console.log('Elements:', v.nodes.map(n => n.target));
-      });
-      console.groupEnd();
-    } else {
-      console.log('No accessibility issues found on instructor-dashboard.');
-    }
-  });
-</script>
 </body>
 </html>

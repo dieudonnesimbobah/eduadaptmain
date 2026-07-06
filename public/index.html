@@ -381,22 +381,6 @@
 <script src="./js/auth.js"></script>
 <script src="./js/theme-lang.js"></script>
 <script src="./js/chatbot.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
-<script>
-  axe.run().then(results => {
-    if (results.violations.length) {
-      console.group('EduAdapt Accessibility Issues:');
-      results.violations.forEach(v => {
-        console.warn(v.impact.toUpperCase() + ': ' + v.description);
-        console.log('Fix:', v.help);
-        console.log('Elements:', v.nodes.map(n => n.target));
-      });
-      console.groupEnd();
-    } else {
-      console.log('No accessibility issues found on this page.');
-    }
-  });
-</script>
 <script>
 (async () => {
   const grid    = document.getElementById('reviews-grid');
