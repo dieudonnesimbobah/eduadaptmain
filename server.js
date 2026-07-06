@@ -26,6 +26,23 @@ if (!process.env.CLOUDINARY_CLOUD_NAME) {
 
 const { verifyMailer } = require('./utils/mailer');
 
+const autoSeedAdmin = async () => {
+  const { ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME } = process.env;
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD || !ADMIN_NAME) return;
+  try {
+    const User = require('./models/User');
+    const existing = await User.findOne({ email: ADMIN_EMAIL });
+    if (existing) return;
+    await User.create({
+      fullName: ADMIN_NAME, email: ADMIN_EMAIL, password: ADMIN_PASSWORD,
+      role: 'admin', approvalStatus: 'approved', isActive: true, isEmailVerified: true,
+    });
+    console.log(`✅ Admin account created: ${ADMIN_EMAIL}`);
+  } catch (e) {
+    console.warn('⚠️  Auto-seed admin failed:', e.message);
+  }
+};
+
 const startServer = async () => {
   try {
     await connectDB();
@@ -33,6 +50,8 @@ const startServer = async () => {
     console.error('❌ Failed to start due to MongoDB connection failure.');
     process.exit(1);
   }
+
+  await autoSeedAdmin();
 
   verifyMailer();
 
