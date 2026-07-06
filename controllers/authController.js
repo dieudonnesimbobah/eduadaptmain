@@ -61,20 +61,26 @@ const register = async (req, res) => {
       localFilePath = null;
     }
 
+    // Students are auto-verified — they are pre-approved and can log in immediately.
+    // Instructors must verify email because their account also requires admin review.
+    const isStudent = role === 'student';
+
     const userData = {
       fullName, email, password, role,
-      approvalStatus:  role === 'student' ? 'approved' : 'pending',
-      isEmailVerified: false,
+      approvalStatus:  isStudent ? 'approved' : 'pending',
+      isEmailVerified: isStudent,
       verificationDocument: verificationDocUrl,
     };
 
     const user = await User.create(userData);
 
-    // ── Send email verification (non-blocking) ──────────────────────────────
-    const rawVerifyToken = user.getEmailVerificationToken();
-    await user.save({ validateBeforeSave: false });
-    const verifyUrl = `${process.env.APP_URL}/verify-email.html?token=${rawVerifyToken}`;
-    sendVerificationEmail({ email: user.email, fullName: user.fullName, verifyUrl });
+    // ── Send verification / welcome email (non-blocking — never blocks login) ──
+    if (!isStudent) {
+      const rawVerifyToken = user.getEmailVerificationToken();
+      await user.save({ validateBeforeSave: false });
+      const verifyUrl = `${process.env.APP_URL}/verify-email.html?token=${rawVerifyToken}`;
+      sendVerificationEmail({ email: user.email, fullName: user.fullName, verifyUrl });
+    }
 
     // ── Notify all admins when a new instructor registers ──────────────────
     if (role === 'instructor') {
@@ -95,7 +101,7 @@ const register = async (req, res) => {
     res.status(201).json({
       message: role === 'instructor'
         ? 'Registration successful. Check your email to verify your address, then wait for admin approval.'
-        : 'Registration successful. Please check your email to verify your account.',
+        : 'Registration successful! You can now log in.',
       user: {
         _id: user._id, fullName: user.fullName,
         email: user.email, role: user.role, approvalStatus: user.approvalStatus,
