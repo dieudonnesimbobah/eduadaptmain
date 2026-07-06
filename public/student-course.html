@@ -7,17 +7,19 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="./css/style.css" />
   <style>
-    .player-sidebar { background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;align-items:center;padding:1rem 0;gap:1rem;position:fixed;left:0;top:0;bottom:0;width:60px;z-index:10; }
-    .player-sidebar a { width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--gray-500);transition:background 0.2s; }
+    .player-sidebar { background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;align-items:center;padding:1rem 0;gap:0.25rem;position:fixed;left:0;top:0;bottom:0;width:80px;z-index:10; }
+    .player-sidebar a { width:72px;padding:0.5rem 0;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.2rem;font-size:0.6rem;font-weight:600;letter-spacing:0.02em;text-transform:uppercase;color:var(--gray-500);text-decoration:none;transition:background 0.2s; }
+    .player-sidebar a .material-symbols-outlined { font-size:1.3rem; }
     .player-sidebar a:hover,.player-sidebar a.active { background:var(--blue-lighter);color:var(--blue-primary); }
     .player-sidebar-right { position:fixed;right:0;top:0;bottom:0;width:320px;background:var(--white);border-left:1px solid var(--gray-200);overflow-y:auto;padding:1.5rem 1rem; }
-    .main-area { margin-left:60px;margin-right:320px;padding:1.5rem 1.75rem; }
+    .main-area { margin-left:80px;margin-right:320px;padding:1.5rem 1.75rem; }
     @media(max-width:1100px){.player-sidebar-right{width:260px;}.main-area{margin-right:260px;}}
     @media(max-width:900px){.player-sidebar-right{display:none;}.main-area{margin-right:0;}}
     @media(max-width:600px){
-      .player-sidebar{width:48px;}
-      .player-sidebar a{width:34px;height:34px;font-size:1rem;}
-      .main-area{margin-left:48px;padding:1rem;}
+      .player-sidebar{width:64px;}
+      .player-sidebar a{width:58px;font-size:0.52rem;}
+      .player-sidebar a .material-symbols-outlined{font-size:1.1rem;}
+      .main-area{margin-left:64px;padding:1rem;}
       .selector-row{gap:0.375rem;}
     }
     @media(max-width:400px){
@@ -45,11 +47,11 @@
 
   <!-- Mini sidebar -->
   <nav class="player-sidebar" aria-label="Course navigation">
-    <a href="./student-dashboard.html" aria-label="Go to Dashboard"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span></a>
-    <a href="#" class="active" aria-label="Courses" aria-current="page"><span class="material-symbols-outlined" aria-hidden="true">school</span></a>
-    <a href="#" aria-label="Notes"><span class="material-symbols-outlined" aria-hidden="true">note</span></a>
-    <a href="#" aria-label="Resources"><span class="material-symbols-outlined" aria-hidden="true">folder</span></a>
-    <a href="#" onclick="logout()" aria-label="Logout" style="margin-top:auto;"><span class="material-symbols-outlined" aria-hidden="true">logout</span></a>
+    <a href="./student-dashboard.html" aria-label="Go to Dashboard"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span>Home</a>
+    <a href="#" class="active" aria-label="Course lessons" aria-current="page"><span class="material-symbols-outlined" aria-hidden="true">school</span>Lessons</a>
+    <a href="#" aria-label="My notes" onclick="switchTab('overview');return false;"><span class="material-symbols-outlined" aria-hidden="true">note</span>Notes</a>
+    <a href="#" aria-label="Course resources" onclick="switchTab('resources');return false;"><span class="material-symbols-outlined" aria-hidden="true">folder</span>Resources</a>
+    <a href="#" onclick="logout()" aria-label="Logout" style="margin-top:auto;"><span class="material-symbols-outlined" aria-hidden="true">logout</span>Logout</a>
   </nav>
 
   <!-- Main player -->
