@@ -564,7 +564,12 @@ const verify2FA = async (req, res) => {
 
 // POST /api/auth/logout
 const logout = (req, res) => {
-  res.clearCookie('ea_token', { httpOnly: true, sameSite: 'Lax' });
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.clearCookie('ea_token', {
+    httpOnly: true,
+    secure:   isProduction,
+    sameSite: isProduction ? 'Strict' : 'Lax',
+  });
   res.json({ message: 'Logged out successfully' });
 };
 
