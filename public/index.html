@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduAdapt – Adaptive E-Learning for Inclusive Education in Cameroon</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    .how-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2rem; }
+    .how-step { text-align:center;padding:2rem; }
+    .how-step .step-num {
+      width:56px;height:56px;border-radius:50%;
+      background:var(--blue-lighter);color:var(--blue-primary);
+      font-family:'Sora',sans-serif;font-weight:800;font-size:1.25rem;
+      display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;
+    }
+    .how-step h3 { margin-bottom:0.5rem;font-size:1rem; }
+    .how-step p  { font-size:0.875rem;color:var(--gray-500); }
+    .courses-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem; }
+    .price-tag      { font-weight:700;font-size:0.85rem;color:var(--blue-primary);margin-top:0.4rem; }
+    .price-tag.free { color:var(--green); }
+    @media(max-width:1024px){
+      .how-grid{grid-template-columns:repeat(2,1fr);}
+      .courses-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+    }
+    @media(max-width:768px){
+      .hero{grid-template-columns:1fr;padding:3rem 1.5rem;}
+      .features-grid,.how-grid{grid-template-columns:1fr;}
+      .hero-visual{height:220px;}
+      #courses{padding:2.5rem 1.25rem!important;}
+      .courses-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+    }
+    @media(max-width:480px){
+      .courses-grid{grid-template-columns:1fr;}
+      .how-grid{grid-template-columns:1fr;}
+    }
+
+    /* ── Reviews / Testimonials ── */
+    #reviews { background:var(--gray-100); padding:3.5rem 2.5rem; }
+    .reviews-inner { max-width:1200px; margin:0 auto; }
+    .reviews-summary {
+      display:flex; align-items:center; gap:1.5rem;
+      justify-content:center; margin-bottom:2.5rem; flex-wrap:wrap;
+    }
+    .reviews-avg-score {
+      font-family:'Sora',sans-serif; font-size:4rem; font-weight:800;
+      color:var(--blue-primary); line-height:1;
+    }
+    .reviews-avg-stars { font-size:1.75rem; color:#f59e0b; letter-spacing:3px; line-height:1; }
+    .reviews-avg-count { font-size:0.9rem; color:var(--gray-500); margin-top:4px; }
+    .reviews-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem;
+    }
+    .review-card {
+      background:var(--white); border-radius:var(--radius-md);
+      padding:1.5rem; box-shadow:var(--shadow-sm);
+      border:1px solid var(--gray-200);
+      display:flex; flex-direction:column; gap:0.75rem;
+    }
+    .review-card-header { display:flex; align-items:center; gap:0.875rem; }
+    .review-avatar {
+      width:44px; height:44px; border-radius:50%; flex-shrink:0;
+      background:var(--blue-primary); color:#fff;
+      font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem;
+      display:flex; align-items:center; justify-content:center;
+      text-transform:uppercase;
+    }
+    .review-avatar.instructor { background:#7c3aed; }
+    .review-meta-name  { font-weight:700; font-size:0.95rem; color:var(--gray-800); }
+    .review-meta-role  { font-size:0.75rem; color:var(--gray-400); text-transform:capitalize; }
+    .review-stars      { font-size:1.1rem; color:#f59e0b; letter-spacing:1px; }
+    .review-comment    { font-size:0.875rem; color:var(--gray-600); line-height:1.65; flex:1; }
+    .review-date       { font-size:0.75rem; color:var(--gray-400); }
+    .reviews-empty     { text-align:center; color:var(--gray-400); padding:2rem 0; font-size:0.95rem; }
+    @media(max-width:1024px){ .reviews-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:600px) { .reviews-grid{grid-template-columns:1fr;} #reviews{padding:2.5rem 1.25rem;} }
+  </style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────── -->
+<nav class="public-nav">
+  <a href="./index.html" class="nav-logo">EduAdapt</a>
+  <div class="nav-links">
+    <a href="#courses"      data-i18n="nav.courses">Courses</a>
+    <a href="#how-it-works" data-i18n="home.how_title">How it Works</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#about"        data-i18n="home.why_title">About</a>
+  </div>
+  <div class="nav-cta">
+    <a href="./login.html"    class="btn btn-secondary btn-sm" data-i18n="nav.login">Log In</a>
+    <a href="./register.html" class="btn btn-primary btn-sm"   data-i18n="nav.signup">Sign Up</a>
+  </div>
+  <button class="mobile-nav-toggle" id="mobile-nav-toggle" onclick="toggleMobileNav()"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobile-nav-menu">
+    <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+  </button>
+</nav>
+
+<!-- Mobile navigation menu -->
+<div class="mobile-nav-menu" id="mobile-nav-menu">
+  <a href="#courses" data-i18n="nav.courses">Courses</a>
+  <a href="#how-it-works" data-i18n="home.how_title">How it Works</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#about" data-i18n="home.why_title">About</a>
+  <div class="mobile-nav-cta">
+    <a href="./login.html"    class="btn btn-secondary btn-sm" data-i18n="nav.login">Log In</a>
+    <a href="./register.html" class="btn btn-primary btn-sm"   data-i18n="nav.signup">Sign Up</a>
+  </div>
+</div>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────── -->
+<main id="main-content">
+<section>
+  <div class="hero">
+    <div class="hero-content">
+      <span class="hero-label" data-i18n="home.hero_label">🇨🇲 Designed for Cameroon</span>
+      <h1>
+        <span data-i18n="home.hero_h1">Adaptive Learning That Works for</span>
+        <br/><span style="color:var(--blue-primary);" data-i18n="home.hero_h1_span">Everyone</span>
+      </h1>
+      <p data-i18n="home.hero_p">EduAdapt delivers high-quality education that automatically adjusts to your network conditions — ensuring inclusive, uninterrupted access to knowledge across Cameroon.</p>
+      <div class="hero-actions">
+        <a href="./register.html" class="btn btn-primary btn-lg" data-i18n="home.get_started">Get Started Free</a>
+        <a href="#courses"        class="btn btn-outline btn-lg" data-i18n="home.browse">Browse Courses</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="stat-num" id="hero-stat-courses">–</div>
+          <div class="stat-desc" data-i18n="nav.courses">Courses</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num" id="hero-stat-students">–</div>
+          <div class="stat-desc" data-i18n="nav.students">Students</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">QoE</div>
+          <div class="stat-desc" data-i18n="home.network_aware">Network-Aware</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <!-- Replace hero-elearning.jpg with any e-learning photo dropped into public/images/ -->
+      <img src="./images/hero-elearning.jpg" alt=""
+           style="width:100%;height:100%;object-fit:cover;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.25);"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <!-- Fallback SVG shown only if image file is missing -->
+      <svg viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;max-height:360px;display:none;">
+        <!-- Background card -->
+        <rect x="20" y="20" width="380" height="300" rx="24" fill="#1a3a5c" opacity="0.85"/>
+        <rect x="20" y="20" width="380" height="300" rx="24" fill="url(#heroGrad)" opacity="0.6"/>
+
+        <!-- Laptop body -->
+        <rect x="90" y="80" width="240" height="155" rx="10" fill="#0d1f35"/>
+        <rect x="100" y="90" width="220" height="135" rx="6" fill="#1565c0"/>
+
+        <!-- Screen content — video lesson -->
+        <rect x="100" y="90" width="220" height="135" rx="6" fill="#0a2540"/>
+        <!-- Lesson header bar -->
+        <rect x="100" y="90" width="220" height="28" rx="6" fill="#1e3a5f"/>
+        <circle cx="116" cy="104" r="5" fill="#ef5350"/>
+        <circle cx="132" cy="104" r="5" fill="#ffa726"/>
+        <circle cx="148" cy="104" r="5" fill="#66bb6a"/>
+        <rect x="162" y="99" width="80" height="10" rx="4" fill="#2196f3" opacity="0.6"/>
+
+        <!-- Instructor silhouette on screen -->
+        <circle cx="155" cy="148" r="20" fill="#1565c0"/>
+        <circle cx="155" cy="138" r="9" fill="#90caf9"/>
+        <ellipse cx="155" cy="158" rx="13" ry="10" fill="#90caf9"/>
+
+        <!-- Lesson text lines on screen -->
+        <rect x="185" y="133" width="80" height="7" rx="3" fill="#42a5f5" opacity="0.9"/>
+        <rect x="185" y="146" width="60" height="6" rx="3" fill="#64b5f6" opacity="0.6"/>
+        <rect x="185" y="158" width="70" height="6" rx="3" fill="#64b5f6" opacity="0.6"/>
+        <rect x="185" y="170" width="50" height="6" rx="3" fill="#64b5f6" opacity="0.4"/>
+
+        <!-- Video progress bar -->
+        <rect x="108" y="210" width="204" height="5" rx="2" fill="#0d3060"/>
+        <rect x="108" y="210" width="120" height="5" rx="2" fill="#2196f3"/>
+        <circle cx="228" cy="212" r="5" fill="#42a5f5"/>
+
+        <!-- Laptop keyboard -->
+        <rect x="75" y="236" width="270" height="14" rx="6" fill="#1a3a5c"/>
+        <rect x="155" y="236" width="110" height="14" rx="0" fill="#162d4a"/>
+        <rect x="80" y="248" width="260" height="8" rx="4" fill="#0f2238"/>
+
+        <!-- Floating badge: 720p -->
+        <rect x="270" y="78" width="52" height="24" rx="12" fill="#2196f3"/>
+        <text x="296" y="94" font-size="11" fill="white" font-family="Arial" text-anchor="middle" font-weight="bold">720p</text>
+
+        <!-- Floating badge: Quiz -->
+        <rect x="88" y="265" width="52" height="24" rx="12" fill="#00897b"/>
+        <text x="114" y="281" font-size="11" fill="white" font-family="Arial" text-anchor="middle" font-weight="bold">Quiz ✓</text>
+
+        <!-- Student character (right side) -->
+        <circle cx="330" cy="200" r="28" fill="#1e3a5f"/>
+        <circle cx="330" cy="187" r="14" fill="#ffcc80"/>
+        <path d="M316 208 Q330 222 344 208" fill="#1565c0"/>
+        <!-- Headphones -->
+        <path d="M317 186 Q317 168 330 168 Q343 168 343 186" stroke="#42a5f5" stroke-width="3" fill="none"/>
+        <rect x="313" y="184" width="7" height="10" rx="3" fill="#42a5f5"/>
+        <rect x="340" y="184" width="7" height="10" rx="3" fill="#42a5f5"/>
+
+        <!-- Wi-Fi signal arcs (top right) -->
+        <path d="M358 55 Q370 43 382 55" stroke="#42a5f5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M352 61 Q370 37 388 61" stroke="#64b5f6" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+        <path d="M346 67 Q370 31 394 67" stroke="#90caf9" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+        <circle cx="370" cy="60" r="3" fill="#42a5f5"/>
+
+        <!-- Stars / sparkles -->
+        <text x="55" y="130" font-size="14" fill="#ffd54f" opacity="0.8">★</text>
+        <text x="365" y="270" font-size="10" fill="#ffd54f" opacity="0.6">★</text>
+        <text x="42" y="260" font-size="10" fill="#42a5f5" opacity="0.5">●</text>
+
+        <defs>
+          <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1565c0;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#6a1b9a;stop-opacity:0.4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why EduAdapt ──────────────────────────────────────────────────────── -->
+<section class="section-page" id="about">
+  <div class="section-heading">
+    <h2 data-i18n="home.why_title">Why EduAdapt?</h2>
+    <p data-i18n="home.why_sub">Built for the realities of connectivity in Cameroon — with smart fallback modes when bandwidth is limited.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📶</div>
+      <h3 class="feature-title">Adaptive Video Quality</h3>
+      <p class="feature-desc">Lessons stream at 360p, 480p, or 720p based on your bandwidth.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔊</div>
+      <h3 class="feature-title">Audio Mode</h3>
+      <p class="feature-desc">When video isn't an option, switch to audio-only lessons.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3 class="feature-title">PDF Transcripts</h3>
+      <p class="feature-desc">Download AI-generated lesson transcripts for offline study.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3 class="feature-title">QoE Monitoring</h3>
+      <p class="feature-desc">Real-time quality of experience tracking recommends the best content mode.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3 class="feature-title">Mobile Money Payments</h3>
+      <p class="feature-desc">Pay for courses with MTN or Orange Mobile Money in XAF.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✅</div>
+      <h3 class="feature-title">Verified Instructors</h3>
+      <p class="feature-desc">All instructors are verified and approved before their courses go live.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Popular Courses ───────────────────────────────────────────────────── -->
+<section id="courses" style="background:var(--gray-50);padding:3rem 2.5rem;max-width:100%;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-header" style="margin-bottom:1rem;">
+      <h2 style="font-size:1.5rem;" data-i18n="home.popular">Popular Courses</h2>
+      <a href="./register.html" class="section-link" data-i18n="home.see_all">See all courses →</a>
+    </div>
+    <!-- Search + Category Filter -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;">
+      <div style="flex:1;min-width:200px;position:relative;">
+        <span class="material-symbols-outlined" aria-hidden="true"
+          style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none;">search</span>
+        <input type="search" id="home-search" class="form-control"
+          placeholder="Search courses…" aria-label="Search courses"
+          style="padding-left:36px;background:var(--white);border:1px solid var(--gray-200);"
+          oninput="debounceHomeSearch()" />
+      </div>
+      <select id="home-category-filter" class="form-control"
+        style="max-width:200px;background:var(--white);border:1px solid var(--gray-200);"
+        onchange="loadHomeCourses(1)" aria-label="Filter by category">
+        <option value="">All Categories</option>
+        <option value="mathematics">Mathematics</option>
+        <option value="science">Science</option>
+        <option value="languages">Languages</option>
+        <option value="technology">Technology</option>
+        <option value="arts">Arts</option>
+        <option value="social studies">Social Studies</option>
+      </select>
+    </div>
+    <div class="courses-grid" id="popular-courses">
+      <div class="loading-state"><div class="spinner"></div></div>
+    </div>
+    <div id="home-courses-pagination" style="text-align:center;margin-top:1.5rem;"></div>
+  </div>
+</section>
+
+<!-- ── How it Works ──────────────────────────────────────────────────────── -->
+<section class="section-page" id="how-it-works">
+  <div class="section-heading">
+    <h2 data-i18n="home.how_title">How It Works</h2>
+    <p data-i18n="home.how_sub">Three simple steps to adaptive learning.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="step-num">1</div>
+      <h3 data-i18n="home.step1_title">Register & Enroll</h3>
+      <p data-i18n="home.step1_p">Create a free account. Enroll in courses that match your goals.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">2</div>
+      <h3 data-i18n="home.step2_title">Learn Adaptively</h3>
+      <p data-i18n="home.step2_p">EduAdapt monitors your connection and selects the best content mode.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">3</div>
+      <h3 data-i18n="home.step3_title">Track & Improve</h3>
+      <p data-i18n="home.step3_p">Take quizzes, track progress, and receive personalized recommendations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── User Reviews ──────────────────────────────────────────────────────── -->
+<section id="reviews">
+  <div class="reviews-inner">
+    <div class="section-heading">
+      <h2 data-i18n="home.reviews_title">What Our Users Say</h2>
+      <p>Real feedback from students and instructors on the EduAdapt platform.</p>
+    </div>
+
+    <!-- Average rating summary -->
+    <div class="reviews-summary" id="reviews-summary" style="display:none;">
+      <div style="text-align:center;">
+        <div class="reviews-avg-score" id="rev-avg-score">–</div>
+        <div class="reviews-avg-stars" id="rev-avg-stars"></div>
+        <div class="reviews-avg-count" id="rev-avg-count"></div>
+      </div>
+    </div>
+
+    <!-- Review cards -->
+    <div class="reviews-grid" id="reviews-grid">
+      <div class="loading-state" style="grid-column:1/-1;"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────────────────────────── -->
+<section class="cta-section">
+  <h2 data-i18n="home.cta_title">Ready to Start Learning?</h2>
+  <p data-i18n="home.cta_p">Join EduAdapt today and experience education that adapts to you — wherever you are in Cameroon.</p>
+  <div class="cta-actions">
+    <a href="./register.html" class="btn btn-white btn-lg" data-i18n="home.start">Start Learning</a>
+    <a href="./login.html" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.5);color:#fff;" data-i18n="nav.login">Log In</a>
+  </div>
+</section>
+
+</main><!-- /main-content -->
+
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div>
+    <span style="font-family:'Sora',sans-serif;font-weight:800;color:#fff;">EduAdapt</span>
+    <span style="margin-left:1rem;">© 2026 EduAdapt. Inclusive Education for Cameroon.</span>
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<script src="./js/auth.js"></script>
+<script src="./js/theme-lang.js"></script>
+<script src="./js/chatbot.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
+<script>
+  axe.run().then(results => {
+    if (results.violations.length) {
+      console.group('EduAdapt Accessibility Issues:');
+      results.violations.forEach(v => {
+        console.warn(v.impact.toUpperCase() + ': ' + v.description);
+        console.log('Fix:', v.help);
+        console.log('Elements:', v.nodes.map(n => n.target));
+      });
+      console.groupEnd();
+    } else {
+      console.log('No accessibility issues found on this page.');
+    }
+  });
+</script>
+<script>
+(async () => {
+  const grid    = document.getElementById('reviews-grid');
+  const summary = document.getElementById('reviews-summary');
+  const CATEGORY_LABELS = {
+    overall:'Overall Experience', ui_ux:'UI & UX',
+    content:'Content', performance:'Performance', support:'Support',
+  };
+  try {
+    const data = await fetch('/api/reviews/public').then(r => r.json());
+
+    if (!data.total || !data.reviews.length) {
+      grid.innerHTML = '<p class="reviews-empty" style="grid-column:1/-1;">No reviews yet — be the first to share your experience!</p>';
+      return;
+    }
+
+    // Summary
+    const filled = Math.round(data.avgRating);
+    document.getElementById('rev-avg-score').textContent = data.avgRating;
+    document.getElementById('rev-avg-stars').textContent = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+    document.getElementById('rev-avg-count').textContent = data.total + ' review' + (data.total !== 1 ? 's' : '');
+    summary.style.display = 'flex';
+
+    // Cards
+    grid.innerHTML = data.reviews.map(r => {
+      const initial  = (r.userName || 'U')[0].toUpperCase();
+      const roleCls  = r.userRole === 'instructor' ? ' instructor' : '';
+      const stars    = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const catLabel = CATEGORY_LABELS[r.category] || r.category;
+      const date     = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+      const name     = r.userName.length > 22 ? r.userName.slice(0, 22) + '…' : r.userName;
+      return `<div class="review-card">
+        <div class="review-card-header">
+          <div class="review-avatar${roleCls}">${initial}</div>
+          <div>
+            <div class="review-meta-name">${name}</div>
+            <div class="review-meta-role">${r.userRole}</div>
+          </div>
+        </div>
+        <div class="review-stars">${stars}</div>
+        <p class="review-comment">"${r.comment}"</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.72rem;background:var(--blue-lighter);color:var(--blue-primary);padding:2px 8px;border-radius:99px;font-weight:600;">${catLabel}</span>
+          <span class="review-date">${date}</span>
+        </div>
+      </div>`;
+    }).join('');
+
+  } catch (e) {
+    grid.innerHTML = '<p class="reviews-empty" style="grid-column:1/-1;">Could not load reviews.</p>';
+  }
+})();
+</script>
+<script>
+  /* ── Mobile nav toggle ── */
+  function toggleMobileNav() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const btn  = document.getElementById('mobile-nav-toggle');
+    const isOpen = menu.classList.toggle('show');
+    btn.querySelector('.material-symbols-outlined').textContent = isOpen ? 'close' : 'menu';
+    btn.setAttribute('aria-expanded', String(isOpen));
+    btn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  document.querySelectorAll('.mobile-nav-menu a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('mobile-nav-menu').classList.remove('show');
+      document.getElementById('mobile-nav-toggle').querySelector('.material-symbols-outlined').textContent = 'menu';
+      document.body.style.overflow = '';
+    });
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      document.getElementById('mobile-nav-menu').classList.remove('show');
+      document.getElementById('mobile-nav-toggle').querySelector('.material-symbols-outlined').textContent = 'menu';
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+<script>
+let homeDebounceTimer = null;
+function debounceHomeSearch() {
+  clearTimeout(homeDebounceTimer);
+  homeDebounceTimer = setTimeout(() => loadHomeCourses(1), 350);
+}
+
+function renderCoursePagination(totalPages, currentPage) {
+  const el = document.getElementById('home-courses-pagination');
+  if (!el || totalPages <= 1) { if (el) el.innerHTML = ''; return; }
+  let html = '';
+  if (currentPage > 1)
+    html += `<button class="btn btn-secondary btn-sm" onclick="loadHomeCourses(${currentPage - 1})" style="margin:0 4px;">← Prev</button>`;
+  html += `<span style="margin:0 8px;font-size:0.85rem;color:var(--gray-500);">Page ${currentPage} of ${totalPages}</span>`;
+  if (currentPage < totalPages)
+    html += `<button class="btn btn-secondary btn-sm" onclick="loadHomeCourses(${currentPage + 1})" style="margin:0 4px;">Next →</button>`;
+  el.innerHTML = html;
+}
+
+async function loadHomeCourses(page = 1) {
+  const grid = document.getElementById('popular-courses');
+  grid.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+  document.getElementById('home-courses-pagination').innerHTML = '';
+
+  const search   = (document.getElementById('home-search')?.value || '').trim();
+  const category = document.getElementById('home-category-filter')?.value || '';
+  const params   = new URLSearchParams({ page, limit: 9 });
+  if (search)   params.set('search', search);
+  if (category) params.set('category', category);
+
+  try {
+    const isSearch = search || category;
+    const url = isSearch
+      ? `/api/student/courses?${params}`
+      : `/api/student/courses/popular?${params}`;
+
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error('Failed');
+    const data = await res.json();
+
+    const courses       = data.courses       || data || [];
+    const totalCourses  = data.totalCourses  || data.total || courses.length;
+    const totalStudents = data.totalStudents || 0;
+
+    if (page === 1 && !isSearch) {
+      const statCourses  = document.getElementById('hero-stat-courses');
+      const statStudents = document.getElementById('hero-stat-students');
+      if (statCourses)  statCourses.textContent  = totalCourses;
+      if (statStudents) statStudents.textContent = totalStudents;
+    }
+
+    if (!courses.length) {
+      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div>'
+        + '<p>No courses found. <a href="./register.html">Sign up for more!</a></p></div>';
+      return;
+    }
+
+    const lang = localStorage.getItem('eduadapt_lang') || 'en';
+    grid.innerHTML = courses.map(c => {
+      const isFree   = c.isFree || !c.price || c.price === 0;
+      const priceTag = isFree
+        ? `<div class="price-tag free">🆓 ${lang === 'fr' ? 'Gratuit' : 'Free'}</div>`
+        : `<div class="price-tag">💰 ${(c.price || 0).toLocaleString()} XAF</div>`;
+      const thumb = c.thumbnail
+        ? `<img src="${c.thumbnail}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;"/>`
+        : '📚';
+      return `
+        <div class="course-card">
+          <div class="course-card-thumb">${thumb}</div>
+          <div class="course-card-body">
+            <div class="course-card-category">${c.category || 'General'}</div>
+            <div class="course-card-title">${c.title}</div>
+            <p style="font-size:0.82rem;color:var(--gray-500);margin-top:0.25rem;line-height:1.5;">
+              ${(c.description || '').substring(0, 90)}...
+            </p>
+            ${priceTag}
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;font-size:0.8rem;color:var(--gray-500);">
+              <span>👥 ${c.enrollmentCount || 0} ${lang === 'fr' ? 'inscrits' : 'enrolled'}</span>
+              <span class="badge badge-blue">${c.difficultyLevel || 'beginner'}</span>
+            </div>
+            <a href="./register.html" class="btn btn-primary btn-sm btn-block" style="margin-top:1rem;">
+              ${lang === 'fr' ? "S'inscrire" : 'Enroll Now'}
+            </a>
+          </div>
+        </div>`;
+    }).join('');
+
+    renderCoursePagination(data.pages || 1, page);
+
+  } catch (err) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div>'
+      + '<p>Courses loading. <a href="./register.html">Sign up to access all courses.</a></p></div>';
+  }
+}
+
+loadHomeCourses();
+</script>
+</body>
+</html>

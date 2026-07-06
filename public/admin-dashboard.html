@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – EduAdapt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<div id="accessibility-toolbar" role="toolbar" aria-label="Accessibility options">
+  <button onclick="toggleHighContrast()" aria-label="Toggle high contrast mode">High Contrast</button>
+  <button onclick="increaseFontSize()" aria-label="Increase font size">A+</button>
+  <button onclick="decreaseFontSize()" aria-label="Decrease font size">A-</button>
+</div>
+
+<div class="dashboard-layout">
+
+  <!-- ─── Sidebar ───────────────────────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar" aria-label="Admin navigation">
+    <div class="sidebar-brand">
+      <div class="brand-name">EduAdapt</div>
+      <div class="brand-role user-display-role">Administrator</div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <div class="nav-item active" id="nav-dashboard" role="button" tabindex="0" aria-label="Dashboard" aria-current="page"
+           onclick="showSection('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('dashboard');}">
+        <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+        <span data-i18n="nav.dashboard">Dashboard</span>
+      </div>
+      <div class="nav-item" id="nav-instructors" role="button" tabindex="0" aria-label="Instructors"
+           onclick="showSection('instructors')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('instructors');}">
+        <span class="material-symbols-outlined" aria-hidden="true">school</span>
+        <span data-i18n="nav.instructors">Instructors</span>
+      </div>
+      <div class="nav-item" id="nav-courses" role="button" tabindex="0" aria-label="Courses"
+           onclick="showSection('courses')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('courses');}">
+        <span class="material-symbols-outlined" aria-hidden="true">library_books</span>
+        <span data-i18n="nav.courses">Courses</span>
+      </div>
+      <div class="nav-item" id="nav-users" role="button" tabindex="0" aria-label="Users"
+           onclick="showSection('users')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('users');}">
+        <span class="material-symbols-outlined" aria-hidden="true">people</span>
+        <span data-i18n="nav.users">Users</span>
+      </div>
+      <div class="nav-item" id="nav-enrollments" role="button" tabindex="0" aria-label="Enrollments"
+           onclick="showSection('enrollments')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('enrollments');}">
+        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+        <span data-i18n="nav.enrollments">Enrollments</span>
+      </div>
+      <div class="nav-item" id="nav-qoe" role="button" tabindex="0" aria-label="QoE"
+           onclick="showSection('qoe')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('qoe');}">
+        <span class="material-symbols-outlined" aria-hidden="true">network_check</span>
+        <span data-i18n="nav.qoe">QoE</span>
+      </div>
+      <div class="nav-item" id="nav-reviews" role="button" tabindex="0" aria-label="Reviews"
+           onclick="showSection('reviews')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('reviews');}">
+        <span class="material-symbols-outlined" aria-hidden="true">star</span>
+        <span data-i18n="nav.reviews">Reviews</span>
+      </div>
+      <div class="nav-item" id="nav-logs" role="button" tabindex="0" aria-label="Activity Logs"
+           onclick="showSection('logs')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('logs');}">
+        <span class="material-symbols-outlined" aria-hidden="true">description</span>
+        <span data-i18n="nav.logs">Activity Logs</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <!-- theme/lang buttons injected here by theme-lang.js -->
+      <div class="nav-item" id="nav-settings" role="button" tabindex="0" aria-label="Settings"
+           onclick="showSection('settings')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('settings');}">
+        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+        <span data-i18n="nav.settings">Settings</span>
+      </div>
+      <div class="nav-item" role="button" tabindex="0" aria-label="Logout"
+           onclick="logout()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();logout();}">
+        <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+        <span data-i18n="nav.logout">Logout</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- ─── Main ─────────────────────────────────────────────────────────────── -->
+  <div class="main-content">
+    <header class="top-header">
+      <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()"
+              aria-label="Toggle sidebar navigation" aria-expanded="false" aria-controls="sidebar">
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+      <div class="header-logo" aria-hidden="true">EduAdapt</div>
+      <nav class="header-nav" aria-label="Top navigation">
+        <a href="./index.html">Explore</a>
+        <a href="#" class="active" aria-current="page">Admin</a>
+      </nav>
+      <div class="header-actions">
+        <button class="header-icon-btn" aria-label="Open notifications" aria-haspopup="true" aria-expanded="false"><span class="material-symbols-outlined" aria-hidden="true">notifications</span></button>
+        <div class="header-avatar user-display-avatar" aria-hidden="true">A</div>
+      </div>
+    </header>
+
+    <div class="page-body" id="main-content">
+
+      <!-- ─── Dashboard Section ─────────────────────────────────────────────── -->
+      <div id="section-dashboard">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="adm.title">Administrative Overview</h1>
+            <p class="page-subtitle" id="admin-status-line"><span data-i18n="common.loading">Loading system status...</span></p>
+          </div>
+        </div>
+
+        <!-- Stats Row 1 -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">person</span></div>
+            <div class="stat-label" data-i18n="adm.total_users">Total Users</div>
+            <div class="stat-value" id="stat-total-users">–</div>
+            <div class="stat-sub">All registered accounts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">backpack</span></div>
+            <div class="stat-label" data-i18n="adm.students_stat">Students</div>
+            <div class="stat-value" id="stat-students">–</div>
+            <div class="stat-sub">Active learners</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">school</span></div>
+            <div class="stat-label" data-i18n="adm.instructors_stat">Instructors</div>
+            <div class="stat-value" id="stat-instructors">–</div>
+            <div class="stat-sub">Approved instructors</div>
+          </div>
+          <div class="stat-card" style="border-left:4px solid var(--yellow);">
+            <div class="stat-icon"><span class="material-symbols-outlined">hourglass_top</span></div>
+            <div class="stat-label" data-i18n="adm.pending_instr">Pending Instructors</div>
+            <div class="stat-value" id="stat-pending-instructors" style="color:var(--yellow);">–</div>
+            <div class="stat-sub">
+              <span class="section-link" onclick="showSection('instructors')" style="cursor:pointer;">Review now →</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="margin-top:0;">
+          <div class="stat-card" style="border-left:4px solid var(--orange);">
+            <div class="stat-icon"><span class="material-symbols-outlined">assignment</span></div>
+            <div class="stat-label" data-i18n="adm.pending_courses_stat">Pending Courses</div>
+            <div class="stat-value" id="stat-pending-courses" style="color:var(--orange);">–</div>
+            <div class="stat-sub">
+              <span class="section-link" onclick="showSection('courses')" style="cursor:pointer;">Approve now →</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">check_circle</span></div>
+            <div class="stat-label" data-i18n="adm.approved_courses_stat">Approved Courses</div>
+            <div class="stat-value" id="stat-approved-courses">–</div>
+            <div class="stat-sub">Live to students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">bar_chart</span></div>
+            <div class="stat-label" data-i18n="adm.enrollments_stat">Total Enrollments</div>
+            <div class="stat-value" id="stat-enrollments">–</div>
+            <div class="stat-sub" data-i18n="adm.enrolled_pairs">Student-course pairs</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">signal_cellular_alt</span></div>
+            <div class="stat-label" data-i18n="adm.qoe_stat">QoE Records</div>
+            <div class="stat-value" id="stat-qoe">–</div>
+            <div class="stat-sub" data-i18n="adm.net_measurements">Network measurements</div>
+          </div>
+        </div>
+
+        <!-- Course Approval Queue -->
+        <div class="two-col-grid" style="margin-top:1.5rem;">
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title" data-i18n="adm.pending_courses_list">Course Approval Queue</h2>
+              <span class="section-link" onclick="showSection('courses')" style="cursor:pointer;" data-i18n="ins.view_all">View All →</span>
+            </div>
+            <div id="pending-courses-list">
+              <p class="empty-state" data-i18n="common.loading">Loading...</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title" data-i18n="adm.pending_instr_list">Pending Instructors</h2>
+              <span class="section-link" onclick="showSection('instructors')" style="cursor:pointer;" data-i18n="ins.view_all">View All →</span>
+            </div>
+            <div id="pending-instructors-list">
+              <p class="empty-state" data-i18n="common.loading">Loading...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management Preview -->
+        <div class="section" style="margin-top:1.5rem;">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="adm.users_title">User Management</h2>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="tab-btn active" onclick="filterUsersTab('all', this)" id="user-tab-all" data-i18n="common.all">All Users</button>
+              <button class="tab-btn" onclick="filterUsersTab('instructor', this)" data-i18n="nav.instructors">Instructors</button>
+              <button class="tab-btn" onclick="filterUsersTab('student', this)" data-i18n="nav.students">Students</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th data-i18n="common.name">Name</th>
+                  <th data-i18n="common.email">Email</th>
+                  <th data-i18n="common.role">Role</th>
+                  <th data-i18n="common.date">Join Date</th>
+                  <th data-i18n="common.status">Status</th>
+                  <th data-i18n="common.actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-preview-tbody">
+                <tr><td colspan="6" class="table-empty" data-i18n="common.loading">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Instructors Section ────────────────────────────────────────────── -->
+      <div id="section-instructors" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="adm.instructors_title">Instructor Management</h1>
+            <p class="page-subtitle" data-i18n="adm.instructors_sub">Review and approve instructor registrations.</p>
+          </div>
+        </div>
+
+        <div class="tab-bar" style="margin-bottom:1.5rem;">
+          <button class="tab-btn active" onclick="filterInstructors('all', this)" data-i18n="common.all">All</button>
+          <button class="tab-btn" onclick="filterInstructors('pending', this)">Pending</button>
+          <button class="tab-btn" onclick="filterInstructors('approved', this)">Approved</button>
+          <button class="tab-btn" onclick="filterInstructors('rejected', this)">Rejected</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="common.name">Name</th>
+                <th data-i18n="common.email">Email</th>
+                <th data-i18n="common.date">Registered</th>
+                <th data-i18n="common.status">Status</th>
+                <th>Document</th>
+                <th data-i18n="common.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="instructors-tbody">
+              <tr><td colspan="6" class="table-empty" data-i18n="common.loading">Loading instructors...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Courses Section ────────────────────────────────────────────────── -->
+      <div id="section-courses" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="adm.courses_title">Course Management</h1>
+            <p class="page-subtitle" data-i18n="adm.courses_sub">Approve, reject, and review all platform courses.</p>
+          </div>
+        </div>
+
+        <div class="tab-bar" style="margin-bottom:1.5rem;">
+          <button class="tab-btn active" onclick="filterCourses('all', this)" data-i18n="common.all">All</button>
+          <button class="tab-btn" onclick="filterCourses('pending', this)">Pending</button>
+          <button class="tab-btn" onclick="filterCourses('approved', this)">Approved</button>
+          <button class="tab-btn" onclick="filterCourses('rejected', this)">Rejected</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="table.course">Course Title</th>
+                <th data-i18n="table.instructor">Instructor</th>
+                <th>Category</th>
+                <th>Level</th>
+                <th data-i18n="common.status">Status</th>
+                <th data-i18n="common.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="courses-tbody">
+              <tr><td colspan="6" class="table-empty" data-i18n="common.loading">Loading courses...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── All Users Section ─────────────────────────────────────────────── -->
+      <div id="section-users" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="adm.users_title">All Users</h1>
+            <p class="page-subtitle" data-i18n="adm.users_sub">Manage all registered platform users.</p>
+          </div>
+        </div>
+
+        <!-- Search + Filter Bar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;align-items:center;">
+          <div style="flex:1;min-width:200px;position:relative;">
+            <span class="material-symbols-outlined" aria-hidden="true"
+              style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none;">search</span>
+            <input type="search" id="users-search" class="form-control"
+              placeholder="Search by name or email…" aria-label="Search users"
+              style="padding-left:36px;" oninput="debounceUserSearch()" />
+          </div>
+          <select id="users-role-filter" class="form-control" style="max-width:160px;"
+            onchange="searchUsers()" aria-label="Filter by role">
+            <option value="">All Roles</option>
+            <option value="student">Students</option>
+            <option value="instructor">Instructors</option>
+          </select>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th data-i18n="common.name">Name</th>
+                <th data-i18n="common.email">Email</th>
+                <th data-i18n="common.role">Role</th>
+                <th data-i18n="common.date">Join Date</th>
+                <th data-i18n="common.status">Status</th>
+                <th data-i18n="common.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="all-users-tbody">
+              <tr><td colspan="6" class="table-empty" data-i18n="common.loading">Loading users...</td></tr>
+            </tbody>
+          </table>
+          <div id="users-pagination"></div>
+        </div>
+      </div>
+
+      <!-- ─── Settings Section ───────────────────────────────────────────────────────────── -->
+      <div id="section-settings" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="adm.settings_title">Settings</h1>
+            <p class="page-subtitle" data-i18n="adm.settings_sub">Edit your profile and manage platform users from one place.</p>
+          </div>
+        </div>
+
+        <div class="two-col-grid" style="gap:1.5rem;">
+          <div class="section" style="flex:1;">
+            <div class="section-header">
+              <h2 class="section-title" data-i18n="adm.profile">Profile</h2>
+            </div>
+            <form id="settings-form" onsubmit="submitAdminProfileForm(event)" aria-label="Admin profile settings form">
+              <div class="form-group">
+                <label class="form-label" for="settings-fullname" data-i18n="settings.fullname">Full Name</label>
+                <input type="text" class="form-input" id="settings-fullname" name="fullName" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-email" data-i18n="settings.email">Email</label>
+                <input type="email" class="form-input" id="settings-email" disabled aria-disabled="true" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-phone" data-i18n="settings.phone">Phone</label>
+                <input type="text" class="form-input" id="settings-phone" name="phone" placeholder="Optional phone number" autocomplete="tel" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-avatar" data-i18n="settings.photo">Profile Photo</label>
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <img id="settings-avatar-preview" src="" alt="Current avatar preview" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:1px solid var(--gray-200);background:#f5f5f5;" />
+                  <input type="file" class="form-input" id="settings-avatar" name="avatar" accept="image/*" />
+                </div>
+              </div>
+              <div class="modal-actions" style="padding:0; margin-top:0.5rem;">
+                <button type="submit" class="btn btn-primary" data-i18n="adm.save_profile">Save Profile</button>
+              </div>
+            </form>
+
+          <div class="section" style="margin-top:1.5rem;">
+            <div class="section-header">
+              <h2 class="section-title" data-i18n="adm.change_password">Change Password</h2>
+            </div>
+            <form id="settings-password-form" onsubmit="submitAdminPasswordForm(event)" aria-label="Change password form">
+              <div class="form-group">
+                <label class="form-label" for="settings-current-password" data-i18n="adm.current_pwd">Current Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-input" id="settings-current-password" required autocomplete="current-password" />
+                  <button type="button" class="password-toggle" onclick="togglePassword('settings-current-password', this)" tabindex="-1" aria-label="Toggle current password visibility">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-new-password" data-i18n="adm.new_pwd">New Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-input" id="settings-new-password" required autocomplete="new-password" />
+                  <button type="button" class="password-toggle" onclick="togglePassword('settings-new-password', this)" tabindex="-1" aria-label="Toggle new password visibility">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-confirm-password" data-i18n="adm.confirm_pwd">Confirm New Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-input" id="settings-confirm-password" required autocomplete="new-password" />
+                  <button type="button" class="password-toggle" onclick="togglePassword('settings-confirm-password', this)" tabindex="-1" aria-label="Toggle confirm password visibility">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div class="modal-actions" style="padding:0; margin-top:0.5rem;">
+                <button type="submit" class="btn btn-secondary" data-i18n="adm.update_password">Update Password</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ── Two-Factor Authentication ─────────────────────────────── -->
+          <div class="section" style="margin-top:1.5rem;" id="twofa-settings-section">
+            <div class="section-header">
+              <h2 class="section-title">Two-Factor Authentication</h2>
+            </div>
+            <div id="twofa-status-card" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:1.25rem;">
+              <!-- content injected by load2FAStatus() -->
+            </div>
+          </div>
+          </div>
+          <div class="section" style="flex:2;">
+            <div class="section-header">
+              <h2 class="section-title" data-i18n="adm.manage_users">Manage Users</h2>
+              <span class="section-subtitle" data-i18n="adm.users_sub">Activate, deactivate, or delete non-admin users.</span>
+            </div>
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="common.name">Name</th>
+                    <th data-i18n="common.email">Email</th>
+                    <th data-i18n="common.role">Role</th>
+                    <th data-i18n="common.date">Joined</th>
+                    <th data-i18n="common.status">Status</th>
+                    <th data-i18n="common.actions">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="all-users-tbody-settings">
+                  <tr><td colspan="6" class="table-empty" data-i18n="common.loading">Loading users...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Enrollments Section ───────────────────────────────────────────── -->
+      <div id="section-enrollments" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">All Enrollments</h1>
+            <p class="page-subtitle">View all student-course enrollment records.</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Instructor</th>
+                <th>Enrolled</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="enrollments-tbody">
+              <tr><td colspan="5" class="table-empty">Loading enrollments...</td></tr>
+            </tbody>
+          </table>
+          <div id="enrollments-pagination"></div>
+        </div>
+      </div>
+
+      <!-- ─── QoE Records Section ───────────────────────────────────────────── -->
+      <div id="section-qoe" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">QoE Records</h1>
+            <p class="page-subtitle">Quality of Experience network measurements from students.</p>
+          </div>
+        </div>
+
+        <!-- Summary cards -->
+        <div class="stats-grid" style="margin-bottom:1.5rem;">
+          <div class="stat-card">
+            <div class="stat-label">Total Records</div>
+            <div class="stat-value" id="qoe-total">–</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Bandwidth</div>
+            <div class="stat-value" id="qoe-avg-bw">– Mbps</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Video Sessions</div>
+            <div class="stat-value" id="qoe-video-count">–</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Audio/PDF Sessions</div>
+            <div class="stat-value" id="qoe-fallback-count">–</div>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Bandwidth</th>
+                <th>Response Time</th>
+                <th>Interruptions</th>
+                <th>Mode</th>
+                <th>Quality</th>
+                <th>Decision</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="qoe-tbody">
+              <tr><td colspan="9" class="table-empty">Loading QoE records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── Activity Logs Section ─────────────────────────────────────────── -->
+      <div id="section-logs" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Activity Logs</h1>
+            <p class="page-subtitle">System-wide audit trail of all user actions.</p>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Action</th>
+                <th>Description</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="logs-tbody">
+              <tr><td colspan="5" class="table-empty">Loading activity logs...</td></tr>
+            </tbody>
+          </table>
+          <div id="logs-pagination"></div>
+        </div>
+      </div>
+
+      <!-- ─── Reviews Section ──────────────────────────────────────────────── -->
+      <div id="section-reviews" style="display:none;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">User Reviews &amp; Feedback</h1>
+            <p class="page-subtitle">Monitor quality of experience based on user ratings and comments.</p>
+          </div>
+        </div>
+
+        <!-- Summary stat cards -->
+        <div class="stats-grid" style="margin-bottom:1.5rem;">
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">rate_review</span></div>
+            <div class="stat-label">Total Reviews</div>
+            <div class="stat-value" id="rev-stat-total">–</div>
+            <div class="stat-sub">All submitted feedback</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">star</span></div>
+            <div class="stat-label">Average Rating</div>
+            <div class="stat-value" id="rev-stat-avg" style="color:var(--yellow);">–</div>
+            <div class="stat-sub">Out of 5 stars</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">thumb_up</span></div>
+            <div class="stat-label">5-Star Reviews</div>
+            <div class="stat-value" id="rev-stat-5star" style="color:var(--green);">–</div>
+            <div class="stat-sub">Excellent ratings</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">thumb_down</span></div>
+            <div class="stat-label">1 &amp; 2-Star Reviews</div>
+            <div class="stat-value" id="rev-stat-low" style="color:var(--red);">–</div>
+            <div class="stat-sub">Needs improvement</div>
+          </div>
+        </div>
+
+        <!-- Rating distribution -->
+        <div class="section" style="margin-bottom:1.5rem;">
+          <div class="section-header"><h2 class="section-title">Rating Distribution</h2></div>
+          <div id="rev-distribution" style="padding:0.5rem 0;">
+            <p class="empty-state">Loading...</p>
+          </div>
+        </div>
+
+        <!-- All reviews table -->
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">All Reviews</h2>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Rating</th>
+                  <th>Category</th>
+                  <th>Comment</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reviews-tbody">
+                <tr><td colspan="7" class="table-empty">Loading reviews...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /dashboard-layout -->
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- Reject Reason Modal -->
+<div class="modal-overlay" id="reject-modal" onclick="handleOverlayClick(event,'reject-modal')"
+     role="dialog" aria-modal="true" aria-labelledby="reject-modal-title">
+  <div class="modal-card" style="max-width:440px;">
+    <div class="modal-header">
+      <h3 id="reject-modal-title">Reject</h3>
+      <button class="modal-close" onclick="closeModal('reject-modal')" aria-label="Close reject dialog">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="reject-reason">Reason for Rejection</label>
+      <textarea class="form-input" id="reject-reason" rows="3" placeholder="Provide a reason for the rejection..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('reject-modal')">Cancel</button>
+      <button class="btn btn-danger" id="confirm-reject-btn" onclick="confirmReject()">Confirm Reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Course Lessons Modal -->
+<div class="modal-overlay" id="view-lessons-modal" onclick="handleOverlayClick(event,'view-lessons-modal')"
+     role="dialog" aria-modal="true" aria-labelledby="view-lessons-title">
+  <div class="modal-card" style="max-width:680px;">
+    <div class="modal-header">
+      <h3 id="view-lessons-title">Course Lessons</h3>
+      <button class="modal-close" onclick="closeModal('view-lessons-modal')" aria-label="Close lessons dialog">✕</button>
+    </div>
+    <div id="view-lessons-body">
+      <p class="empty-state">Loading lessons...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Video Player Modal -->
+<div class="modal-overlay" id="video-modal" onclick="handleOverlayClick(event,'video-modal')"
+     role="dialog" aria-modal="true" aria-labelledby="video-modal-title">
+  <div class="modal-card" style="max-width:720px;">
+    <div class="modal-header">
+      <h3 id="video-modal-title">Video Player</h3>
+      <button class="modal-close" onclick="closeVideoModal()" aria-label="Close video player">✕</button>
+    </div>
+    <video id="admin-video-player" controls style="width:100%;border-radius:8px;background:#000;" aria-label="Lesson video"></video>
+    <div style="margin-top:1rem;" id="admin-video-meta"></div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="./js/auth.js"></script>
+<script src="./js/twofa.js"></script>
+<script src="./js/admin.js"></script>
+
+<!-- Chatbot Js link -->
+<script src="./js/chatbot.js"></script>
+
+<!-- Dark theme -->
+<script src="./js/theme-lang.js"></script>
+
+<!-- Notification -->
+<script src="./js/notifications.js"></script>
+
+<script>
+  /* ── Sidebar toggle for mobile ── */
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const isOpen = sidebar.classList.toggle('open');
+    overlay.classList.toggle('show', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeSidebar() {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+  });
+  window.addEventListener('resize', () => { if (window.innerWidth > 768) closeSidebar(); });
+
+  // ── Accessibility toolbar ─────────────────────────────────────────────────
+  const srAnnounce = (text) => {
+    const el = document.getElementById('sr-announcer');
+    if (el) { el.textContent = ''; setTimeout(() => { el.textContent = text; }, 50); }
+  };
+  (function initA11yToolbar() {
+    if (localStorage.getItem('highContrast') === 'true') document.body.classList.add('high-contrast');
+    const savedSize = localStorage.getItem('fontSize');
+    if (savedSize) document.body.style.fontSize = savedSize;
+  })();
+  window.toggleHighContrast = () => {
+    const enabled = document.body.classList.toggle('high-contrast');
+    localStorage.setItem('highContrast', String(enabled));
+    srAnnounce(enabled ? 'High contrast mode enabled' : 'High contrast mode disabled');
+  };
+  window.increaseFontSize = () => {
+    const current = parseFloat(getComputedStyle(document.body).fontSize);
+    const next = Math.min(current + 2, 24) + 'px';
+    document.body.style.fontSize = next;
+    localStorage.setItem('fontSize', next);
+    srAnnounce('Font size increased');
+  };
+  window.decreaseFontSize = () => {
+    const current = parseFloat(getComputedStyle(document.body).fontSize);
+    const next = Math.max(current - 2, 12) + 'px';
+    document.body.style.fontSize = next;
+    localStorage.setItem('fontSize', next);
+    srAnnounce('Font size decreased');
+  };
+
+  // ── Modal focus trap + Escape ─────────────────────────────────────────────
+  let _modalOpeners = {};
+  const _origOpenModal = window.openModal;
+  window.openModal = (id) => {
+    _modalOpeners[id] = document.activeElement;
+    if (_origOpenModal) _origOpenModal(id);
+    const modal = document.getElementById(id);
+    if (!modal) return;
+    const focusable = modal.querySelectorAll('button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
+    if (focusable[0]) focusable[0].focus();
+    modal._trapHandler = (e) => {
+      const foc = modal.querySelectorAll('button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])');
+      const first = foc[0]; const last = foc[foc.length - 1];
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      if (e.key === 'Escape') closeModal(id);
+    };
+    modal.addEventListener('keydown', modal._trapHandler);
+  };
+  const _origCloseModal = window.closeModal;
+  window.closeModal = (id) => {
+    const modal = document.getElementById(id);
+    if (modal && modal._trapHandler) { modal.removeEventListener('keydown', modal._trapHandler); modal._trapHandler = null; }
+    if (_origCloseModal) _origCloseModal(id);
+    if (_modalOpeners[id]) { _modalOpeners[id].focus(); delete _modalOpeners[id]; }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
+<script>
+  axe.run().then(results => {
+    if (results.violations.length) {
+      console.group('EduAdapt Accessibility Issues (admin-dashboard):');
+      results.violations.forEach(v => {
+        console.warn(v.impact.toUpperCase() + ': ' + v.description);
+        console.log('Fix:', v.help);
+        console.log('Elements:', v.nodes.map(n => n.target));
+      });
+      console.groupEnd();
+    } else {
+      console.log('No accessibility issues found on admin-dashboard.');
+    }
+  });
+</script>
+</body>
+</html>

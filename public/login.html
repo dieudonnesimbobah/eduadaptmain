@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – EduAdapt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<!-- ─── Navigation ─────────────────────────────────────────────────────────── -->
+<nav class="public-nav">
+  <a href="./index.html" class="nav-logo">EduAdapt</a>
+  <div class="nav-links">
+    <a href="./index.html">Explore</a>
+    <a href="./index.html#courses">Courses</a>
+  </div>
+  <div class="nav-cta">
+    <button class="header-icon-btn" aria-label="Notifications"><span class="material-symbols-outlined" aria-hidden="true">notifications</span></button>
+    <button class="header-icon-btn" aria-label="Settings"><span class="material-symbols-outlined" aria-hidden="true">settings</span></button>
+  </div>
+  <button class="mobile-nav-toggle" id="mobile-nav-toggle" onclick="toggleMobileNav()"
+          aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+    <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+  </button>
+</nav>
+<div class="mobile-nav-menu" id="mobile-nav-menu">
+  <a href="./index.html">Explore</a>
+  <a href="./index.html#courses">Courses</a>
+  <div class="mobile-nav-cta">
+    <a href="./register.html" class="btn btn-primary btn-sm">Sign Up</a>
+  </div>
+</div>
+
+<!-- ─── Auth Page ───────────────────────────────────────────────────────────── -->
+<main id="main-content">
+<div class="auth-page">
+  <div>
+    <div class="auth-card">
+      <div class="auth-card-top"><span class="material-symbols-outlined">school</span></div>
+      <div class="auth-card-body">
+        <h1 class="auth-title" data-i18n="auth.welcome_back">Welcome Back</h1>
+        <p class="auth-subtitle" data-i18n="auth.login_sub">Continue your adaptive learning journey with EduAdapt.</p>
+
+        <div id="alert-box"></div>
+
+        <!-- Step 2: 2FA code entry (hidden until required) -->
+        <div id="twofa-step" class="hidden">
+          <h1 class="auth-title" style="font-size:1.25rem;">Two-Factor Authentication</h1>
+          <p class="auth-subtitle">Open your authenticator app and enter the 6-digit code.</p>
+          <div id="alert-box-2fa"></div>
+          <form id="twofa-form" aria-label="Two-factor authentication form">
+            <div class="form-group">
+              <label class="form-label" for="totp-code">Authenticator Code</label>
+              <input type="text" id="totp-code" class="form-control"
+                placeholder="000 000" maxlength="7" autocomplete="one-time-code"
+                inputmode="numeric" pattern="[0-9 ]*" required
+                style="letter-spacing:0.3em;font-size:1.5rem;text-align:center;" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="twofa-btn">
+              Verify Code
+            </button>
+          </form>
+          <div style="text-align:center;margin-top:0.75rem;">
+            <button onclick="cancelTwoFA()" class="btn btn-secondary btn-sm">← Back to Login</button>
+          </div>
+        </div>
+
+        <div id="login-step">
+        <form id="login-form" aria-label="Login form">
+          <div class="form-group">
+            <label class="form-label" for="role" data-i18n="auth.role">Select Your Role</label>
+            <select id="role" name="role" class="form-control"
+                    aria-label="Select your role: Student, Instructor, or Administrator" required>
+              <option value="student">Student</option>
+              <option value="instructor">Instructor</option>
+              <option value="administrator">Administrator</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email" data-i18n="auth.email">Email Address</label>
+            <input type="email" id="email" name="email" class="form-control"
+              placeholder="e.g. you@example.com" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password" data-i18n="auth.password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" class="form-control"
+                placeholder="••••••••" required autocomplete="current-password" />
+              <button type="button" class="password-toggle" onclick="togglePassword('password', this)" tabindex="-1" aria-label="Toggle password visibility">
+                <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="login-btn" data-i18n="auth.login_btn">
+            Login
+          </button>
+        </form>
+
+        <div style="text-align:center;margin-top:0.75rem;">
+          <a href="./reset-password.html" style="font-size:0.875rem;color:var(--blue-primary);" data-i18n="auth.forgot_pwd">Forgot your password?</a>
+        </div>
+        <div class="auth-footer-text" style="margin-top:0.75rem;">
+          <span data-i18n="auth.no_account">New here?</span> <a href="./register.html" data-i18n="auth.create">Create an account</a>
+        </div>
+        </div><!-- /#login-step -->
+      </div>
+    </div>
+    <p class="auth-quote">"Education is not the filling of a pail, but the lighting of a fire."</p>
+  </div>
+</div>
+</main>
+<!-- Dark theme -->
+<script src="./js/theme-lang.js"></script>
+
+<script src="./js/auth.js"></script>
+<script>
+  function toggleMobileNav() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const btn  = document.getElementById('mobile-nav-toggle');
+    const isOpen = menu.classList.toggle('show');
+    btn.querySelector('.material-symbols-outlined').textContent = isOpen ? 'close' : 'menu';
+    btn.setAttribute('aria-expanded', String(isOpen));
+    btn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+  }
+  document.querySelectorAll('.mobile-nav-menu a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('mobile-nav-menu').classList.remove('show');
+      const btn = document.getElementById('mobile-nav-toggle');
+      btn.querySelector('.material-symbols-outlined').textContent = 'menu';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open navigation menu');
+    });
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
+<script>
+  axe.run().then(results => {
+    if (results.violations.length) {
+      console.group('EduAdapt Accessibility Issues:');
+      results.violations.forEach(v => {
+        console.warn(v.impact.toUpperCase() + ': ' + v.description);
+        console.log('Fix:', v.help);
+        console.log('Elements:', v.nodes.map(n => n.target));
+      });
+      console.groupEnd();
+    } else {
+      console.log('No accessibility issues found on this page.');
+    }
+  });
+</script>
+<script>
+  clearAuth();
+
+  let pending2FATempToken = null; // held in memory only (never persisted)
+
+  function doRedirect(user) {
+    setAuth(null, user); // store user profile; cookie holds the real token
+    showToast('Login successful! Redirecting...', 'success');
+    const path =
+      user.role === 'admin'      ? './admin-dashboard.html' :
+      user.role === 'instructor' ? './instructor-dashboard.html' :
+      './student-dashboard.html';
+    setTimeout(() => window.location.replace(path), 800);
+  }
+
+  function cancelTwoFA() {
+    pending2FATempToken = null;
+    document.getElementById('twofa-step').classList.add('hidden');
+    document.getElementById('login-step').classList.remove('hidden');
+    document.getElementById('alert-box-2fa').innerHTML = '';
+    document.getElementById('totp-code').value = '';
+  }
+
+  // ── Step 1: credentials ────────────────────────────────────────────────────
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById('alert-box');
+    const btn      = document.getElementById('login-btn');
+    alertBox.innerHTML = '';
+    btn.disabled = true;
+    btn.textContent = 'Logging in...';
+
+    const roleSelect = document.getElementById('role').value;
+    const role       = roleSelect === 'administrator' ? 'admin' : roleSelect;
+    const email      = document.getElementById('email').value.trim();
+    const password   = document.getElementById('password').value;
+
+    try {
+      const res  = await fetch(resolveApiUrl('/api/auth/login'), {
+        method:      'POST',
+        headers:     { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body:        JSON.stringify({ email, password, role }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.code === 'EMAIL_NOT_VERIFIED') {
+          alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}
+            <br><a href="./verify-email.html" style="color:inherit;font-weight:600;text-decoration:underline;">Resend verification link →</a></div>`;
+        } else {
+          alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+        }
+        btn.disabled = false;
+        btn.textContent = 'Login';
+        return;
+      }
+
+      // 2FA required — switch to step 2
+      if (data.requires2FA) {
+        pending2FATempToken = data.tempToken;
+        document.getElementById('login-step').classList.add('hidden');
+        document.getElementById('twofa-step').classList.remove('hidden');
+        document.getElementById('totp-code').focus();
+        btn.disabled = false;
+        btn.textContent = 'Login';
+        return;
+      }
+
+      if (!data.user) {
+        alertBox.innerHTML = `<div class="alert alert-error">⚠ Invalid response from server</div>`;
+        btn.disabled = false;
+        btn.textContent = 'Login';
+        return;
+      }
+
+      doRedirect(data.user);
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">⚠ ${err.message || 'Network error. Please try again.'}</div>`;
+      btn.disabled = false;
+      btn.textContent = 'Login';
+    }
+  });
+
+  // ── Step 2: TOTP code ─────────────────────────────────────────────────────
+  document.getElementById('twofa-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById('alert-box-2fa');
+    const btn      = document.getElementById('twofa-btn');
+    const code     = document.getElementById('totp-code').value.replace(/\s/g, '');
+    alertBox.innerHTML = '';
+    btn.disabled = true;
+    btn.textContent = 'Verifying...';
+
+    try {
+      const res  = await fetch(resolveApiUrl('/api/auth/2fa/verify'), {
+        method:      'POST',
+        headers:     { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body:        JSON.stringify({ tempToken: pending2FATempToken, code }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+        btn.disabled = false;
+        btn.textContent = 'Verify Code';
+        return;
+      }
+
+      pending2FATempToken = null;
+      doRedirect(data.user);
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">⚠ Network error. Please try again.</div>`;
+      btn.disabled = false;
+      btn.textContent = 'Verify Code';
+    }
+  });
+
+  // Auto-format TOTP input: insert space after 3 digits
+  document.getElementById('totp-code').addEventListener('input', (e) => {
+    let v = e.target.value.replace(/\D/g, '');
+    if (v.length > 3) v = v.slice(0, 3) + ' ' + v.slice(3, 6);
+    e.target.value = v;
+  });
+</script>
+</body>
+</html>

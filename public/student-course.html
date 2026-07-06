@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Player – EduAdapt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+  <style>
+    .player-sidebar { background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;align-items:center;padding:1rem 0;gap:1rem;position:fixed;left:0;top:0;bottom:0;width:60px;z-index:10; }
+    .player-sidebar a { width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--gray-500);transition:background 0.2s; }
+    .player-sidebar a:hover,.player-sidebar a.active { background:var(--blue-lighter);color:var(--blue-primary); }
+    .player-sidebar-right { position:fixed;right:0;top:0;bottom:0;width:320px;background:var(--white);border-left:1px solid var(--gray-200);overflow-y:auto;padding:1.5rem 1rem; }
+    .main-area { margin-left:60px;margin-right:320px;padding:1.5rem 1.75rem; }
+    @media(max-width:1100px){.player-sidebar-right{width:260px;}.main-area{margin-right:260px;}}
+    @media(max-width:900px){.player-sidebar-right{display:none;}.main-area{margin-right:0;}}
+    @media(max-width:600px){
+      .player-sidebar{width:48px;}
+      .player-sidebar a{width:34px;height:34px;font-size:1rem;}
+      .main-area{margin-left:48px;padding:1rem;}
+      .selector-row{gap:0.375rem;}
+    }
+    @media(max-width:400px){
+      .player-sidebar{display:none;}
+      .main-area{margin-left:0;padding:0.875rem;}
+    }
+    .quality-badge { position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.65);color:#fff;font-size:0.72rem;font-weight:700;padding:3px 8px;border-radius:4px;pointer-events:none;z-index:5; }
+    .video-wrap { position:relative;background:#000;border-radius:var(--radius-md);overflow:hidden; }
+    .video-wrap video { width:100%;display:block; }
+    .selector-row { display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-top:0.75rem; }
+    .selector-row .label { font-size:0.78rem;color:var(--gray-500);white-space:nowrap; }
+    .pill-btn { padding:3px 12px;border-radius:20px;border:1px solid var(--gray-300);background:var(--white);font-size:0.78rem;cursor:pointer;transition:all 0.15s; }
+    .pill-btn.active { background:var(--blue-primary);color:#fff;border-color:var(--blue-primary); }
+    .pill-btn:hover:not(.active) { background:var(--gray-100); }
+    .transcript-box { background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:1.5rem;text-align:center; }
+    /* Locked lesson overlay */
+    .locked-lesson { background:var(--gray-50);border:2px dashed var(--gray-300);border-radius:var(--radius-md);padding:3rem;text-align:center; }
+  </style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<div style="display:flex;min-height:100vh;">
+
+  <!-- Mini sidebar -->
+  <nav class="player-sidebar" aria-label="Course navigation">
+    <a href="./student-dashboard.html" aria-label="Go to Dashboard"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span></a>
+    <a href="#" class="active" aria-label="Courses" aria-current="page"><span class="material-symbols-outlined" aria-hidden="true">school</span></a>
+    <a href="#" aria-label="Notes"><span class="material-symbols-outlined" aria-hidden="true">note</span></a>
+    <a href="#" aria-label="Resources"><span class="material-symbols-outlined" aria-hidden="true">folder</span></a>
+    <a href="#" onclick="logout()" aria-label="Logout" style="margin-top:auto;"><span class="material-symbols-outlined" aria-hidden="true">logout</span></a>
+  </nav>
+
+  <!-- Main player -->
+  <main class="main-area" id="main-content">
+
+    <!-- Breadcrumb -->
+    <div style="font-size:0.78rem;color:var(--gray-500);margin-bottom:1rem;display:flex;gap:0.5rem;align-items:center;">
+      <a href="./student-dashboard.html" style="color:var(--gray-500);">COURSE HOME</a>
+      <span>›</span>
+      <span id="course-name-crumb" style="color:var(--gray-700);">Loading...</span>
+      <span>›</span>
+      <span id="lesson-name-crumb" style="color:var(--blue-primary);font-weight:600;">Lesson</span>
+    </div>
+
+    <!-- Adaptive banner -->
+    <div class="alert alert-info hidden" id="adaptive-banner" style="margin-bottom:1rem;font-size:0.84rem;"></div>
+
+    <!-- Mode selector -->
+    <div class="selector-row" style="margin-bottom:1rem;" role="group" aria-label="Lesson playback mode">
+      <span class="label" data-i18n="player.video" aria-hidden="true">Mode:</span>
+      <button class="pill-btn mode-btn active" data-mode="video" aria-pressed="true" aria-label="Switch to Video mode">
+        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;" aria-hidden="true">play_circle</span>
+        <span data-i18n="player.video">Video</span>
+      </button>
+      <button class="pill-btn mode-btn" data-mode="audio" aria-pressed="false" aria-label="Switch to Audio only mode">
+        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;" aria-hidden="true">volume_up</span>
+        <span data-i18n="player.audio">Audio</span>
+      </button>
+      <button class="pill-btn mode-btn" data-mode="pdf" aria-pressed="false" aria-label="Switch to PDF Transcript mode">
+        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;" aria-hidden="true">description</span>
+        <span data-i18n="player.pdf">Transcript PDF</span>
+      </button>
+    </div>
+
+    <!-- VIDEO SECTION -->
+    <div id="video-section" role="region" aria-label="Lesson video player">
+      <div class="video-wrap" id="video-container">
+        <video id="lesson-video" controls style="width:100%;" aria-label="Lesson video">Your browser does not support the video tag.</video>
+        <div class="quality-badge" id="quality-badge" aria-live="polite" aria-label="Current quality: 360p">360p</div>
+      </div>
+      <div class="selector-row" role="group" aria-label="Video quality selector">
+        <span class="label" data-i18n="player.quality" aria-hidden="true">Quality:</span>
+        <button class="pill-btn quality-btn active" data-quality="360p" aria-pressed="true" aria-label="Switch to 360p quality">360p</button>
+        <button class="pill-btn quality-btn" data-quality="480p" aria-pressed="false" aria-label="Switch to 480p quality">480p</button>
+        <button class="pill-btn quality-btn" data-quality="720p" aria-pressed="false" aria-label="Switch to 720p quality">720p</button>
+        <span style="font-size:0.72rem;color:var(--gray-400);margin-left:4px;" aria-hidden="true">(auto-adjusts to your connection)</span>
+      </div>
+    </div>
+
+    <!-- AUDIO SECTION -->
+    <div id="audio-section" class="hidden" role="region" aria-label="Audio only player">
+      <div style="background:#111;border-radius:var(--radius-md);padding:3rem;text-align:center;margin-bottom:1rem;">
+        <div style="font-size:4rem;margin-bottom:1rem;" aria-hidden="true"><span class="material-symbols-outlined" style="font-size:4rem;color:#fff;">music_note_2</span></div>
+        <h3 id="audio-lesson-title" style="color:#fff;margin-bottom:0.5rem;">Lesson Title</h3>
+        <p style="color:#aaa;font-size:0.82rem;margin-bottom:1.5rem;">Auto-generated audio track from lesson video</p>
+        <audio id="lesson-audio" controls style="width:100%;max-width:400px;"></audio>
+      </div>
+    </div>
+
+    <!-- PDF TRANSCRIPT SECTION -->
+    <div id="pdf-section" class="hidden" role="region" aria-label="Transcript PDF">
+      <div class="transcript-box">
+        <div style="font-size:4rem;margin-bottom:1rem;" aria-hidden="true"><span class="material-symbols-outlined" style="font-size:4rem;">description</span></div>
+        <h3 style="margin-bottom:0.5rem;">Lesson Transcript (PDF)</h3>
+        <p style="color:var(--gray-500);margin-bottom:0.5rem;font-size:0.88rem;">This transcript is automatically generated from the lesson video.</p>
+        <p style="color:var(--gray-400);margin-bottom:1.5rem;font-size:0.8rem;">Download it to study offline or when your connection is limited.</p>
+        <div id="transcript-actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg" onclick="downloadTranscript()" data-i18n="player.download">
+            ⬇ Download Transcript PDF
+          </button>
+          <a id="pdf-download-link" href="#" download class="btn btn-secondary btn-lg hidden">
+            ⬇ Download Uploaded Notes
+          </a>
+        </div>
+        <div id="transcript-status" style="margin-top:1rem;font-size:0.82rem;color:var(--gray-500);"></div>
+      </div>
+    </div>
+
+    <!-- Prev / Next -->
+    <div style="display:flex;justify-content:space-between;margin-top:1.5rem;gap:1rem;">
+      <button class="btn btn-secondary" id="btn-prev" onclick="navigateLesson(-1)" data-i18n="player.prev">← Previous</button>
+      <button class="btn btn-primary"   id="btn-next" onclick="navigateLesson(1)"  data-i18n="player.next">Next →</button>
+    </div>
+
+    <!-- Lesson info tabs -->
+    <div class="tabs" style="margin-top:2rem;">
+      <button class="tab-btn active" onclick="switchTab('overview')" data-i18n="player.overview">Overview</button>
+      <button class="tab-btn" onclick="switchTab('resources')"       data-i18n="player.resources">Resources</button>
+      <button class="tab-btn" onclick="switchTab('quiz')"            data-i18n="player.quiz">Quiz</button>
+    </div>
+
+    <div id="tab-overview" class="tab-pane active" style="padding-top:1rem;">
+      <h2 id="lesson-title" style="margin-bottom:0.75rem;">Loading...</h2>
+      <p id="lesson-description" style="color:var(--gray-600);line-height:1.7;"></p>
+    </div>
+
+    <div id="tab-resources" class="tab-pane" style="padding-top:1rem;">
+      <h3 style="margin-bottom:1rem;" data-i18n="player.resources">Downloadable Resources</h3>
+      <div id="materials-list" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+      <div id="no-resources" style="color:var(--gray-400);font-size:0.88rem;display:none;">No additional resources for this lesson.</div>
+    </div>
+
+    <div id="tab-quiz" class="tab-pane" style="padding-top:1rem;">
+      <h3 style="margin-bottom:1rem;" data-i18n="player.quiz">Lesson Quiz</h3>
+      <div id="quiz-container"><div class="loading-state"><div class="spinner"></div></div></div>
+    </div>
+
+  </main><!-- /main-area -->
+
+  <!-- Right sidebar -->
+  <div class="player-sidebar-right">
+    <div style="margin-bottom:1.5rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <strong style="font-size:0.9rem;" data-i18n="player.progress">Course Progress</strong>
+        <span id="progress-pct" style="color:var(--blue-primary);font-weight:600;">0%</span>
+      </div>
+      <div class="progress-bar" style="height:8px;"><div class="progress-fill" id="progress-bar" style="width:0%"></div></div>
+    </div>
+    <div>
+      <h4 style="font-size:0.85rem;font-weight:700;color:var(--gray-700);margin-bottom:0.75rem;">LESSONS</h4>
+      <div class="lesson-list" id="lesson-list"><div class="loading-state"><div class="spinner"></div></div></div>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <h4 style="font-size:0.85rem;font-weight:700;color:var(--gray-700);margin-bottom:0.75rem;" data-i18n="player.network">NETWORK STATUS</h4>
+      <div class="qoe-panel">
+        <div class="qoe-metric"><span class="qoe-label">Bandwidth</span><span class="qoe-value" id="qoe-bandwidth">–</span></div>
+        <div class="qoe-metric"><span class="qoe-label">Response</span><span class="qoe-value" id="qoe-response-time">–</span></div>
+        <div class="qoe-metric"><span class="qoe-label">Current Quality</span><span class="qoe-value" id="qoe-mode">–</span></div>
+      </div>
+      <div style="margin-top:0.5rem;font-size:0.75rem;color:var(--gray-500);" id="qoe-decision"></div>
+    </div>
+  </div>
+</div>
+<!-- Dark theme -->
+<script src="./js/theme-lang.js"></script>
+
+<script src="./js/auth.js"></script>
+<script src="./js/qoe.js"></script>
+<script src="./js/adaptiveVideo.js"></script>
+<script src="./js/chatbot.js"></script>
+<script src="./js/theme-lang.js"></script>
+<!-- Notification -->
+<script src="./js/notifications.js"></script>
+<script>
+  requireAuth('student');
+
+  const params          = new URLSearchParams(window.location.search);
+  const courseId        = params.get('courseId');
+  const initialLessonId = params.get('lessonId');
+  if (!courseId) window.location.href = './student-dashboard.html';
+
+  let lessons           = [];
+  let currentLessonIndex = 0;
+  let userChoseMode     = false;
+  let userChoseQuality  = false;
+
+  const init = async () => {
+    try {
+      const course = await apiGet('/api/student/courses/' + courseId);
+      document.getElementById('course-name-crumb').textContent = course.title || 'Course';
+
+      lessons = await apiGet('/api/student/courses/' + courseId + '/lessons');
+      if (!lessons.length) { showToast('No lessons in this course yet.', 'info'); return; }
+
+      if (initialLessonId) {
+        const idx = lessons.findIndex(l => l._id === initialLessonId);
+        if (idx >= 0) currentLessonIndex = idx;
+      }
+
+      renderLessonList();
+      loadLesson(lessons[currentLessonIndex]);
+
+      const prog = await apiGet('/api/student/progress/' + courseId).catch(() => null);
+      if (prog) updateProgressDisplay(prog);
+
+      startQoEMonitoring(courseId, lessons[currentLessonIndex]?._id);
+      trackVideoElement(document.getElementById('lesson-video'));
+      initModeSelector();
+      initQualitySelector();
+      loadQuiz();
+
+    } catch (e) { showToast('Failed to load course: ' + e.message, 'error'); }
+  };
+
+  const renderLessonList = () => {
+    const list = document.getElementById('lesson-list');
+    if (!lessons.length) { list.innerHTML = '<p style="color:var(--gray-400);">No lessons yet.</p>'; return; }
+    list.innerHTML = lessons.map((l, i) => {
+      const isFree   = l.isFree;
+      const isActive = i === currentLessonIndex;
+      const icon     = isActive ? '▶' : (i < currentLessonIndex ? '✓' : (isFree ? '🆓' : '🔒'));
+      const statusText = isActive ? 'Now playing' : (i < currentLessonIndex ? 'Completed' : (isFree ? 'Free preview' : 'Locked'));
+      return `<div class="lesson-item ${isActive ? 'active' : ''}" id="li-${i}"
+                   role="button" tabindex="0"
+                   aria-label="Lesson ${i+1}: ${l.title} — ${statusText}"
+                   aria-pressed="${isActive ? 'true' : 'false'}"
+                   onclick="selectLesson(${i})" style="cursor:pointer;"
+                   onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectLesson(${i});}">
+        <span class="lesson-status" aria-hidden="true">${icon}</span>
+        <div class="lesson-info">
+          <div class="lesson-title">${String(i+1).padStart(2,'0')}. ${l.title}</div>
+          <div class="lesson-duration">${l.duration || ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  };
+
+  window.selectLesson = (idx) => {
+    currentLessonIndex = idx;
+    userChoseMode    = false;
+    userChoseQuality = false;
+    renderLessonList();
+    loadLesson(lessons[idx]);
+    markLessonWatched(lessons[idx]._id);
+    loadQuiz();
+  };
+
+  window.navigateLesson = (dir) => {
+    const next = currentLessonIndex + dir;
+    if (next < 0 || next >= lessons.length) return;
+    selectLesson(next);
+    window.scrollTo(0, 0);
+  };
+
+  const markLessonWatched = async (lessonId) => {
+    try {
+      await apiPost('/api/student/progress', { courseId, lessonId, mode: currentMode });
+      const prog = await apiGet('/api/student/progress/' + courseId);
+      updateProgressDisplay(prog);
+    } catch {}
+  };
+
+  const updateProgressDisplay = (prog) => {
+    const pct = prog?.completionPercentage || 0;
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('progress-bar').style.width = pct + '%';
+  };
+
+  window.onQualityChanged = (quality) => {
+    const badge = document.getElementById('quality-badge');
+    if (badge) badge.textContent = quality;
+    const modeEl = document.getElementById('qoe-mode');
+    if (modeEl) modeEl.textContent = 'Video ' + quality;
+  };
+
+  window.downloadTranscript = async () => {
+    const lesson = lessons[currentLessonIndex];
+    if (!lesson) return;
+    const btn    = document.querySelector('#transcript-actions .btn-primary');
+    const status = document.getElementById('transcript-status');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating transcript...';
+    status.textContent = 'This may take up to 30 seconds for the first time.';
+    try {
+      const res = await fetch('/api/transcript/' + lesson._id, { headers: { Authorization: 'Bearer ' + getToken() } });
+      if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.message || 'Transcript not available yet'); }
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = lesson.title.replace(/[^a-z0-9]/gi, '_') + '-transcript.pdf'; a.click();
+      URL.revokeObjectURL(url);
+      status.textContent = '✅ Transcript downloaded!';
+    } catch (e) {
+      status.textContent = '⚠ ' + e.message;
+      showToast(e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = window.t ? t('player.download') : '⬇ Download Transcript PDF';
+    }
+  };
+
+  const loadQuiz = async () => {
+    const qc = document.getElementById('quiz-container');
+    qc.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    try {
+      const data = await authFetch('/api/student/courses/' + courseId + '/quizzes');
+      if (!data.ok) throw new Error();
+      const { quizzes, lastResults } = await data.json();
+      const quiz = quizzes[0];
+      if (!quiz || !quiz.questions?.length) {
+        qc.innerHTML = '<p style="color:var(--gray-400);">No quiz available for this course yet.</p>';
+        return;
+      }
+      const prevResult = lastResults && lastResults[quiz._id] ? lastResults[quiz._id] : null;
+      renderQuiz(quiz, prevResult);
+    } catch {
+      qc.innerHTML = '<p style="color:var(--gray-400);">No quiz available.</p>';
+    }
+  };
+
+  const renderQuiz = (quiz, prevResult) => {
+    const qc = document.getElementById('quiz-container');
+
+    const scoreColor = pct => pct >= 70 ? 'var(--green)' : pct >= 50 ? '#f59e0b' : 'var(--red)';
+    const scoreIcon  = pct => pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📖';
+
+    const prevHtml = prevResult
+      ? '<div style="margin-bottom:1.25rem;padding:1rem;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-50);">'
+        + '<div style="font-size:0.78rem;color:var(--gray-500);margin-bottom:0.35rem;">Your last attempt</div>'
+        + '<div style="font-size:1.5rem;font-weight:800;color:' + scoreColor(prevResult.percentage) + ';">'
+        + scoreIcon(prevResult.percentage) + ' ' + prevResult.percentage + '%</div>'
+        + '<div style="font-size:0.85rem;color:var(--gray-600);">'
+        + prevResult.score + ' / ' + prevResult.totalQuestions + ' correct &bull; Level: <strong>' + prevResult.recommendedDifficulty + '</strong></div>'
+        + '<button class="btn btn-secondary btn-sm" style="margin-top:0.75rem;" onclick="showQuizForm()">Retake Quiz</button>'
+        + '</div>'
+      : '';
+
+    const formHtml = '<form id="quiz-form" ' + (prevResult ? 'style="display:none;"' : '') + '>'
+      + '<h4 style="margin-bottom:1rem;">' + (quiz.title || 'Course Quiz') + '</h4>'
+      + quiz.questions.map((q, i) =>
+          '<div style="margin-bottom:1.5rem;">'
+          + '<p style="font-weight:600;margin-bottom:0.5rem;">' + (i+1) + '. ' + q.questionText + '</p>'
+          + q.options.map(opt =>
+              '<label style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;cursor:pointer;font-size:0.9rem;padding:0.4rem 0.6rem;border-radius:6px;border:1px solid var(--gray-200);" class="quiz-option-label">'
+              + '<input type="radio" name="q' + i + '" value="' + opt + '" style="accent-color:var(--blue-primary);" /> ' + opt
+              + '</label>'
+            ).join('')
+          + '</div>'
+        ).join('')
+      + '<button type="submit" class="btn btn-primary" style="width:100%;">Submit Quiz</button>'
+      + '<div id="quiz-result" style="margin-top:1rem;"></div>'
+      + '</form>';
+
+    qc.innerHTML = '<div id="quiz-prev-result">' + prevHtml + '</div>' + formHtml;
+
+    window.showQuizForm = () => {
+      document.getElementById('quiz-prev-result').style.display = 'none';
+      document.getElementById('quiz-form').style.display = '';
+    };
+
+    document.getElementById('quiz-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const unanswered = quiz.questions.findIndex((_, i) => !document.querySelector('input[name="q' + i + '"]:checked'));
+      if (unanswered !== -1) {
+        showToast('Please answer question ' + (unanswered + 1) + ' before submitting.', 'error');
+        return;
+      }
+      const answers = quiz.questions.map((_, i) => {
+        const sel = document.querySelector('input[name="q' + i + '"]:checked');
+        return sel ? sel.value : '';
+      });
+      const btn = e.target.querySelector('[type="submit"]');
+      btn.disabled = true; btn.textContent = 'Submitting...';
+      try {
+        const result = await apiPost('/api/student/quizzes/' + quiz._id + '/submit', {
+          answers, courseId, lessonId: lessons[currentLessonIndex]?._id,
+        });
+        // Replace form with result card — prevent re-submission
+        qc.innerHTML =
+          '<div style="text-align:center;padding:1.5rem;border-radius:12px;border:1px solid var(--gray-200);">'
+          + '<div style="font-size:3rem;margin-bottom:0.5rem;">' + scoreIcon(result.percentage) + '</div>'
+          + '<div style="font-size:2.5rem;font-weight:800;color:' + scoreColor(result.percentage) + ';">' + result.percentage + '%</div>'
+          + '<div style="font-size:1rem;color:var(--gray-600);margin-top:0.35rem;">'
+          + result.score + ' / ' + result.totalQuestions + ' correct</div>'
+          + '<div style="margin-top:0.75rem;padding:0.5rem 1rem;display:inline-block;border-radius:20px;background:var(--blue-lighter);color:var(--blue-dark);font-size:0.85rem;">'
+          + 'Recommended level: <strong>' + result.recommendedDifficulty + '</strong></div>'
+          + '<div style="margin-top:1.25rem;">'
+          + '<button class="btn btn-secondary" onclick="loadQuiz()">Retake Quiz</button>'
+          + '</div>'
+          + '</div>';
+      } catch (err) {
+        btn.disabled = false; btn.textContent = 'Submit Quiz';
+        showToast(err.message || 'Submission failed', 'error');
+      }
+    });
+  };
+
+  window.switchTab = (name) => {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const pane = document.getElementById('tab-' + name);
+    if (pane) pane.classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => { if (b.textContent.toLowerCase().includes(name.toLowerCase())) b.classList.add('active'); });
+  };
+
+  init();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
+<script>
+  axe.run().then(results => {
+    if (results.violations.length) {
+      console.group('EduAdapt Accessibility Issues (student-course):');
+      results.violations.forEach(v => {
+        console.warn(v.impact.toUpperCase() + ': ' + v.description);
+        console.log('Fix:', v.help);
+        console.log('Elements:', v.nodes.map(n => n.target));
+      });
+      console.groupEnd();
+    } else {
+      console.log('No accessibility issues found on student-course.');
+    }
+  });
+</script>
+</body>
+</html>

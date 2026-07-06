@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Email – EduAdapt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="public-nav">
+  <a href="./index.html" class="nav-logo">EduAdapt</a>
+  <div class="nav-cta">
+    <a href="./login.html" class="btn btn-secondary btn-sm">Log In</a>
+  </div>
+</nav>
+
+<main id="main-content">
+<div class="auth-page">
+  <div>
+    <div class="auth-card">
+      <div class="auth-card-top"><span class="material-symbols-outlined" id="status-icon">mark_email_read</span></div>
+      <div class="auth-card-body">
+        <div id="alert-box"></div>
+
+        <!-- If no token in URL — show resend form -->
+        <div id="resend-section">
+          <h1 class="auth-title" data-i18n="auth.verify_title">Verify Your Email</h1>
+          <p class="auth-subtitle" data-i18n="auth.verify_sub">Enter your email to receive a new verification link.</p>
+          <form id="resend-form">
+            <div class="form-group">
+              <label class="form-label" for="resend-email">Email Address</label>
+              <input type="email" id="resend-email" class="form-control"
+                placeholder="you@example.com" required autocomplete="email" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="resend-btn" data-i18n="auth.resend_btn">
+              Resend Verification Link
+            </button>
+          </form>
+          <div class="auth-footer-text" style="margin-top:1rem;">
+            <a href="./login.html">Back to Login</a>
+          </div>
+        </div>
+
+        <!-- Verification result (shown after token processed) -->
+        <div id="result-section" class="hidden">
+          <h1 class="auth-title" id="result-title">Verifying…</h1>
+          <p class="auth-subtitle" id="result-message">Please wait.</p>
+          <div id="result-actions" class="hidden" style="margin-top:1.5rem;">
+            <a href="./login.html" class="btn btn-primary btn-block btn-lg">Log In Now</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script src="./js/theme-lang.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token');
+
+  if (token) {
+    // Hide resend form, show result panel
+    document.getElementById('resend-section').classList.add('hidden');
+    document.getElementById('result-section').classList.remove('hidden');
+
+    fetch('/api/auth/verify-email?token=' + encodeURIComponent(token))
+      .then(r => r.json().then(d => ({ ok: r.ok, data: d })))
+      .then(({ ok, data }) => {
+        const icon = document.getElementById('status-icon');
+        const title = document.getElementById('result-title');
+        const msg   = document.getElementById('result-message');
+        const actions = document.getElementById('result-actions');
+        if (ok) {
+          icon.textContent  = 'verified';
+          icon.style.color  = 'var(--green)';
+          title.textContent = 'Email Verified!';
+          msg.textContent   = data.message;
+          actions.classList.remove('hidden');
+        } else {
+          icon.textContent  = 'error';
+          icon.style.color  = 'var(--red)';
+          title.textContent = 'Verification Failed';
+          msg.textContent   = data.message;
+          // Show resend option
+          document.getElementById('resend-section').classList.remove('hidden');
+        }
+      })
+      .catch(() => {
+        document.getElementById('result-title').textContent   = 'Network Error';
+        document.getElementById('result-message').textContent = 'Could not reach the server. Please try again.';
+      });
+  }
+
+  // Resend form
+  document.getElementById('resend-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById('alert-box');
+    const btn      = document.getElementById('resend-btn');
+    const email    = document.getElementById('resend-email').value.trim();
+    alertBox.innerHTML = '';
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const res  = await fetch('/api/auth/resend-verification', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      alertBox.innerHTML = `<div class="alert ${res.ok ? 'alert-success' : 'alert-error'}">${res.ok ? '✓' : '⚠'} ${data.message}</div>`;
+    } catch {
+      alertBox.innerHTML = '<div class="alert alert-error">⚠ Network error. Please try again.</div>';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Resend Verification Link';
+  });
+</script>
+</body>
+</html>

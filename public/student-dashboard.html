@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard – EduAdapt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<div id="accessibility-toolbar" role="toolbar" aria-label="Accessibility options">
+  <button onclick="toggleHighContrast()" aria-label="Toggle high contrast mode">High Contrast</button>
+  <button onclick="increaseFontSize()" aria-label="Increase font size">A+</button>
+  <button onclick="decreaseFontSize()" aria-label="Decrease font size">A-</button>
+</div>
+
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Student navigation">
+    <div class="sidebar-brand">
+      <div class="brand-name">EduAdapt</div>
+      <div class="brand-role user-display-role">Student</div>
+    </div>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <div class="nav-item active" id="nav-dashboard" role="button" tabindex="0"
+           onclick="showSection('dashboard')" aria-label="Dashboard" aria-current="page"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('dashboard');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span></span>
+        <span data-i18n="nav.dashboard">Dashboard</span>
+      </div>
+      <div class="nav-item" id="nav-courses" role="button" tabindex="0"
+           onclick="showSection('courses')" aria-label="My Courses"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('courses');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">book_2</span></span>
+        <span data-i18n="nav.my_courses">My Courses</span>
+      </div>
+      <div class="nav-item" id="nav-browse" role="button" tabindex="0"
+           onclick="showSection('browse')" aria-label="Browse Courses"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('browse');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">search</span></span>
+        <span data-i18n="nav.browse">Browse Courses</span>
+      </div>
+      <div class="nav-item" id="nav-progress" role="button" tabindex="0"
+           onclick="showSection('progress')" aria-label="My Progress"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('progress');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span></span>
+        <span data-i18n="nav.progress">My Progress</span>
+      </div>
+      <div class="nav-item" id="nav-qoe" role="button" tabindex="0"
+           onclick="showSection('qoe')" aria-label="Network and QoE"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('qoe');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">network_check</span></span>
+        <span data-i18n="nav.network">Network &amp; QoE</span>
+      </div>
+      <div class="nav-item" id="nav-feedback" role="button" tabindex="0"
+           onclick="showSection('feedback')" aria-label="Feedback"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('feedback');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
+        <span data-i18n="nav.feedback">Feedback</span>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <!-- theme/lang buttons injected here by theme-lang.js -->
+      <div class="nav-item" id="nav-settings" role="button" tabindex="0"
+           onclick="showSection('settings')" aria-label="Settings"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('settings');}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">settings</span></span>
+        <span data-i18n="nav.settings">Settings</span>
+      </div>
+      <div class="nav-item" role="button" tabindex="0"
+           onclick="logout()" aria-label="Logout"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();logout();}">
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">logout</span></span>
+        <span data-i18n="nav.logout">Logout</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Main -->
+  <div class="main-content">
+    <header class="top-header">
+      <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()"
+              aria-label="Toggle sidebar navigation" aria-expanded="false" aria-controls="sidebar">
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+      <div class="header-logo" aria-hidden="true">EduAdapt</div>
+      <nav class="header-nav" aria-label="Top navigation">
+        <a href="#" data-i18n="nav.explore">Explore</a>
+        <a href="#" class="active" data-i18n="nav.courses" aria-current="page">Courses</a>
+      </nav>
+      <div class="header-actions">
+        <!-- theme/lang buttons also injected here -->
+        <button class="header-icon-btn" aria-label="Open notifications" aria-haspopup="true" aria-expanded="false"><span class="material-symbols-outlined" aria-hidden="true">notifications</span></button>
+        <div class="header-avatar user-display-avatar" aria-hidden="true">S</div>
+      </div>
+    </header>
+
+    <div class="page-body" id="main-content">
+
+      <!-- Dashboard -->
+      <div id="section-dashboard">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">
+              <span data-i18n="std.welcome">Welcome back,</span>
+              <span class="user-display-name">Student</span> 👋
+            </h1>
+            <p class="page-subtitle">Your adaptive learning journey continues today.</p>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">book_2</span></div>
+            <div class="stat-label" data-i18n="std.enrolled">Courses Enrolled</div>
+            <div class="stat-value" id="stat-enrolled">–</div>
+            <div class="stat-sub">Active enrollments</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">check_circle</span></div>
+            <div class="stat-label" data-i18n="std.completed">Completed</div>
+            <div class="stat-value" id="stat-completed">–</div>
+            <div class="stat-sub">Courses finished</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">bar_chart</span></div>
+            <div class="stat-label" data-i18n="std.avg_progress">Avg. Progress</div>
+            <div class="stat-value" id="stat-progress">–%</div>
+            <div class="stat-sub">Across all courses</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">target</span></div>
+            <div class="stat-label" data-i18n="std.rec_level">Recommended Level</div>
+            <div class="stat-value" id="stat-level" style="font-size:1.25rem;text-transform:capitalize;">–</div>
+            <div class="stat-sub">Based on quiz results</div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="std.continue">Continue Learning</h2>
+            <span class="section-link" onclick="showSection('courses')" style="cursor:pointer;" data-i18n="std.view_all"
+                  role="button" tabindex="0" aria-label="View all my courses"
+                  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('courses');}">View all →</span>
+          </div>
+          <div class="grid-auto" id="recent-courses-grid">
+            <div class="loading-state"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Courses -->
+      <div id="section-courses" class="hidden">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="nav.my_courses">My Courses</h1>
+            <p class="page-subtitle">Courses you are enrolled in</p>
+          </div>
+          <button class="btn btn-primary" onclick="showSection('browse')" data-i18n="std.find_courses">+ Find Courses</button>
+        </div>
+        <div class="grid-auto" id="my-courses-grid">
+          <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- Browse Courses -->
+      <div id="section-browse" class="hidden">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="nav.browse">Browse Courses</h1>
+            <p class="page-subtitle">Explore all available approved courses</p>
+          </div>
+        </div>
+        <!-- Search + Filter Bar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center;">
+          <div style="flex:1;min-width:200px;position:relative;">
+            <span class="material-symbols-outlined" aria-hidden="true"
+              style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none;">search</span>
+            <input type="search" id="browse-search" class="form-control"
+              placeholder="Search courses…" aria-label="Search courses"
+              style="padding-left:36px;" oninput="debounceBrowse()" />
+          </div>
+          <select id="browse-level" class="form-control" style="max-width:160px;" onchange="loadBrowseCourses(1)" aria-label="Filter by difficulty">
+            <option value="">All Levels</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        <div class="grid-auto" id="browse-courses-grid">
+          <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+        <div id="browse-pagination"></div>
+      </div>
+
+      <!-- Progress -->
+      <div id="section-progress" class="hidden">
+        <div class="page-header">
+          <h1 class="page-title" data-i18n="nav.progress">My Progress</h1>
+        </div>
+        <div id="progress-list">
+          <div class="loading-state"><div class="spinner"></div></div>
+        </div>
+        <!-- Quiz History -->
+        <div class="section" style="margin-top:2rem;">
+          <div class="section-header">
+            <h2 class="section-title">Quiz History</h2>
+          </div>
+          <div id="quiz-history-list">
+            <div class="loading-state"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QoE -->
+      <div id="section-qoe" class="hidden">
+        <div class="page-header">
+          <h1 class="page-title" data-i18n="nav.network">Network & QoE</h1>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title" data-i18n="std.qoe_title">Live Network Status</h3>
+              <button class="btn btn-secondary btn-sm" onclick="runBandwidthTest()">
+                <span class="material-symbols-outlined">refresh</span> <span data-i18n="common.refresh">Test</span>
+              </button>
+            </div>
+            <div class="card-body qoe-panel">
+              <div class="qoe-metric"><span class="qoe-label" data-i18n="qoe.bandwidth">Bandwidth</span><span class="qoe-value" id="qoe-bandwidth">Measuring...</span></div>
+              <div class="qoe-metric"><span class="qoe-label" data-i18n="qoe.response">Response Time</span><span class="qoe-value" id="qoe-response-time">Measuring...</span></div>
+              <div class="qoe-metric"><span class="qoe-label">Interruptions</span><span class="qoe-value" id="qoe-interruptions">0</span></div>
+              <div class="qoe-metric"><span class="qoe-label" data-i18n="qoe.current_quality">Recommended Mode</span><span class="qoe-value" id="qoe-mode">–</span></div>
+              <div style="margin-top:1rem;padding:0.75rem;background:var(--blue-lighter);border-radius:var(--radius-sm);font-size:0.82rem;color:var(--blue-dark);" id="qoe-decision">Run a test to see your recommendation.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">QoE History</h3></div>
+            <div class="card-body" id="qoe-history-list">
+              <div class="loading-state"><div class="spinner"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div id="section-feedback" class="hidden">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="std.feedback_title">Share Your Feedback</h1>
+            <p class="page-subtitle" data-i18n="std.feedback_sub">Help us improve EduAdapt by rating your experience.</p>
+          </div>
+        </div>
+        <div class="two-col-grid" style="gap:1.5rem;align-items:start;">
+          <!-- Submit form -->
+          <div class="section">
+            <div class="section-header"><h2 class="section-title" data-i18n="std.feedback_title">Rate Your Experience</h2></div>
+            <div class="form-group">
+              <label class="form-label" id="star-rating-label" data-i18n="std.rating_label">Overall Rating</label>
+              <div class="star-rating" id="review-stars"
+                   role="radiogroup" aria-labelledby="star-rating-label" aria-required="true">
+                <span class="material-symbols-outlined star" data-value="1"
+                      role="radio" tabindex="0" aria-label="1 star: Poor" aria-checked="false"
+                      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">star</span>
+                <span class="material-symbols-outlined star" data-value="2"
+                      role="radio" tabindex="0" aria-label="2 stars: Below Average" aria-checked="false"
+                      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">star</span>
+                <span class="material-symbols-outlined star" data-value="3"
+                      role="radio" tabindex="0" aria-label="3 stars: Average" aria-checked="false"
+                      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">star</span>
+                <span class="material-symbols-outlined star" data-value="4"
+                      role="radio" tabindex="0" aria-label="4 stars: Good" aria-checked="false"
+                      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">star</span>
+                <span class="material-symbols-outlined star" data-value="5"
+                      role="radio" tabindex="0" aria-label="5 stars: Excellent" aria-checked="false"
+                      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">star</span>
+              </div>
+              <p style="font-size:0.8rem;color:var(--gray-500);margin-top:0.25rem;" id="review-rating-label" aria-live="polite" data-i18n="std.click_star">Click a star to rate</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="review-category" data-i18n="std.category">Category</label>
+              <select class="form-select" id="review-category">
+                <option value="overall">Overall Experience</option>
+                <option value="ui_ux">User Interface &amp; UX</option>
+                <option value="content">Course Content</option>
+                <option value="performance">Platform Performance</option>
+                <option value="support">Support &amp; Communication</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="review-comment">Comment <span style="color:var(--gray-400);font-weight:400;">(optional)</span></label>
+              <textarea class="form-input" id="review-comment" rows="4" maxlength="1000"
+                placeholder="Tell us what worked well and what could be better..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="submitReview()" data-i18n="std.submit_review">Submit Review</button>
+          </div>
+
+          <!-- Summary + previous review -->
+          <div>
+            <div class="section">
+              <div class="section-header"><h2 class="section-title" data-i18n="std.platform_ratings">Platform Ratings</h2></div>
+              <div id="review-summary-area"><div class="loading-state"><div class="spinner"></div></div></div>
+            </div>
+            <div class="section" style="margin-top:1.5rem;">
+              <div class="section-header"><h2 class="section-title" data-i18n="std.prev_review">Your Previous Review</h2></div>
+              <div id="my-review-area"><p class="text-gray" data-i18n="std.no_review">No review submitted yet.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div id="section-settings" class="hidden">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="nav.settings">Settings</h1>
+            <p class="page-subtitle" data-i18n="std.settings_sub">Update your profile and manage your account preferences.</p>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-header"><h2 class="section-title" data-i18n="settings.profile">Profile</h2></div>
+          <form id="student-settings-form" onsubmit="saveStudentProfile(event)" aria-label="Profile settings form">
+            <div class="form-group">
+              <label class="form-label" for="settings-fullname" data-i18n="settings.fullname">Full Name</label>
+              <input type="text" class="form-input" id="settings-fullname" name="fullName" required autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-email" data-i18n="settings.email">Email</label>
+              <input type="email" class="form-input" id="settings-email" disabled aria-disabled="true" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="settings-phone" data-i18n="settings.phone">Phone</label>
+              <input type="text" class="form-input" id="settings-phone" name="phone" placeholder="Optional phone number" autocomplete="tel" />
+            </div>
+            <div class="modal-actions" style="padding:0;margin-top:0.5rem;">
+              <button type="submit" class="btn btn-primary" data-i18n="common.save">Save Profile</button>
+            </div>
+          </form>
+          <div class="section" style="margin-top:1.5rem;">
+            <div class="section-header"><h2 class="section-title" data-i18n="std.change_password">Change Password</h2></div>
+            <form id="student-password-form" onsubmit="changeStudentPassword(event)" aria-label="Change password form">
+              <div class="form-group">
+                <label class="form-label" for="settings-current-password" data-i18n="std.current_pwd">Current Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-input" id="settings-current-password" required autocomplete="current-password" />
+                  <button type="button" class="password-toggle" onclick="togglePassword('settings-current-password', this)" tabindex="-1" aria-label="Toggle current password visibility">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-new-password" data-i18n="std.new_pwd">New Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-input" id="settings-new-password" required autocomplete="new-password" />
+                  <button type="button" class="password-toggle" onclick="togglePassword('settings-new-password', this)" tabindex="-1" aria-label="Toggle new password visibility">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="settings-confirm-password" data-i18n="std.confirm_pwd">Confirm New Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-input" id="settings-confirm-password" required autocomplete="new-password" />
+                  <button type="button" class="password-toggle" onclick="togglePassword('settings-confirm-password', this)" tabindex="-1" aria-label="Toggle confirm password visibility">
+                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  </button>
+                </div>
+              </div>
+              <div class="modal-actions" style="padding:0;margin-top:0.5rem;">
+                <button type="submit" class="btn btn-secondary" data-i18n="std.change_pwd_btn">Change Password</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ── Two-Factor Authentication ─────────────────────────────────── -->
+          <div class="section" style="margin-top:1.5rem;" id="twofa-settings-section">
+            <div class="section-header">
+              <h2 class="section-title">Two-Factor Authentication</h2>
+            </div>
+            <div id="twofa-status-card" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:1.25rem;">
+              <!-- content injected by load2FAStatus() -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PAYMENT MODAL ══════════════ -->
+<div class="modal-overlay" id="payment-modal" onclick="handlePaymentOverlayClick(event)" style="display:none;"
+     role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+  <div class="modal-card" style="max-width:460px;">
+    <div class="modal-header">
+      <h3 id="payment-modal-title" data-i18n="pay.title">Complete Payment</h3>
+      <button class="modal-close" onclick="closePaymentModal()" aria-label="Close payment modal">✕</button>
+    </div>
+
+    <!-- Course summary -->
+    <div style="background:var(--gray-50);border-radius:8px;padding:1rem;margin-bottom:1.25rem;border:1px solid var(--gray-200);">
+      <div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:4px;" data-i18n="pay.course">Course</div>
+      <div id="pay-course-title" style="font-weight:700;font-size:1rem;"></div>
+      <div style="margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-size:0.8rem;color:var(--gray-500);" data-i18n="pay.amount">Amount</span>
+        <span id="pay-amount" style="font-size:1.25rem;font-weight:800;color:var(--blue-primary);"></span>
+      </div>
+    </div>
+
+    <!-- Provider selection -->
+    <div class="form-group">
+      <label class="form-label" data-i18n="pay.method">Payment Method</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.5rem;"
+           role="radiogroup" aria-label="Select payment provider">
+        <div class="role-card selected" id="pay-mtn-btn"
+             role="radio" aria-checked="true" tabindex="0"
+             onclick="selectProvider('mtn')" style="padding:1rem;cursor:pointer;"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProvider('mtn');}">
+          <div style="font-size:1.5rem;" aria-hidden="true">📱</div>
+          <div style="font-weight:700;font-size:0.85rem;margin-top:4px;" data-i18n="pay.mtn">MTN Mobile Money</div>
+        </div>
+        <div class="role-card" id="pay-orange-btn"
+             role="radio" aria-checked="false" tabindex="0"
+             onclick="selectProvider('orange')" style="padding:1rem;cursor:pointer;"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProvider('orange');}">
+          <div style="font-size:1.5rem;" aria-hidden="true">🟠</div>
+          <div style="font-weight:700;font-size:0.85rem;margin-top:4px;" data-i18n="pay.orange">Orange Money</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone number -->
+    <div class="form-group">
+      <label class="form-label" for="pay-phone" data-i18n="pay.phone">Mobile Money Number</label>
+      <input type="tel" class="form-input" id="pay-phone"
+             placeholder="677000000" maxlength="9"
+             aria-describedby="pay-phone-hint"
+             style="font-size:1.1rem;letter-spacing:0.05em;"
+             autocomplete="tel" />
+      <small class="form-hint" id="pay-phone-hint" data-i18n="pay.phone_hint">Enter your MTN or Orange number (e.g. 677000000)</small>
+    </div>
+
+    <!-- Status message -->
+    <div id="pay-status" style="display:none;margin-bottom:1rem;"></div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closePaymentModal()" data-i18n="common.cancel">Cancel</button>
+      <button class="btn btn-primary" id="pay-confirm-btn" onclick="confirmPayment()" data-i18n="pay.confirm">Pay Now</button>
+    </div>
+
+    <p style="font-size:0.75rem;color:var(--gray-400);text-align:center;margin-top:0.75rem;">
+      🔒 Secured by Fapshi. You will receive a prompt on your phone to confirm.
+    </p>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container" class="toast-container"></div>
+<!-- Dark theme -->
+<script src="./js/theme-lang.js"></script>
+
+<script src="./js/auth.js"></script>
+<script src="./js/twofa.js"></script>
+<script src="./js/qoe.js"></script>
+<script src="./js/chatbot.js"></script>
+<script src="./js/theme-lang.js"></script>
+<!-- Notification -->
+<script src="./js/notifications.js"></script>
+<script>
+  requireAuth('student');
+  setUserDisplay();
+
+  let enrolledCourseIds = new Set();
+
+  const refreshEnrolledCourseIds = async () => {
+    try {
+      const enrollments = await apiGet('/api/student/enrollments');
+      enrolledCourseIds = new Set(
+        enrollments.map(e => String(e.courseId?._id || e.courseId || '')).filter(Boolean)
+      );
+      return enrollments;
+    } catch {
+      enrolledCourseIds = new Set();
+      return [];
+    }
+  };
+
+  // ── Section navigation ────────────────────────────────────────────────────
+  const sections = ['dashboard','courses','browse','progress','qoe','feedback','settings'];
+  window.showSection = (name) => {
+    sections.forEach(s => {
+      document.getElementById('section-' + s).classList.toggle('hidden', s !== name);
+      const nav = document.getElementById('nav-' + s);
+      if (nav) nav.classList.toggle('active', s === name);
+    });
+    if (name === 'courses')  loadMyCourses();
+    if (name === 'browse')   loadBrowseCourses();
+    if (name === 'progress') { loadProgress(); loadQuizHistory(); }
+    if (name === 'qoe')      { runBandwidthTest(); loadQoEHistory(); }
+    if (name === 'feedback') initFeedbackSection();
+    if (name === 'settings') { loadStudentSettings(); if (typeof load2FAStatus === 'function') load2FAStatus(); }
+  };
+
+  // ── Course card renderer ──────────────────────────────────────────────────
+  const courseCard = (c, enrolled) => {
+    if (!c || !c._id) return '';
+    const safeTitle = String(c.title || '').replace(/"/g, '&quot;');
+    const thumb = c.thumbnail
+      ? '<img src="' + c.thumbnail + '" alt="' + safeTitle + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"/>'
+      : '📚';
+
+    // Price tag
+    const isFree = c.isFree || !c.price || c.price === 0;
+    const priceTag = isFree
+      ? '<div style="font-size:0.82rem;font-weight:700;color:var(--green);margin-top:4px;">🆓 ' + (window.t ? t('common.free') : 'Free') + '</div>'
+      : '<div style="font-size:0.82rem;font-weight:700;color:var(--blue-primary);margin-top:4px;">💰 ' + c.price.toLocaleString() + ' XAF</div>';
+
+    const action = enrolled
+      ? '<a href="./student-course.html?courseId=' + c._id + '" class="btn btn-primary btn-sm btn-block" style="margin-top:1rem;" data-i18n="std.continue_btn">Continue →</a>'
+      : '<button type="button" class="btn btn-outline btn-sm btn-block" style="margin-top:1rem;" onclick="doEnroll(\'' + c._id + '\',\'' + safeTitle + '\',' + (c.price || 0) + ',' + (c.isFree ? 'true' : 'false') + ')" data-i18n="std.enroll">Enroll</button>';
+
+    return '<div class="course-card">'
+      + '<div class="course-card-thumb">' + thumb + '</div>'
+      + '<div class="course-card-body">'
+      + '<div class="course-card-category">' + (c.category || 'General') + '</div>'
+      + '<div class="course-card-title">' + (c.title || '') + '</div>'
+      + priceTag
+      + '<div class="course-card-meta"><span class="badge badge-blue">' + (c.difficultyLevel || 'beginner') + '</span></div>'
+      + action
+      + '</div></div>';
+  };
+
+  // ── Accessibility helpers ─────────────────────────────────────────────────
+  const srAnnounce = (text) => {
+    const el = document.getElementById('sr-announcer');
+    if (el) { el.textContent = ''; setTimeout(() => { el.textContent = text; }, 50); }
+  };
+
+  // ── Payment modal state ───────────────────────────────────────────────────
+  let pendingPayment = { courseId: null, courseTitle: '', price: 0, provider: 'mtn', transId: null };
+
+  let _paymentModalOpener = null;
+
+  const selectProvider = (p) => {
+    pendingPayment.provider = p;
+    document.getElementById('pay-mtn-btn').classList.toggle('selected', p === 'mtn');
+    document.getElementById('pay-orange-btn').classList.toggle('selected', p === 'orange');
+    document.getElementById('pay-mtn-btn').setAttribute('aria-checked', String(p === 'mtn'));
+    document.getElementById('pay-orange-btn').setAttribute('aria-checked', String(p === 'orange'));
+  };
+
+  const openPaymentModal = (courseId, courseTitle, price) => {
+    pendingPayment = { courseId, courseTitle, price, provider: 'mtn', transId: null };
+    document.getElementById('pay-course-title').textContent = courseTitle;
+    document.getElementById('pay-amount').textContent = price.toLocaleString() + ' XAF';
+    document.getElementById('pay-phone').value = '';
+    document.getElementById('pay-status').style.display = 'none';
+    document.getElementById('pay-confirm-btn').disabled = false;
+    document.getElementById('pay-confirm-btn').textContent = window.t ? t('pay.confirm') : 'Pay Now';
+    selectProvider('mtn');
+    _paymentModalOpener = document.activeElement;
+    const modal = document.getElementById('payment-modal');
+    modal.style.display = 'flex';
+    trapFocus(modal);
+  };
+
+  const closePaymentModal = () => {
+    document.getElementById('payment-modal').style.display = 'none';
+    if (_paymentModalOpener) { _paymentModalOpener.focus(); _paymentModalOpener = null; }
+  };
+
+  function trapFocus(modal) {
+    const focusable = modal.querySelectorAll(
+      'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (first) first.focus();
+    modal._trapHandler = (e) => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus();
+        }
+      }
+      if (e.key === 'Escape') closePaymentModal();
+    };
+    modal.addEventListener('keydown', modal._trapHandler);
+  }
+
+  const handlePaymentOverlayClick = (e) => {
+    if (e.target.id === 'payment-modal') closePaymentModal();
+  };
+
+  const setPayStatus = (msg, type = 'info') => {
+    const el = document.getElementById('pay-status');
+    const bg = { info: 'var(--blue-lighter)', success: 'var(--green-light)', error: 'var(--red-light)' };
+    const fg = { info: 'var(--blue-dark)', success: 'var(--green)', error: 'var(--red)' };
+    el.style.cssText = 'display:block;padding:0.75rem;border-radius:8px;font-size:0.875rem;background:' + bg[type] + ';color:' + fg[type] + ';';
+    el.textContent = msg;
+  };
+
+  const confirmPayment = async () => {
+    const phone = document.getElementById('pay-phone').value.trim();
+    if (!phone || phone.length < 9) { setPayStatus('Please enter a valid 9-digit phone number.', 'error'); return; }
+
+    const btn = document.getElementById('pay-confirm-btn');
+    btn.disabled = true;
+    btn.textContent = window.t ? t('pay.processing') : 'Processing...';
+    setPayStatus('Sending payment request to your phone...', 'info');
+
+    try {
+      const res  = await authFetch('/api/payments/initiate', {
+        method: 'POST',
+        body:   JSON.stringify({ courseId: pendingPayment.courseId, phone, provider: pendingPayment.provider }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) { setPayStatus(data.message || 'Payment failed.', 'error'); btn.disabled = false; btn.textContent = window.t ? t('pay.confirm') : 'Pay Now'; return; }
+
+      pendingPayment.transId = data.transId;
+      setPayStatus('📱 Check your phone! Confirm the Mobile Money prompt within 2 minutes.', 'info');
+      btn.textContent = 'Confirming...';
+
+      let attempts = 0;
+      const poll = setInterval(async () => {
+        attempts++;
+        try {
+          const vRes  = await authFetch('/api/payments/verify/' + pendingPayment.transId);
+          const vData = await vRes.json();
+
+          if (vData.status === 'successful') {
+            clearInterval(poll);
+            setPayStatus(window.t ? t('pay.success') : '✅ Payment successful! You are now enrolled.', 'success');
+            enrolledCourseIds.add(String(pendingPayment.courseId));
+            setTimeout(() => { closePaymentModal(); loadDashboard(); loadBrowseCourses(); showToast('Enrolled successfully!', 'success'); }, 1800);
+          } else if (vData.status === 'failed') {
+            clearInterval(poll);
+            setPayStatus('Payment failed or cancelled. Please try again.', 'error');
+            btn.disabled = false; btn.textContent = window.t ? t('pay.confirm') : 'Pay Now';
+          } else if (attempts >= 24) {
+            clearInterval(poll);
+            setPayStatus('Payment timed out. If you confirmed on your phone, enrollment will be processed shortly.', 'error');
+            btn.disabled = false; btn.textContent = window.t ? t('pay.confirm') : 'Pay Now';
+          }
+        } catch {}
+      }, 5000);
+
+    } catch (e) {
+      setPayStatus(e.message || 'Network error. Please try again.', 'error');
+      btn.disabled = false; btn.textContent = window.t ? t('pay.confirm') : 'Pay Now';
+    }
+  };
+
+  // ── Enroll (handles both free and paid) ───────────────────────────────────
+  window.doEnroll = async (courseId, courseTitle, price, isFree) => {
+    if (!courseId) return;
+
+    // Free course — confirm then enroll directly
+    if (isFree || !price || price === 0) {
+      const ok = window.confirm('Enroll in "' + courseTitle + '"?');
+      if (!ok) return;
+      try {
+        await apiPost('/api/student/courses/' + courseId + '/enroll', {});
+        enrolledCourseIds.add(String(courseId));
+        showToast('Enrolled successfully!', 'success');
+        srAnnounce('Successfully enrolled in ' + courseTitle);
+        loadBrowseCourses(); loadDashboard();
+      } catch (e) { showToast((e && e.message) ? e.message : 'Enrollment failed.', 'error'); }
+      return;
+    }
+
+    // Paid course — check with server first then open payment modal
+    try {
+      const res  = await authFetch('/api/student/courses/' + courseId + '/enroll', { method: 'POST', body: JSON.stringify({}) });
+      const data = await res.json();
+
+      if (res.status === 402 && data.paymentRequired) {
+        openPaymentModal(courseId, courseTitle, data.price);
+        return;
+      }
+      if (res.status === 400 && data.message?.includes('Already enrolled')) {
+        showToast('You are already enrolled in this course.', 'info'); return;
+      }
+      if (!res.ok) throw new Error(data.message || 'Enrollment failed');
+
+      enrolledCourseIds.add(String(courseId));
+      showToast('Enrolled successfully!', 'success');
+      srAnnounce('Successfully enrolled in ' + courseTitle);
+      loadBrowseCourses(); loadDashboard();
+    } catch (e) { showToast((e && e.message) ? e.message : 'Enrollment failed.', 'error'); }
+  };
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────
+  const loadDashboard = async () => {
+    try {
+      const stats = await apiGet('/api/student/dashboard');
+      document.getElementById('stat-enrolled').textContent  = stats.totalEnrollments  ?? 0;
+      document.getElementById('stat-completed').textContent = stats.completedCourses  ?? 0;
+      document.getElementById('stat-progress').textContent  = (stats.avgProgress      ?? 0) + '%';
+      document.getElementById('stat-level').textContent     = stats.recommendedDifficulty ?? '–';
+    } catch { showToast('Failed to load dashboard stats', 'error'); }
+
+    const grid = document.getElementById('recent-courses-grid');
+    try {
+      const enrollments = await refreshEnrolledCourseIds();
+      if (!enrollments.length) {
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div>'
+          + '<p>' + (window.t ? t('std.no_enrolled') : 'No enrolled courses yet.') + ' '
+          + '<span style="color:var(--blue-primary);cursor:pointer;" onclick="showSection(\'browse\')">'
+          + (window.t ? t('std.browse_cta') : 'Browse courses →') + '</span></p></div>';
+        return;
+      }
+      const cards = enrollments.filter(e => e.courseId && e.courseId._id).map(e => courseCard(e.courseId, true));
+      grid.innerHTML = cards.length ? cards.join('') : '<p class="text-gray">Could not load course details.</p>';
+    } catch { grid.innerHTML = '<p class="text-gray">Could not load courses.</p>'; }
+  };
+
+  // ── My Courses ────────────────────────────────────────────────────────────
+  const loadMyCourses = async () => {
+    const grid = document.getElementById('my-courses-grid');
+    grid.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    try {
+      const enrollments = await apiGet('/api/student/enrollments');
+      if (!enrollments.length) {
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>You have not enrolled in any courses yet.</p></div>'; return;
+      }
+      const cards = enrollments.filter(e => e.courseId && e.courseId._id).map(e => courseCard(e.courseId, true));
+      grid.innerHTML = cards.length ? cards.join('') : '<p class="text-gray">No course details available.</p>';
+    } catch { grid.innerHTML = '<p class="text-gray">Failed to load courses.</p>'; }
+  };
+
+  // ── Browse ────────────────────────────────────────────────────────────────
+  let browseDebounceTimer = null;
+  const debounceBrowse = () => {
+    clearTimeout(browseDebounceTimer);
+    browseDebounceTimer = setTimeout(() => loadBrowseCourses(1), 350);
+  };
+
+  const loadBrowseCourses = async (page = 1) => {
+    const grid   = document.getElementById('browse-courses-grid');
+    const pagEl  = document.getElementById('browse-pagination');
+    const search = (document.getElementById('browse-search')?.value || '').trim();
+    const level  = document.getElementById('browse-level')?.value || '';
+
+    grid.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    if (pagEl) pagEl.innerHTML = '';
+
+    try {
+      await refreshEnrolledCourseIds();
+      const params = new URLSearchParams({ page, limit: 12 });
+      if (search) params.set('search', search);
+      if (level)  params.set('level', level);
+
+      const r = await apiGet('/api/student/courses?' + params.toString());
+      const courses = r.courses || r;
+
+      if (!courses.length) {
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No courses found. Try a different search.</p></div>';
+        return;
+      }
+      grid.innerHTML = courses.map(c => courseCard(c, enrolledCourseIds.has(String(c._id)))).join('');
+
+      // Pagination controls
+      if (pagEl && r.pages > 1) {
+        const prev = page > 1;
+        const next = page < r.pages;
+        pagEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;justify-content:center;padding:16px 0;">
+            <button class="btn btn-sm btn-secondary" ${prev ? '' : 'disabled'} onclick="loadBrowseCourses(${page - 1})">← Prev</button>
+            <span style="font-size:0.875rem;color:var(--gray-600);">Page ${page} of ${r.pages} (${r.total} courses)</span>
+            <button class="btn btn-sm btn-secondary" ${next ? '' : 'disabled'} onclick="loadBrowseCourses(${page + 1})">Next →</button>
+          </div>`;
+      }
+    } catch { grid.innerHTML = '<p class="text-gray">Failed to load courses.</p>'; showToast('Unable to load courses. Please refresh.', 'error'); }
+  };
+
+  window.loadBrowseCourses = loadBrowseCourses;
+
+  // ── Progress ──────────────────────────────────────────────────────────────
+  const loadProgress = async () => {
+    const list = document.getElementById('progress-list');
+    list.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    try {
+      const enrollments = await apiGet('/api/student/enrollments');
+      if (!enrollments.length) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>Enroll in courses to track progress.</p></div>'; return;
+      }
+      const rows = await Promise.all(enrollments.map(async (e) => {
+        if (!e.courseId || !e.courseId._id) return '';
+        let prog = { completionPercentage: 0, completedLessons: [] };
+        try { prog = await apiGet('/api/student/progress/' + e.courseId._id); } catch {}
+        const pct  = prog.completionPercentage || 0;
+        const done = (prog.completedLessons || []).length;
+        return '<div class="card" style="margin-bottom:1rem;"><div class="card-body">'
+          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;">'
+          + '<strong>' + (e.courseId.title || 'Course') + '</strong>'
+          + '<span class="badge badge-blue">' + pct + '%</span></div>'
+          + '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%"></div></div>'
+          + '<p style="font-size:0.8rem;color:var(--gray-500);margin-top:0.5rem;">' + done + ' lessons completed</p>'
+          + '</div></div>';
+      }));
+      list.innerHTML = rows.filter(Boolean).join('') || '<p class="text-gray">No progress data yet.</p>';
+    } catch { list.innerHTML = '<p class="text-gray">Failed to load progress.</p>'; }
+  };
+
+  // ── Quiz History ──────────────────────────────────────────────────────────
+  const loadQuizHistory = async () => {
+    const el = document.getElementById('quiz-history-list');
+    if (!el) return;
+    el.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+    try {
+      const results = await apiGet('/api/student/quiz-results');
+      if (!results.length) {
+        el.innerHTML = '<p class="text-gray" style="padding:1rem 0;">No quiz attempts yet. Take a quiz from a course lesson.</p>';
+        return;
+      }
+      const scoreColor = pct => pct >= 70 ? 'var(--green)' : pct >= 50 ? '#f59e0b' : 'var(--red,#e11d48)';
+      el.innerHTML = '<div style="display:flex;flex-direction:column;gap:0.75rem;">'
+        + results.map(r => {
+            const quizTitle  = r.quizId?.title  || 'Quiz';
+            const courseTitle = r.courseId?.title || 'Course';
+            const pct = r.percentage || 0;
+            return '<div style="display:flex;align-items:center;gap:1rem;padding:0.875rem 1rem;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);">'
+              + '<div style="min-width:56px;text-align:center;font-size:1.5rem;font-weight:800;color:' + scoreColor(pct) + ';">' + pct + '%</div>'
+              + '<div style="flex:1;">'
+              + '<div style="font-weight:600;font-size:0.9rem;">' + quizTitle + '</div>'
+              + '<div style="font-size:0.78rem;color:var(--gray-500);">' + courseTitle + '</div>'
+              + '</div>'
+              + '<div style="text-align:right;font-size:0.78rem;color:var(--gray-500);">'
+              + r.score + '/' + r.totalQuestions + '<br>'
+              + '<span class="badge badge-secondary" style="font-size:0.7rem;">' + (r.recommendedDifficulty || 'beginner') + '</span>'
+              + '</div>'
+              + '</div>';
+          }).join('')
+        + '</div>';
+    } catch {
+      el.innerHTML = '<p class="text-gray">Failed to load quiz history.</p>';
+    }
+  };
+
+  // ── Settings ──────────────────────────────────────────────────────────────
+  const loadStudentSettings = async () => {
+    try {
+      const user = await apiGet('/api/auth/me');
+      document.getElementById('settings-fullname').value = user.fullName || '';
+      document.getElementById('settings-email').value    = user.email   || '';
+      document.getElementById('settings-phone').value    = user.phone   || '';
+    } catch { showToast('Failed to load profile data', 'error'); }
+  };
+
+  const saveStudentProfile = async (event) => {
+    event.preventDefault();
+    try {
+      const result = await apiPatchForm('/api/auth/profile', new FormData(document.getElementById('student-settings-form')));
+      setAuth(getToken(), result.user); setUserDisplay();
+      showToast(result.message || 'Profile saved', 'success');
+    } catch (e) { showToast(e.message || 'Failed to save profile', 'error'); }
+  };
+
+  const changeStudentPassword = async (event) => {
+    event.preventDefault();
+    const currentPassword = document.getElementById('settings-current-password').value.trim();
+    const newPassword     = document.getElementById('settings-new-password').value.trim();
+    const confirmPassword = document.getElementById('settings-confirm-password').value.trim();
+    try {
+      const result = await apiPatch('/api/auth/password', { currentPassword, newPassword, confirmPassword });
+      document.getElementById('settings-current-password').value = '';
+      document.getElementById('settings-new-password').value     = '';
+      document.getElementById('settings-confirm-password').value = '';
+      showToast(result.message || 'Password updated', 'success');
+    } catch (e) { showToast(e.message || 'Failed to update password', 'error'); }
+  };
+
+  // ── QoE ───────────────────────────────────────────────────────────────────
+  const loadQoEHistory = async () => {
+    const list = document.getElementById('qoe-history-list');
+    try {
+      const records = await apiGet('/api/qoe/my-records');
+      if (!records.length) { list.innerHTML = '<p class="text-gray">No QoE records yet.</p>'; return; }
+      list.innerHTML = records.slice(0, 10).map(r =>
+        '<div style="padding:0.5rem 0;border-bottom:1px solid var(--gray-100);font-size:0.82rem;">'
+        + '<div style="display:flex;justify-content:space-between;">'
+        + '<span>' + r.selectedMode.toUpperCase() + ' — ' + (r.selectedVideoQuality || 'N/A') + '</span>'
+        + '<span class="text-gray">' + formatDate(r.createdAt) + '</span></div>'
+        + '<div class="text-gray">' + r.bandwidthSpeed + ' Mbps | ' + r.responseTime + 'ms</div>'
+        + '</div>'
+      ).join('');
+    } catch { list.innerHTML = '<p class="text-gray">Could not load QoE history.</p>'; }
+  };
+
+  const runBandwidthTest = async () => {
+    document.getElementById('qoe-bandwidth').textContent = 'Testing...';
+    await estimateBandwidth();
+    updateQoEPanel();
+  };
+
+  // ── Feedback / Review ─────────────────────────────────────────────────────
+  const RATING_LABELS = { 1:'Poor', 2:'Below Average', 3:'Average', 4:'Good', 5:'Excellent' };
+  let _selectedRating = 0;
+
+  const _updateStars = (val) => {
+    document.querySelectorAll('#review-stars .star').forEach(s => {
+      s.classList.toggle('active', Number(s.dataset.value) <= val);
+    });
+    document.getElementById('review-rating-label').textContent =
+      val ? RATING_LABELS[val] + ' (' + val + '/5)' : 'Click a star to rate';
+  };
+
+  document.querySelectorAll('#review-stars .star').forEach(star => {
+    star.addEventListener('click',       () => { _selectedRating = Number(star.dataset.value); _updateStars(_selectedRating); });
+    star.addEventListener('mouseenter',  () => _updateStars(Number(star.dataset.value)));
+    star.addEventListener('mouseleave',  () => _updateStars(_selectedRating));
+  });
+
+  const initFeedbackSection = async () => {
+    await Promise.all([loadMyReview(), loadReviewSummary()]);
+  };
+
+  const loadMyReview = async () => {
+    const area = document.getElementById('my-review-area');
+    try {
+      const r = await apiGet('/api/reviews/my');
+      if (!r) { area.innerHTML = '<p class="text-gray">No review submitted yet.</p>'; return; }
+      _selectedRating = r.rating;
+      _updateStars(r.rating);
+      document.getElementById('review-category').value = r.category || 'overall';
+      document.getElementById('review-comment').value  = r.comment  || '';
+      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      area.innerHTML = `<div style="padding:0.75rem;background:var(--gray-50);border-radius:8px;border:1px solid var(--gray-200);">
+        <div style="font-size:1.25rem;color:#f59e0b;letter-spacing:2px;">${stars}</div>
+        <div style="font-size:0.8rem;color:var(--gray-500);margin-top:4px;">${RATING_LABELS[r.rating]} • ${r.category}</div>
+        ${r.comment ? `<p style="margin-top:0.5rem;font-size:0.875rem;">"${r.comment}"</p>` : ''}
+        <div style="font-size:0.75rem;color:var(--gray-400);margin-top:0.5rem;">Submitted ${formatDate(r.createdAt)}</div>
+      </div>`;
+    } catch { area.innerHTML = '<p class="text-gray">Could not load your review.</p>'; }
+  };
+
+  const loadReviewSummary = async () => {
+    const area = document.getElementById('review-summary-area');
+    try {
+      const s = await apiGet('/api/reviews/summary');
+      if (!s.total) { area.innerHTML = '<p class="text-gray">No ratings yet — be the first!</p>'; return; }
+      const filled = Math.round(s.avgRating);
+      const stars  = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+      area.innerHTML = `<div style="text-align:center;margin-bottom:1rem;">
+        <div style="font-size:2.5rem;font-weight:800;color:#f59e0b;">${s.avgRating}</div>
+        <div style="font-size:1.25rem;color:#f59e0b;letter-spacing:2px;">${stars}</div>
+        <div style="font-size:0.8rem;color:var(--gray-500);margin-top:2px;">${s.total} review${s.total !== 1 ? 's' : ''}</div>
+      </div>` +
+      [5,4,3,2,1].map(n => {
+        const count = s.distribution?.[n] ?? 0;
+        const pct   = s.total ? Math.round((count / s.total) * 100) : 0;
+        return `<div class="rating-bar-row">
+          <span class="rating-bar-label">${n} ★</span>
+          <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
+          <span class="rating-bar-count">${count}</span>
+        </div>`;
+      }).join('');
+    } catch { area.innerHTML = '<p class="text-gray">Could not load ratings.</p>'; }
+  };
+
+  window.submitReview = async () => {
+    if (!_selectedRating) { showToast('Please select a star rating first.', 'error'); return; }
+    const payload = {
+      rating:   _selectedRating,
+      category: document.getElementById('review-category').value,
+      comment:  document.getElementById('review-comment').value.trim(),
+    };
+    try {
+      await apiPost('/api/reviews', payload);
+      showToast('Thank you for your feedback!', 'success');
+      await initFeedbackSection();
+    } catch (e) { showToast(e.message || 'Failed to submit review', 'error'); }
+  };
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  loadDashboard();
+</script>
+
+<script>
+  /* ── Sidebar toggle for mobile ── */
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const isOpen = sidebar.classList.toggle('open');
+    overlay.classList.toggle('show', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeSidebar() {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+  });
+  window.addEventListener('resize', () => { if (window.innerWidth > 768) closeSidebar(); });
+
+  // ── Accessibility toolbar ─────────────────────────────────────────────────
+  (function initA11yToolbar() {
+    if (localStorage.getItem('highContrast') === 'true') document.body.classList.add('high-contrast');
+    const savedSize = localStorage.getItem('fontSize');
+    if (savedSize) document.body.style.fontSize = savedSize;
+  })();
+
+  window.toggleHighContrast = () => {
+    const enabled = document.body.classList.toggle('high-contrast');
+    localStorage.setItem('highContrast', String(enabled));
+    srAnnounce(enabled ? 'High contrast mode enabled' : 'High contrast mode disabled');
+  };
+  window.increaseFontSize = () => {
+    const current = parseFloat(getComputedStyle(document.body).fontSize);
+    const next = Math.min(current + 2, 24) + 'px';
+    document.body.style.fontSize = next;
+    localStorage.setItem('fontSize', next);
+    srAnnounce('Font size increased');
+  };
+  window.decreaseFontSize = () => {
+    const current = parseFloat(getComputedStyle(document.body).fontSize);
+    const next = Math.max(current - 2, 12) + 'px';
+    document.body.style.fontSize = next;
+    localStorage.setItem('fontSize', next);
+    srAnnounce('Font size decreased');
+  };
+
+  // Sync star aria-checked on click
+  document.querySelectorAll('#review-stars .star').forEach(star => {
+    star.addEventListener('click', () => {
+      const val = parseInt(star.dataset.value, 10);
+      document.querySelectorAll('#review-stars .star').forEach(s => {
+        s.setAttribute('aria-checked', String(parseInt(s.dataset.value, 10) === val));
+      });
+    });
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
+<script>
+  axe.run().then(results => {
+    if (results.violations.length) {
+      console.group('EduAdapt Accessibility Issues (student-dashboard):');
+      results.violations.forEach(v => {
+        console.warn(v.impact.toUpperCase() + ': ' + v.description);
+        console.log('Fix:', v.help);
+        console.log('Elements:', v.nodes.map(n => n.target));
+      });
+      console.groupEnd();
+    } else {
+      console.log('No accessibility issues found on student-dashboard.');
+    }
+  });
+</script>
+</body>
+</html>

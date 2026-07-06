@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account – EduAdapt</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<nav class="public-nav">
+  <a href="./index.html" class="nav-logo">EduAdapt</a>
+  <div class="nav-links"><a href="./index.html" data-i18n="nav.explore">Explore</a><a href="./index.html#courses" data-i18n="nav.courses">Courses</a></div>
+  <div class="nav-cta">
+    <a href="./login.html" class="btn btn-secondary btn-sm" data-i18n="nav.login">Log In</a>
+  </div>
+  <button class="mobile-nav-toggle" id="mobile-nav-toggle" onclick="toggleMobileNav()"
+          aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+    <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+  </button>
+</nav>
+<div class="mobile-nav-menu" id="mobile-nav-menu">
+  <a href="./index.html">Explore</a>
+  <a href="./index.html#courses">Courses</a>
+  <div class="mobile-nav-cta">
+    <a href="./login.html" class="btn btn-secondary btn-sm">Log In</a>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="auth-page">
+  <div class="auth-card" style="max-width:520px;">
+    <div class="auth-card-top"><span class="material-symbols-outlined">school</span></div>
+    <div class="auth-card-body">
+      <h1 class="auth-title" data-i18n="auth.create_title">Create Account</h1>
+      <p class="auth-subtitle" data-i18n="auth.create_sub">Join EduAdapt and start your adaptive learning journey today.</p>
+
+      <div id="alert-box"></div>
+
+      <!-- Role Selection -->
+      <div class="form-group">
+        <label class="form-label" id="role-group-label" data-i18n="auth.choose_role">Choose Your Role</label>
+        <div class="role-cards" role="radiogroup" aria-labelledby="role-group-label">
+          <div class="role-card selected" id="card-student"
+               role="radio" aria-checked="true" tabindex="0"
+               onclick="selectRole('student')"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('student');}">
+            <div class="role-icon"><span class="material-symbols-outlined" aria-hidden="true">school</span></div>
+            <div class="role-name" data-i18n="auth.student">Student</div>
+          </div>
+          <div class="role-card" id="card-instructor"
+               role="radio" aria-checked="false" tabindex="0"
+               onclick="selectRole('instructor')"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectRole('instructor');}">
+            <div class="role-icon"><span class="material-symbols-outlined" aria-hidden="true">person</span></div>
+            <div class="role-name" data-i18n="auth.instructor">Instructor</div>
+          </div>
+        </div>
+        <input type="hidden" id="selected-role" value="student" />
+      </div>
+
+      <form id="register-form" aria-label="Create account form">
+        <div class="form-group">
+          <label class="form-label" for="fullName" data-i18n="auth.fullname">Full Name</label>
+          <input type="text" id="fullName" class="form-control" placeholder="Alex Mbah" required autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email" data-i18n="auth.email">Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="alex@example.com" required autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password" data-i18n="auth.password">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" class="form-control" placeholder="••••••••" required minlength="8" autocomplete="new-password" />
+            <button type="button" class="password-toggle" onclick="togglePassword('password', this)" tabindex="-1" aria-label="Toggle password visibility">
+              <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+            </button>
+          </div>
+          <p class="form-help" style="margin-top:4px;">At least 8 characters with one uppercase letter and one number.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword" data-i18n="auth.confirm_pwd">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="confirmPassword" class="form-control" placeholder="••••••••" required autocomplete="new-password" />
+            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword', this)" tabindex="-1" aria-label="Toggle password visibility">
+              <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Instructor only: verification document -->
+        <div class="form-group hidden" id="verification-section">
+          <label class="form-label" for="verificationDocument" data-i18n="auth.verify_doc">Verification Document <span style="color:var(--red)" aria-hidden="true">*</span><span class="sr-only">(required for instructors)</span></label>
+          <input type="file" id="verificationDocument" class="form-control"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+          <p class="form-help" id="verification-hint">Upload a valid ID, teaching certificate, or institutional letter (PDF, DOC, JPG, PNG)</p>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.875rem;cursor:pointer;" for="terms-check">
+            <input type="checkbox" id="terms-check" required />
+            I agree to the <a href="#" style="color:var(--blue-primary)">Terms of Service</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="register-btn" data-i18n="auth.register_btn">
+          Create Account →
+        </button>
+      </form>
+
+      <div class="auth-footer-text">
+        <span data-i18n="auth.have_account">Already have an account?</span> <a href="./login.html" data-i18n="nav.login">Login</a>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+<!-- Dark theme -->
+<script src="./js/theme-lang.js"></script>
+
+<script src="./js/auth.js"></script>
+<script>
+  function toggleMobileNav() {
+    const menu = document.getElementById('mobile-nav-menu');
+    const btn  = document.getElementById('mobile-nav-toggle');
+    const isOpen = menu.classList.toggle('show');
+    btn.querySelector('.material-symbols-outlined').textContent = isOpen ? 'close' : 'menu';
+    btn.setAttribute('aria-expanded', String(isOpen));
+    btn.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+  }
+  document.querySelectorAll('.mobile-nav-menu a').forEach(a => {
+    a.addEventListener('click', () => {
+      document.getElementById('mobile-nav-menu').classList.remove('show');
+      const btn = document.getElementById('mobile-nav-toggle');
+      btn.querySelector('.material-symbols-outlined').textContent = 'menu';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open navigation menu');
+    });
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.7.0/axe.min.js"></script>
+<script>
+  axe.run().then(results => {
+    if (results.violations.length) {
+      console.group('EduAdapt Accessibility Issues:');
+      results.violations.forEach(v => {
+        console.warn(v.impact.toUpperCase() + ': ' + v.description);
+        console.log('Fix:', v.help);
+        console.log('Elements:', v.nodes.map(n => n.target));
+      });
+      console.groupEnd();
+    } else {
+      console.log('No accessibility issues found on this page.');
+    }
+  });
+</script>
+<script>
+  redirectIfLoggedIn();
+
+  let selectedRole = 'student';
+
+  const selectRole = (role) => {
+    selectedRole = role;
+    document.getElementById('selected-role').value = role;
+    document.getElementById('card-student').classList.toggle('selected', role === 'student');
+    document.getElementById('card-instructor').classList.toggle('selected', role === 'instructor');
+    document.getElementById('card-student').setAttribute('aria-checked', String(role === 'student'));
+    document.getElementById('card-instructor').setAttribute('aria-checked', String(role === 'instructor'));
+    const verSection = document.getElementById('verification-section');
+    verSection.classList.toggle('hidden', role !== 'instructor');
+  };
+
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const alertBox = document.getElementById('alert-box');
+    const btn = document.getElementById('register-btn');
+    alertBox.innerHTML = '';
+
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const terms = document.getElementById('terms-check').checked;
+    const docFile = document.getElementById('verificationDocument').files[0];
+
+    if (!terms) {
+      alertBox.innerHTML = '<div class="alert alert-error">⚠ You must agree to the Terms of Service.</div>';
+      return;
+    }
+
+    if (selectedRole === 'instructor' && !docFile) {
+      alertBox.innerHTML = '<div class="alert alert-error">⚠ Please upload a verification document (ID, teaching certificate, or institutional letter) to register as an instructor.</div>';
+      document.getElementById('verification-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('fullName', fullName);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('confirmPassword', confirmPassword);
+    formData.append('role', selectedRole);
+    if (docFile) formData.append('verificationDocument', docFile);
+
+    btn.disabled = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+      const res = await fetch('/api/auth/register', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (!res.ok) {
+        alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+        btn.disabled = false;
+        btn.textContent = 'Create Account →';
+        return;
+      }
+
+      alertBox.innerHTML = `<div class="alert alert-success">✓ ${data.message}</div>`;
+      btn.textContent = 'Account created!';
+      setTimeout(() => { window.location.href = './login.html'; }, 1800);
+    } catch (err) {
+      alertBox.innerHTML = '<div class="alert alert-error">⚠ Network error. Please try again.</div>';
+      btn.disabled = false;
+      btn.textContent = 'Create Account →';
+    }
+  });
+</script>
+</body>
+</html>
