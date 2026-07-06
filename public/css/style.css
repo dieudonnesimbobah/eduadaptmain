@@ -1691,48 +1691,6 @@ body.dark-mode .star-rating .star:hover  { color: #fcd34d; }
   border-color: var(--blue-primary, #1d4ed8);
 }
 
-/* ─── High contrast mode ─────────────────────────────────────────────────── */
-body.high-contrast {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-}
-body.high-contrast a { color: #ffff00 !important; }
-body.high-contrast button,
-body.high-contrast .btn {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-}
-body.high-contrast input,
-body.high-contrast select,
-body.high-contrast textarea {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-}
-body.high-contrast .card,
-body.high-contrast .modal-card,
-body.high-contrast .stat-card,
-body.high-contrast .section,
-body.high-contrast .course-card,
-body.high-contrast .sidebar,
-body.high-contrast .top-header {
-  background-color: #111111 !important;
-  border: 1px solid #ffffff !important;
-  color: #ffffff !important;
-}
-body.high-contrast .nav-item { color: #ffffff !important; }
-body.high-contrast .form-label { color: #cccccc !important; }
-body.high-contrast .badge { color: #ffffff !important; border: 1px solid #ffffff !important; }
-body.high-contrast #accessibility-toolbar {
-  background: #111 !important;
-  border-color: #ffffff !important;
-}
-body.high-contrast #accessibility-toolbar button {
-  background: #000 !important;
-  color: #ffff00 !important;
-  border-color: #ffff00 !important;
-}
 
 /* ─── Lesson-item keyboard focus ─────────────────────────────────────────── */
 .lesson-item[role="button"]:focus-visible {

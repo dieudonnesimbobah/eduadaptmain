@@ -12,7 +12,6 @@
 <div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
 <div id="accessibility-toolbar" role="toolbar" aria-label="Accessibility options">
-  <button onclick="toggleHighContrast()" aria-label="Toggle high contrast mode">High Contrast</button>
   <button onclick="increaseFontSize()" aria-label="Increase font size">A+</button>
   <button onclick="decreaseFontSize()" aria-label="Decrease font size">A-</button>
 </div>
@@ -726,15 +725,9 @@
     if (el) { el.textContent = ''; setTimeout(() => { el.textContent = text; }, 50); }
   };
   (function initA11yToolbar() {
-    if (localStorage.getItem('highContrast') === 'true') document.body.classList.add('high-contrast');
     const savedSize = localStorage.getItem('fontSize');
     if (savedSize) document.body.style.fontSize = savedSize;
   })();
-  window.toggleHighContrast = () => {
-    const enabled = document.body.classList.toggle('high-contrast');
-    localStorage.setItem('highContrast', String(enabled));
-    srAnnounce(enabled ? 'High contrast mode enabled' : 'High contrast mode disabled');
-  };
   window.increaseFontSize = () => {
     const current = parseFloat(getComputedStyle(document.body).fontSize);
     const next = Math.min(current + 2, 24) + 'px';
