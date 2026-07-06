@@ -1,5 +1,6 @@
 // utils/mailer.js — Nodemailer transporter + email helpers
 const nodemailer = require('nodemailer');
+const dns        = require('dns');
 
 const buildTransporter = () =>
   nodemailer.createTransport({
@@ -11,7 +12,8 @@ const buildTransporter = () =>
       pass: process.env.MAIL_PASS,
     },
     tls: { rejectUnauthorized: false },
-    family: 4, // force IPv4 — Railway containers have no IPv6 outbound
+    // Force IPv4 DNS — Railway containers have no IPv6 outbound
+    dnsLookup: (addr, options, callback) => dns.lookup(addr, { ...options, family: 4 }, callback),
   });
 
 // Verify SMTP connection on server startup — logs result, never throws

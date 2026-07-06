@@ -116,6 +116,9 @@ const startServer = async () => {
     maxAge: 86400,
   };
 
+  // Trust Railway's reverse proxy so rate-limiter sees real client IPs
+  app.set('trust proxy', 1);
+
   app.use(cors(corsOptions));
   app.options('*', cors(corsOptions));
 
