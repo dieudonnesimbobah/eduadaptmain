@@ -302,11 +302,7 @@
   // ── Fetch all notifications ─────────────────────────────────────────────────
   const loadNotifications = async () => {
     try {
-      const token = typeof getToken === 'function' ? getToken() : null;
-      if (!token) return;
-      const res = await fetch('/api/notifications', {
-        headers: { Authorization: 'Bearer ' + token }
-      });
+      const res = await fetch('/api/notifications', { credentials: 'include' });
       if (!res.ok) return;
       notifications = await res.json();
       renderList();
@@ -317,11 +313,7 @@
   // ── Fetch unread count only (for background poll) ───────────────────────────
   const loadUnreadCount = async () => {
     try {
-      const token = typeof getToken === 'function' ? getToken() : null;
-      if (!token) return;
-      const res = await fetch('/api/notifications/unread-count', {
-        headers: { Authorization: 'Bearer ' + token }
-      });
+      const res = await fetch('/api/notifications/unread-count', { credentials: 'include' });
       if (!res.ok) return;
       const { count } = await res.json();
       updateBadge(count);
@@ -331,13 +323,10 @@
   // ── Click a notification → mark read → navigate ─────────────────────────────
   window.notifClick = async (id, link) => {
     try {
-      const token = typeof getToken === 'function' ? getToken() : null;
-      if (token) {
-        await fetch('/api/notifications/' + id + '/read', {
-          method: 'PATCH',
-          headers: { Authorization: 'Bearer ' + token }
-        });
-      }
+      await fetch('/api/notifications/' + id + '/read', {
+        method: 'PATCH',
+        credentials: 'include'
+      });
       // Update locally
       const n = notifications.find(x => x._id === id);
       if (n) n.read = true;
@@ -365,11 +354,9 @@
   // ── Mark all read ────────────────────────────────────────────────────────────
   window.notifMarkAllRead = async () => {
     try {
-      const token = typeof getToken === 'function' ? getToken() : null;
-      if (!token) return;
       await fetch('/api/notifications/mark-all-read', {
         method: 'PATCH',
-        headers: { Authorization: 'Bearer ' + token }
+        credentials: 'include'
       });
       notifications.forEach(n => n.read = true);
       renderList();

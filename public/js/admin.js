@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   requireAuth(['admin']);
   setUserDisplay();
   await loadDashboard();
+  // Navigate to ?section= if the page was opened via a notification link
+  const urlSection = new URLSearchParams(window.location.search).get('section');
+  if (urlSection) showSection(urlSection);
 });
 
 // ─── Section Navigation ───────────────────────────────────────────────────────
