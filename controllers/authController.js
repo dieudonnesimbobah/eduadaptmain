@@ -136,7 +136,8 @@ const login = async (req, res) => {
       return res.status(403).json({ message: 'Your account has been deactivated' });
     }
 
-    if (!user.isEmailVerified) {
+    // Instructors are identity-verified by admin approval — skip email check for them
+    if (user.role !== 'instructor' && !user.isEmailVerified) {
       return res.status(403).json({
         message: 'Please verify your email before logging in. Check your inbox or request a new verification link.',
         code: 'EMAIL_NOT_VERIFIED',
