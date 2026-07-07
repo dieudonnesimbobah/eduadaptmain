@@ -75,15 +75,15 @@
     <div class="selector-row" style="margin-bottom:1rem;" role="group" aria-label="Lesson playback mode">
       <span class="label" data-i18n="player.video" aria-hidden="true">Mode:</span>
       <button class="pill-btn mode-btn active" data-mode="video" aria-pressed="true" aria-label="Switch to Video mode">
-        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;" aria-hidden="true">play_circle</span>
+        <span class="material-symbols-outlined" style="font-size:0.9rem;" aria-hidden="true">play_circle</span>
         <span data-i18n="player.video">Video</span>
       </button>
       <button class="pill-btn mode-btn" data-mode="audio" aria-pressed="false" aria-label="Switch to Audio only mode">
-        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;" aria-hidden="true">volume_up</span>
+        <span class="material-symbols-outlined" style="font-size:0.9rem;" aria-hidden="true">volume_up</span>
         <span data-i18n="player.audio">Audio</span>
       </button>
       <button class="pill-btn mode-btn" data-mode="pdf" aria-pressed="false" aria-label="Switch to PDF Transcript mode">
-        <span class="material-symbols-outlined" style="font-size:0.9rem;vertical-align:middle;" aria-hidden="true">description</span>
+        <span class="material-symbols-outlined" style="font-size:0.9rem;" aria-hidden="true">description</span>
         <span data-i18n="player.pdf">Transcript PDF</span>
       </button>
     </div>
@@ -140,7 +140,7 @@
     </div>
 
     <!-- Prev / Next -->
-    <div style="display:flex;justify-content:space-between;margin-top:1.5rem;gap:1rem;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;gap:1rem;">
       <button class="btn btn-secondary" id="btn-prev" onclick="navigateLesson(-1)" data-i18n="player.prev">← Previous</button>
       <button class="btn btn-primary"   id="btn-next" onclick="navigateLesson(1)"  data-i18n="player.next">Next →</button>
     </div>
@@ -251,7 +251,7 @@
     list.innerHTML = lessons.map((l, i) => {
       const isFree   = l.isFree;
       const isActive = i === currentLessonIndex;
-      const icon     = isActive ? '▶' : (i < currentLessonIndex ? '&#10003;' : (isFree ? '<i class="fas fa-tag"></i>' : '<i class="fas fa-lock"></i>'));
+      const icon     = isActive ? '<i class="fas fa-circle-play"></i>' : (i < currentLessonIndex ? '<i class="fas fa-circle-check" style="color:var(--green);"></i>' : (isFree ? '<i class="fas fa-tag"></i>' : '<i class="fas fa-lock"></i>'));
       const statusText = isActive ? 'Now playing' : (i < currentLessonIndex ? 'Completed' : (isFree ? 'Free preview' : 'Locked'));
       return `<div class="lesson-item ${isActive ? 'active' : ''}" id="li-${i}"
                    role="button" tabindex="0"
@@ -376,7 +376,7 @@
           + '<p style="font-weight:600;margin-bottom:0.5rem;">' + (i+1) + '. ' + escHtml(q.questionText) + '</p>'
           + q.options.map(opt =>
               '<label style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;cursor:pointer;font-size:0.9rem;padding:0.4rem 0.6rem;border-radius:6px;border:1px solid var(--gray-200);" class="quiz-option-label">'
-              + '<input type="radio" name="q' + i + '" value="' + escHtml(opt) + '" style="accent-color:var(--blue-primary);" /> ' + escHtml(opt)
+              + '<input type="radio" name="q' + i + '" value="' + escHtml(opt) + '" style="accent-color:var(--blue-primary);" /><span>' + escHtml(opt) + '</span>'
               + '</label>'
             ).join('')
           + '</div>'

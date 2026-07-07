@@ -161,10 +161,7 @@ function renderUserTable(users, tbodyId, filter) {
       <td>
         <div style="display:flex;align-items:center;gap:10px;">
           <div class="user-avatar" style="width:34px;height:34px;font-size:0.85rem;">${(u.fullName||'?')[0].toUpperCase()}</div>
-          <div>
-            <div style="font-weight:600;">${esc(u.fullName)}</div>
-            <div style="font-size:0.8rem;color:var(--gray-500);">${esc(u.email)}</div>
-          </div>
+          <div style="font-weight:600;">${esc(u.fullName)}</div>
         </div>
       </td>
       <td>${esc(u.email)}</td>
@@ -173,9 +170,11 @@ function renderUserTable(users, tbodyId, filter) {
       <td><span class="badge ${u.isActive ? 'badge-success' : 'badge-danger'}">${u.isActive ? '● ACTIVE' : '● INACTIVE'}</span></td>
       <td>
         ${u.role !== 'admin' ? `
-          <button class="btn-icon" title="${u.isActive ? 'Deactivate' : 'Activate'}"
-            onclick="toggleUserStatus('${u._id}',${u.isActive})"><i class="fas ${u.isActive ? 'fa-ban' : 'fa-circle-check'}"></i></button>
-          <button class="btn-icon" title="Delete" onclick="deleteUser('${u._id}')"><i class="fas fa-trash"></i></button>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <button class="btn-icon" title="${u.isActive ? 'Deactivate' : 'Activate'}"
+              onclick="toggleUserStatus('${u._id}',${u.isActive})"><i class="fas ${u.isActive ? 'fa-ban' : 'fa-circle-check'}"></i></button>
+            <button class="btn-icon" title="Delete" onclick="deleteUser('${u._id}')"><i class="fas fa-trash"></i></button>
+          </div>
         ` : '<span style="color:var(--gray-400);">–</span>'}
       </td>
     </tr>`).join('');
@@ -279,12 +278,14 @@ function renderInstructors(filter = 'all') {
           : '<span style="color:var(--gray-400);">No document</span>'}
       </td>
       <td>
-        ${i.approvalStatus === 'pending' ? `
-          <button class="btn btn-sm btn-success" onclick="approveInstructor('${i._id}')">Approve</button>
-          <button class="btn btn-sm btn-danger"  onclick="openRejectModal('instructor','${i._id}','${esc(i.fullName)}')">Reject</button>
-        ` : i.approvalStatus === 'approved' ? `
-          <button class="btn btn-sm btn-secondary" onclick="openRejectModal('instructor','${i._id}','${esc(i.fullName)}')">Revoke</button>
-        ` : '<span class="badge badge-danger">Rejected</span>'}
+        <div style="display:flex;align-items:center;gap:4px;">
+          ${i.approvalStatus === 'pending' ? `
+            <button class="btn btn-sm btn-success" onclick="approveInstructor('${i._id}')">Approve</button>
+            <button class="btn btn-sm btn-danger"  onclick="openRejectModal('instructor','${i._id}','${esc(i.fullName)}')">Reject</button>
+          ` : i.approvalStatus === 'approved' ? `
+            <button class="btn btn-sm btn-secondary" onclick="openRejectModal('instructor','${i._id}','${esc(i.fullName)}')">Revoke</button>
+          ` : '<span class="badge badge-danger">Rejected</span>'}
+        </div>
       </td>
     </tr>`).join('');
 }
@@ -333,15 +334,17 @@ function renderCourses(filter = 'all') {
       <td><span class="badge badge-secondary">${c.difficultyLevel || '–'}</span></td>
       <td><span class="badge ${statusBadge(c.approvalStatus)}">${c.approvalStatus}</span></td>
       <td>
-        <button class="btn-icon" title="View Lessons" onclick="viewCourseLessons('${c._id}','${esc(c.title)}')"><i class="fas fa-list"></i></button>
-        ${c.approvalStatus === 'pending' ? `
-          <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')">Approve</button>
-          <button class="btn btn-sm btn-danger"  onclick="openRejectModal('course','${c._id}','${esc(c.title)}')">Reject</button>
-        ` : c.approvalStatus === 'approved' ? `
-          <button class="btn btn-sm btn-secondary" onclick="openRejectModal('course','${c._id}','${esc(c.title)}')">Revoke</button>
-        ` : `
-          <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')">Re-Approve</button>
-        `}
+        <div style="display:flex;align-items:center;gap:4px;">
+          <button class="btn-icon" title="View Lessons" onclick="viewCourseLessons('${c._id}','${esc(c.title)}')"><i class="fas fa-list"></i></button>
+          ${c.approvalStatus === 'pending' ? `
+            <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')">Approve</button>
+            <button class="btn btn-sm btn-danger"  onclick="openRejectModal('course','${c._id}','${esc(c.title)}')">Reject</button>
+          ` : c.approvalStatus === 'approved' ? `
+            <button class="btn btn-sm btn-secondary" onclick="openRejectModal('course','${c._id}','${esc(c.title)}')">Revoke</button>
+          ` : `
+            <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')">Re-Approve</button>
+          `}
+        </div>
       </td>
     </tr>`).join('');
 }
@@ -498,7 +501,7 @@ async function loadQoE() {
         <td>${r.sessionInterruptions??0}</td>
         <td><span class="badge ${r.selectedMode==='video'?'badge-info':'badge-warning'}">${r.selectedMode||'–'}</span></td>
         <td>${r.selectedVideoQuality||'–'}</td>
-        <td style="font-size:0.8rem;max-width:200px;">${esc(r.adaptiveDecision||'–')}</td>
+        <td style="font-size:0.8rem;width:200px;max-width:none;">${esc(r.adaptiveDecision||'–')}</td>
         <td>${formatDate(r.createdAt)}</td>
       </tr>`).join('');
   } catch { tbody.innerHTML = '<tr><td colspan="9" class="table-empty">' + (window.t ? t('common.error') : 'Error loading QoE records.') + '</td></tr>'; }
@@ -527,7 +530,7 @@ async function loadLogs(page = 1) {
         </td>
         <td><span class="badge ${roleBadge(l.role)}">${l.role||'–'}</span></td>
         <td><code style="font-size:0.8rem;background:var(--gray-100);padding:2px 6px;border-radius:4px;">${esc(l.action)}</code></td>
-        <td style="font-size:0.88rem;max-width:300px;">${esc(l.description||'–')}</td>
+        <td style="font-size:0.88rem;width:300px;max-width:none;">${esc(l.description||'–')}</td>
         <td style="font-size:0.85rem;">${formatDate(l.createdAt)}</td>
       </tr>`).join('');
     renderPagination('logs-pagination', r.pages || 1, page, loadLogs);
@@ -633,7 +636,7 @@ function renderReviewsTable(reviews) {
       <td><span class="badge ${roleBadge(user.role || '')}">${(user.role || '–').toUpperCase()}</span></td>
       <td style="color:#f59e0b;letter-spacing:1px;">${stars}</td>
       <td>${esc(CATEGORY_LABELS[r.category] || r.category)}</td>
-      <td style="max-width:260px;word-break:break-word;">${esc(r.comment || '–')}</td>
+      <td style="width:260px;max-width:none;word-break:break-word;">${esc(r.comment || '–')}</td>
       <td>${formatDate(r.createdAt)}</td>
       <td><button class="btn-icon" title="Delete review" onclick="deleteReview('${r._id}')"><i class="fas fa-trash"></i></button></td>
     </tr>`;

@@ -223,7 +223,7 @@
             <div class="card-header">
               <h3 class="card-title" data-i18n="std.qoe_title">Live Network Status</h3>
               <button class="btn btn-secondary btn-sm" onclick="runBandwidthTest()">
-                <span class="material-symbols-outlined">refresh</span> <span data-i18n="common.refresh">Test</span>
+                <span class="material-symbols-outlined">refresh</span><span data-i18n="common.refresh">Test</span>
               </button>
             </div>
             <div class="card-body qoe-panel">
@@ -332,7 +332,7 @@
               <label class="form-label" for="settings-phone" data-i18n="settings.phone">Phone</label>
               <input type="text" class="form-input" id="settings-phone" name="phone" placeholder="Optional phone number" autocomplete="tel" />
             </div>
-            <div class="modal-actions" style="padding:0;margin-top:0.5rem;">
+            <div class="modal-actions" style="padding:0;margin-top:0.5rem;border-top:none;">
               <button type="submit" class="btn btn-primary" data-i18n="common.save">Save Profile</button>
             </div>
           </form>
@@ -416,14 +416,14 @@
              role="radio" aria-checked="true" tabindex="0"
              onclick="selectProvider('mtn')" style="padding:1rem;cursor:pointer;"
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProvider('mtn');}">
-          <div style="font-size:1.5rem;" aria-hidden="true"><i class="fas fa-mobile-screen"></i></div>
+          <div style="font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.5rem;" aria-hidden="true"><i class="fas fa-mobile-screen"></i></div>
           <div style="font-weight:700;font-size:0.85rem;margin-top:4px;" data-i18n="pay.mtn">MTN Mobile Money</div>
         </div>
         <div class="role-card" id="pay-orange-btn"
              role="radio" aria-checked="false" tabindex="0"
              onclick="selectProvider('orange')" style="padding:1rem;cursor:pointer;"
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProvider('orange');}">
-          <div style="font-size:1.5rem;" aria-hidden="true"><i class="fas fa-circle" style="color:#ff7900;"></i></div>
+          <div style="font-size:1.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:0.5rem;" aria-hidden="true"><i class="fas fa-circle" style="color:#ff7900;"></i></div>
           <div style="font-weight:700;font-size:0.85rem;margin-top:4px;" data-i18n="pay.orange">Orange Money</div>
         </div>
       </div>
@@ -512,8 +512,8 @@
     // Price tag
     const isFree = c.isFree || !c.price || c.price === 0;
     const priceTag = isFree
-      ? '<div style="font-size:0.82rem;font-weight:700;color:var(--green);margin-top:4px;"><i class="fas fa-tag"></i> ' + (window.t ? t('common.free') : 'Free') + '</div>'
-      : '<div style="font-size:0.82rem;font-weight:700;color:var(--blue-primary);margin-top:4px;"><i class="fas fa-coins"></i> ' + c.price.toLocaleString() + ' XAF</div>';
+      ? '<div style="display:flex;align-items:center;gap:0.35rem;font-size:0.82rem;font-weight:700;color:var(--green);margin-top:4px;"><i class="fas fa-tag"></i><span>' + (window.t ? t('common.free') : 'Free') + '</span></div>'
+      : '<div style="display:flex;align-items:center;gap:0.35rem;font-size:0.82rem;font-weight:700;color:var(--blue-primary);margin-top:4px;"><i class="fas fa-coins"></i><span>' + (c.price || 0).toLocaleString() + ' XAF</span></div>';
 
     const action = enrolled
       ? '<a href="./student-course.html?courseId=' + c._id + '" class="btn btn-primary btn-sm btn-block" style="margin-top:1rem;" data-i18n="std.continue_btn">Continue →</a>'
@@ -958,7 +958,7 @@
         const count = s.distribution?.[n] ?? 0;
         const pct   = s.total ? Math.round((count / s.total) * 100) : 0;
         return `<div class="rating-bar-row">
-          <span class="rating-bar-label">${n} <i class="fas fa-star" style="color:#f59e0b;font-size:0.75rem;"></i></span>
+          <span class="rating-bar-label">${n} <i class="fas fa-star" style="color:#f59e0b;font-size:0.75rem;vertical-align:middle;"></i></span>
           <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
           <span class="rating-bar-count">${count}</span>
         </div>`;

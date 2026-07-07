@@ -24,42 +24,42 @@
     <nav class="sidebar-nav" aria-label="Main navigation">
       <div class="nav-item active" id="nav-dashboard" role="button" tabindex="0" aria-label="Dashboard" aria-current="page"
            onclick="showSection('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('dashboard');}">
-        <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span></span>
         <span data-i18n="nav.dashboard">Dashboard</span>
       </div>
       <div class="nav-item" id="nav-instructors" role="button" tabindex="0" aria-label="Instructors"
            onclick="showSection('instructors')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('instructors');}">
-        <span class="material-symbols-outlined" aria-hidden="true">school</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">school</span></span>
         <span data-i18n="nav.instructors">Instructors</span>
       </div>
       <div class="nav-item" id="nav-courses" role="button" tabindex="0" aria-label="Courses"
            onclick="showSection('courses')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('courses');}">
-        <span class="material-symbols-outlined" aria-hidden="true">library_books</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">library_books</span></span>
         <span data-i18n="nav.courses">Courses</span>
       </div>
       <div class="nav-item" id="nav-users" role="button" tabindex="0" aria-label="Users"
            onclick="showSection('users')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('users');}">
-        <span class="material-symbols-outlined" aria-hidden="true">people</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">people</span></span>
         <span data-i18n="nav.users">Users</span>
       </div>
       <div class="nav-item" id="nav-enrollments" role="button" tabindex="0" aria-label="Enrollments"
            onclick="showSection('enrollments')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('enrollments');}">
-        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">assignment</span></span>
         <span data-i18n="nav.enrollments">Enrollments</span>
       </div>
       <div class="nav-item" id="nav-qoe" role="button" tabindex="0" aria-label="QoE"
            onclick="showSection('qoe')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('qoe');}">
-        <span class="material-symbols-outlined" aria-hidden="true">network_check</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">network_check</span></span>
         <span data-i18n="nav.qoe">QoE</span>
       </div>
       <div class="nav-item" id="nav-reviews" role="button" tabindex="0" aria-label="Reviews"
            onclick="showSection('reviews')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('reviews');}">
-        <span class="material-symbols-outlined" aria-hidden="true">star</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
         <span data-i18n="nav.reviews">Reviews</span>
       </div>
       <div class="nav-item" id="nav-logs" role="button" tabindex="0" aria-label="Activity Logs"
            onclick="showSection('logs')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('logs');}">
-        <span class="material-symbols-outlined" aria-hidden="true">description</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">description</span></span>
         <span data-i18n="nav.logs">Activity Logs</span>
       </div>
     </nav>
@@ -67,12 +67,12 @@
       <!-- theme/lang buttons injected here by theme-lang.js -->
       <div class="nav-item" id="nav-settings" role="button" tabindex="0" aria-label="Settings"
            onclick="showSection('settings')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('settings');}">
-        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">settings</span></span>
         <span data-i18n="nav.settings">Settings</span>
       </div>
       <div class="nav-item" role="button" tabindex="0" aria-label="Logout"
            onclick="logout()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();logout();}">
-        <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">logout</span></span>
         <span data-i18n="nav.logout">Logout</span>
       </div>
     </div>
@@ -140,7 +140,7 @@
           </div>
         </div>
 
-        <div class="stats-grid" style="margin-top:0;">
+        <div class="stats-grid" style="margin-top:1.25rem;">
           <div class="stat-card" style="border-left:4px solid var(--orange);">
             <div class="stat-icon"><span class="material-symbols-outlined">assignment</span></div>
             <div class="stat-label" data-i18n="adm.pending_courses_stat">Pending Courses</div>
@@ -196,7 +196,7 @@
         <div class="section" style="margin-top:1.5rem;">
           <div class="section-header">
             <h2 class="section-title" data-i18n="adm.users_title">User Management</h2>
-            <div style="display:flex;gap:0.5rem;">
+            <div style="display:flex;align-items:center;gap:0.5rem;">
               <button class="tab-btn active" onclick="filterUsersTab('all', this)" id="user-tab-all" data-i18n="common.all">All Users</button>
               <button class="tab-btn" onclick="filterUsersTab('instructor', this)" data-i18n="nav.instructors">Instructors</button>
               <button class="tab-btn" onclick="filterUsersTab('student', this)" data-i18n="nav.students">Students</button>
@@ -347,8 +347,8 @@
           </div>
         </div>
 
-        <div class="two-col-grid" style="gap:1.5rem;">
-          <div class="section" style="flex:1;">
+        <div style="display:grid; grid-template-columns:1fr 2fr; gap:2rem; align-items:start;">
+          <div class="section" style="">
             <div class="section-header">
               <h2 class="section-title" data-i18n="adm.profile">Profile</h2>
             </div>
@@ -376,8 +376,10 @@
                 <button type="submit" class="btn btn-primary" data-i18n="adm.save_profile">Save Profile</button>
               </div>
             </form>
+          </div>
 
-          <div class="section" style="margin-top:1.5rem;">
+          <div style="display:flex; flex-direction:column; gap:1.5rem;">
+          <div class="section">
             <div class="section-header">
               <h2 class="section-title" data-i18n="adm.change_password">Change Password</h2>
             </div>
@@ -424,8 +426,7 @@
               <!-- content injected by load2FAStatus() -->
             </div>
           </div>
-          </div>
-          <div class="section" style="flex:2;">
+          <div class="section" style="">
             <div class="section-header">
               <h2 class="section-title" data-i18n="adm.manage_users">Manage Users</h2>
               <span class="section-subtitle" data-i18n="adm.users_sub">Activate, deactivate, or delete non-admin users.</span>
@@ -447,6 +448,7 @@
                 </tbody>
               </table>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -491,18 +493,22 @@
         <!-- Summary cards -->
         <div class="stats-grid" style="margin-bottom:1.5rem;">
           <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">analytics</span></div>
             <div class="stat-label">Total Records</div>
             <div class="stat-value" id="qoe-total">–</div>
           </div>
           <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">speed</span></div>
             <div class="stat-label">Avg Bandwidth</div>
             <div class="stat-value" id="qoe-avg-bw">– Mbps</div>
           </div>
           <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">hd</span></div>
             <div class="stat-label">Video Sessions</div>
             <div class="stat-value" id="qoe-video-count">–</div>
           </div>
           <div class="stat-card">
+            <div class="stat-icon"><span class="material-symbols-outlined">play_circle</span></div>
             <div class="stat-label">Audio/PDF Sessions</div>
             <div class="stat-value" id="qoe-fallback-count">–</div>
           </div>

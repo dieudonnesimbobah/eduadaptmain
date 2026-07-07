@@ -79,32 +79,32 @@
     <nav class="sidebar-nav" aria-label="Main navigation">
       <div class="nav-item active" id="nav-dashboard" role="button" tabindex="0" aria-label="Dashboard" aria-current="page"
            onclick="showSection('dashboard')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('dashboard');}">
-        <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span></span>
         <span data-i18n="nav.dashboard">Dashboard</span>
       </div>
       <div class="nav-item" id="nav-courses" role="button" tabindex="0" aria-label="My Courses"
            onclick="showSection('courses')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('courses');}">
-        <span class="material-symbols-outlined" aria-hidden="true">library_books</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">library_books</span></span>
         <span data-i18n="nav.my_courses">My Courses</span>
       </div>
       <div class="nav-item" id="nav-students" role="button" tabindex="0" aria-label="Students"
            onclick="showSection('students')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('students');}">
-        <span class="material-symbols-outlined" aria-hidden="true">people</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">people</span></span>
         <span data-i18n="nav.students">Students</span>
       </div>
       <div class="nav-item" id="nav-lessons" role="button" tabindex="0" aria-label="Lessons"
            onclick="showSection('lessons')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('lessons');}">
-        <span class="material-symbols-outlined" aria-hidden="true">theaters</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">theaters</span></span>
         <span data-i18n="nav.lessons">Lessons</span>
       </div>
       <div class="nav-item" id="nav-quizzes" role="button" tabindex="0" aria-label="Quizzes"
            onclick="showSection('quizzes')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('quizzes');}">
-        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">assignment</span></span>
         <span data-i18n="nav.quizzes">Quizzes</span>
       </div>
       <div class="nav-item" id="nav-feedback" role="button" tabindex="0" aria-label="Feedback"
            onclick="showSection('feedback')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('feedback');}">
-        <span class="material-symbols-outlined" aria-hidden="true">star</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
         <span data-i18n="nav.feedback">Feedback</span>
       </div>
     </nav>
@@ -112,12 +112,12 @@
       <!-- theme/lang buttons injected by theme-lang.js -->
       <div class="nav-item" id="nav-settings" role="button" tabindex="0" aria-label="Settings"
            onclick="showSection('settings')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showSection('settings');}">
-        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">settings</span></span>
         <span data-i18n="nav.settings">Settings</span>
       </div>
       <div class="nav-item" role="button" tabindex="0" aria-label="Logout"
            onclick="logout()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();logout();}">
-        <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+        <span class="nav-icon"><span class="material-symbols-outlined" aria-hidden="true">logout</span></span>
         <span data-i18n="nav.logout">Logout</span>
       </div>
     </div>
@@ -217,11 +217,11 @@
             <div class="section-header"><h2 class="section-title">Course Status Breakdown</h2></div>
             <div id="status-breakdown">
               <div class="breakdown-item">
-                <span class="badge badge-success">Approved</span>
+                <span class="badge badge-approved">Approved</span>
                 <span id="breakdown-approved" class="breakdown-count">–</span>
               </div>
               <div class="breakdown-item">
-                <span class="badge badge-warning">Pending</span>
+                <span class="badge badge-pending">Pending</span>
                 <span id="breakdown-pending" class="breakdown-count">–</span>
               </div>
               <div class="breakdown-item">
@@ -411,11 +411,12 @@
             <div class="form-group">
               <label class="form-label" for="settings-avatar" data-i18n="settings.photo">Profile Photo</label>
               <div style="display:flex;align-items:center;gap:1rem;">
-                <div id="settings-avatar-preview" style="width:60px;height:60px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--gray-500);">I</div>
+                <img id="settings-avatar-preview" src="" alt="Profile photo preview"
+                   style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--blue-primary);display:block;background:var(--blue-primary);color:#fff;font-size:1.75rem;font-weight:700;" />
                 <input type="file" class="form-input" id="settings-avatar" name="avatar" accept="image/*" onchange="previewProfileAvatar(event,'settings-avatar-preview')" />
               </div>
             </div>
-            <div class="modal-actions" style="padding:0;margin-top:0.5rem;">
+            <div class="modal-actions" style="padding:0;margin-top:0.5rem;border-top:none;">
               <button type="submit" class="btn btn-primary" data-i18n="ins.save_profile">Save Profile</button>
             </div>
           </form>
@@ -634,7 +635,7 @@
     </div>
     <form id="create-quiz-form" onsubmit="submitCreateQuiz(event)">
       <input type="hidden" id="quiz-course-id-input" />
-      <div class="form-group" style="padding:0 1rem 0.5rem;">
+      <div class="form-group">
         <label class="form-label" for="quiz-title-input">Quiz Title *</label>
         <input type="text" id="quiz-title-input" class="form-input" placeholder="e.g. Chapter 1 Quiz" required />
       </div>

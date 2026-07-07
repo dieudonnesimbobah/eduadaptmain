@@ -198,6 +198,8 @@ const loadInstructorSettings = async () => {
     document.getElementById('settings-fullname').value = user.fullName || '';
     document.getElementById('settings-email').value    = user.email   || '';
     document.getElementById('settings-phone').value    = user.phone   || '';
+    const av = document.getElementById('settings-avatar-preview');
+    if (av) av.src = user.avatar ? resolveApiUrl(user.avatar) : '';
   } catch { showToast('Unable to load profile settings.', 'error'); }
 };
 
