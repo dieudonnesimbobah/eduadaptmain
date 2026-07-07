@@ -367,14 +367,15 @@
         + '</div>'
       : '';
 
+    const escHtml = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     const formHtml = '<form id="quiz-form" ' + (prevResult ? 'style="display:none;"' : '') + '>'
-      + '<h4 style="margin-bottom:1rem;">' + (quiz.title || 'Course Quiz') + '</h4>'
+      + '<h4 style="margin-bottom:1rem;">' + escHtml(quiz.title || 'Course Quiz') + '</h4>'
       + quiz.questions.map((q, i) =>
           '<div style="margin-bottom:1.5rem;">'
-          + '<p style="font-weight:600;margin-bottom:0.5rem;">' + (i+1) + '. ' + q.questionText + '</p>'
+          + '<p style="font-weight:600;margin-bottom:0.5rem;">' + (i+1) + '. ' + escHtml(q.questionText) + '</p>'
           + q.options.map(opt =>
               '<label style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;cursor:pointer;font-size:0.9rem;padding:0.4rem 0.6rem;border-radius:6px;border:1px solid var(--gray-200);" class="quiz-option-label">'
-              + '<input type="radio" name="q' + i + '" value="' + opt + '" style="accent-color:var(--blue-primary);" /> ' + opt
+              + '<input type="radio" name="q' + i + '" value="' + escHtml(opt) + '" style="accent-color:var(--blue-primary);" /> ' + escHtml(opt)
               + '</label>'
             ).join('')
           + '</div>'
