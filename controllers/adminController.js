@@ -57,7 +57,9 @@ const getAllInstructors = async (req, res) => {
 const approveInstructor = async (req, res) => {
   try {
     const instructor = await User.findByIdAndUpdate(
-      req.params.id, { approvalStatus: 'approved' }, { new: true }
+      req.params.id,
+      { approvalStatus: 'approved', isEmailVerified: true },
+      { new: true }
     ).select('-password');
     if (!instructor) return res.status(404).json({ message: 'Instructor not found' });
 
