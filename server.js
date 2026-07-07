@@ -64,8 +64,8 @@ const startServer = async () => {
         defaultSrc:    ["'self'"],
         scriptSrc:     ["'self'", "'unsafe-inline'"],
         scriptSrcAttr: null,    // remove directive — inline event handlers governed by script-src 'unsafe-inline'
-        styleSrc:      ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com'],
-        fontSrc:       ["'self'", 'fonts.gstatic.com', 'fonts.googleapis.com'],
+        styleSrc:      ["'self'", "'unsafe-inline'", 'fonts.googleapis.com', 'fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+        fontSrc:       ["'self'", 'fonts.gstatic.com', 'fonts.googleapis.com', 'https://cdnjs.cloudflare.com'],
         imgSrc:        ["'self'", 'data:', 'res.cloudinary.com', 'blob:'],
         connectSrc:    ["'self'", 'res.cloudinary.com', 'api.cloudinary.com',
                         'api.assemblyai.com', 'api.anthropic.com',

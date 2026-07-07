@@ -53,9 +53,9 @@ async function loadCourses() {
 // ── Price badge helper ────────────────────────────────────────────────────────
 function priceBadge(c) {
   if (c.isFree || !c.price || c.price === 0) {
-    return '<span class="badge" style="background:var(--green-light);color:var(--green);">🆓 Free</span>';
+    return '<span class="badge" style="background:var(--green-light);color:var(--green);"><i class="fas fa-tag"></i> Free</span>';
   }
-  return '<span class="badge badge-blue">💰 ' + Number(c.price).toLocaleString() + ' XAF</span>';
+  return '<span class="badge badge-blue"><i class="fas fa-coins"></i> ' + Number(c.price).toLocaleString() + ' XAF</span>';
 }
 
 function renderDashboardCourseTable() {
@@ -76,8 +76,8 @@ function renderDashboardCourseTable() {
       <td>${priceBadge(c)}</td>
       <td><span class="badge ${statusBadge(c.approvalStatus)}">${c.approvalStatus}</span></td>
       <td>
-        <button class="btn-icon" onclick="showSection('lessons');setLessonCourse('${c._id}')" title="Manage Lessons">🎬</button>
-        <button class="btn-icon" onclick="editCourse('${c._id}')" title="Edit">✏️</button>
+        <button class="btn-icon" onclick="showSection('lessons');setLessonCourse('${c._id}')" title="Manage Lessons"><i class="fas fa-film"></i></button>
+        <button class="btn-icon" onclick="editCourse('${c._id}')" title="Edit"><i class="fas fa-pen"></i></button>
       </td>
     </tr>`).join('');
 }
@@ -288,8 +288,8 @@ async function loadLessonsForCourse(courseId) {
               ${l.pdfNote      ? '<span class="badge badge-secondary">PDF</span>'              : ''}
               <span class="badge ${l.processingStatus === 'completed' ? 'badge-success' : 'badge-secondary'}">${l.processingStatus || 'pending'}</span>
               ${l.isFree
-                ? '<span class="badge" style="background:var(--green-light);color:var(--green);">🆓 Free Preview</span>'
-                : '<span class="badge" style="background:var(--blue-lighter);color:var(--blue-primary);">🔒 Paid</span>'}
+                ? '<span class="badge" style="background:var(--green-light);color:var(--green);"><i class="fas fa-tag"></i> Free Preview</span>'
+                : '<span class="badge" style="background:var(--blue-lighter);color:var(--blue-primary);"><i class="fas fa-lock"></i> Paid</span>'}
             </div>
           </div>
           <div class="lesson-actions">
@@ -316,7 +316,7 @@ function openAddLessonModal() {
 
 function setUploadStatus(msg) {
   const el = document.getElementById('upload-status-text');
-  if (el) el.textContent = msg;
+  if (el) el.innerHTML = msg;
 }
 
 function setUploadBar(pct) {
@@ -470,14 +470,14 @@ async function submitAddLesson(event) {
       }
     );
     if (!videoResult?.secure_url) throw new Error('Video upload failed — no URL returned.');
-    setUploadStatus('Video uploaded ✓'); setUploadBar(100);
+    setUploadStatus('Video uploaded <i class="fas fa-check"></i>'); setUploadBar(100);
 
     // Step 2: upload PDF
     let pdfResult = null;
     if (pdfFile) {
       setUploadStatus('Uploading PDF notes...'); setUploadBar(0);
       pdfResult = await uploadToCloudinary(pdfFile, CLOUDINARY_FOLDERS.pdf, pct => setUploadBar(pct));
-      setUploadStatus('PDF uploaded ✓');
+      setUploadStatus('PDF uploaded <i class="fas fa-check"></i>');
     }
 
     // Step 3: upload material
@@ -485,7 +485,7 @@ async function submitAddLesson(event) {
     if (matFile) {
       setUploadStatus('Uploading material...'); setUploadBar(0);
       matResult = await uploadToCloudinary(matFile, CLOUDINARY_FOLDERS.material, pct => setUploadBar(pct));
-      setUploadStatus('Material uploaded ✓');
+      setUploadStatus('Material uploaded <i class="fas fa-check"></i>');
     }
 
     // Step 4: save to database
@@ -561,7 +561,7 @@ async function loadQuizzesForCourse(courseId) {
               <div style="margin-top:0.5rem;display:grid;grid-template-columns:1fr 1fr;gap:0.25rem;">
                 ${qu.options.map((o, j) => `
                   <span style="font-size:0.85rem;${o === qu.correctAnswer ? 'color:var(--green);font-weight:600;' : 'color:var(--gray-600);'}">
-                    ${String.fromCharCode(65+j)}. ${esc(o)} ${o === qu.correctAnswer ? '✓' : ''}
+                    ${String.fromCharCode(65+j)}. ${esc(o)} ${o === qu.correctAnswer ? '<i class="fas fa-check" style="color:var(--green);margin-left:4px;"></i>' : ''}
                   </span>`).join('')}
               </div>
               <span class="badge badge-secondary" style="margin-top:0.5rem;">${qu.difficultyLevel}</span>
@@ -586,7 +586,7 @@ function addQuizQuestion() {
     <div class="section" style="margin-bottom:1rem;">
       <div class="section-header">
         <h4>Question ${qIndex + 1}</h4>
-        <button type="button" class="btn-icon btn-danger-icon" onclick="removeQuestion(${qIndex})">✕</button>
+        <button type="button" class="btn-icon btn-danger-icon" onclick="removeQuestion(${qIndex})"><i class="fas fa-times"></i></button>
       </div>
       <div style="padding:1rem;">
         <div class="form-group">
@@ -707,7 +707,7 @@ async function submitCreateCourse(event) {
     const priceEl  = document.getElementById('course-price');
     if (isPaidEl) isPaidEl.checked       = false;
     if (priceGrp) priceGrp.style.display = 'none';
-    if (labelEl)  labelEl.textContent    = '🆓 This course is FREE';
+    if (labelEl)  labelEl.innerHTML       = '<i class="fas fa-tag"></i> This course is FREE';
     if (hintEl)   hintEl.textContent     = 'Students can enroll without paying. Check to make it paid.';
     if (priceEl)  priceEl.value          = '';
     await loadCourses();
@@ -739,7 +739,7 @@ function editCourse(courseId) {
   if (isPaidCheckbox) {
     isPaidCheckbox.checked = !courseIsFree;  // checked when PAID
     if (priceGroup)   priceGroup.style.display = courseIsFree ? 'none' : 'block';
-    if (pricingLabel) pricingLabel.textContent = courseIsFree ? '🆓 This course is FREE' : '💳 This course is PAID';
+    if (pricingLabel) pricingLabel.innerHTML   = courseIsFree ? '<i class="fas fa-tag"></i> This course is FREE' : '<i class="fas fa-credit-card"></i> This course is PAID';
     if (pricingHint)  pricingHint.textContent  = courseIsFree
       ? 'Students can enroll without paying. Check to make it paid.'
       : 'Students must pay before enrolling. Uncheck to make it free.';
@@ -772,6 +772,12 @@ function hashColor(str) {
   for (const c of String(str)) h = (h * 31 + c.charCodeAt(0)) % colors.length;
   return colors[Math.abs(h)];
 }
+
+// ─── Star rating helper ───────────────────────────────────────────────────────
+const renderStars = (rating, max = 5) =>
+  Array.from({length: max}, (_, i) =>
+    `<i class="fa${i < rating ? 's' : 'r'} fa-star" style="color:${i < rating ? '#f59e0b' : 'var(--gray-300)'}"></i>`
+  ).join('');
 
 // ─── Feedback / Review ────────────────────────────────────────────────────────
 const RATING_LABELS = { 1:'Poor', 2:'Below Average', 3:'Average', 4:'Good', 5:'Excellent' };
@@ -807,9 +813,9 @@ async function loadMyReview() {
     _updateStars(r.rating);
     document.getElementById('review-category').value = r.category || 'overall';
     document.getElementById('review-comment').value  = r.comment  || '';
-    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const stars = renderStars(r.rating);
     area.innerHTML = `<div style="padding:0.75rem;background:var(--gray-50);border-radius:8px;border:1px solid var(--gray-200);">
-      <div style="font-size:1.25rem;color:#f59e0b;letter-spacing:2px;">${stars}</div>
+      <div style="font-size:1.25rem;letter-spacing:2px;">${stars}</div>
       <div style="font-size:0.8rem;color:var(--gray-500);margin-top:4px;">${RATING_LABELS[r.rating]} &bull; ${esc(r.category)}</div>
       ${r.comment ? `<p style="margin-top:0.5rem;font-size:0.875rem;">"${esc(r.comment)}"</p>` : ''}
       <div style="font-size:0.75rem;color:var(--gray-400);margin-top:0.5rem;">Submitted ${formatDate(r.createdAt)}</div>
@@ -824,17 +830,17 @@ async function loadReviewSummary() {
     const s = await apiGet('/api/reviews/summary');
     if (!s.total) { area.innerHTML = '<p class="text-gray">No ratings yet — be the first!</p>'; return; }
     const filled = Math.round(s.avgRating);
-    const stars  = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+    const stars  = renderStars(filled);
     area.innerHTML = `<div style="text-align:center;margin-bottom:1rem;">
       <div style="font-size:2.5rem;font-weight:800;color:#f59e0b;">${s.avgRating}</div>
-      <div style="font-size:1.25rem;color:#f59e0b;letter-spacing:2px;">${stars}</div>
+      <div style="font-size:1.25rem;letter-spacing:2px;">${stars}</div>
       <div style="font-size:0.8rem;color:var(--gray-500);margin-top:2px;">${s.total} review${s.total !== 1 ? 's' : ''}</div>
     </div>` +
     [5,4,3,2,1].map(n => {
       const count = s.distribution?.[n] ?? 0;
       const pct   = s.total ? Math.round((count / s.total) * 100) : 0;
       return `<div class="rating-bar-row">
-        <span class="rating-bar-label">${n} ★</span>
+        <span class="rating-bar-label">${n} <i class="fas fa-star" style="color:#f59e0b;font-size:0.75rem;"></i></span>
         <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
         <span class="rating-bar-count">${count}</span>
       </div>`;

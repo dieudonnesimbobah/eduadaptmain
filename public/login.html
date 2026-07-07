@@ -6,6 +6,7 @@
   <title>Login | EduAdapt</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -187,10 +188,10 @@
 
       if (!res.ok) {
         if (data.code === 'EMAIL_NOT_VERIFIED') {
-          alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}
+          alertBox.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>${data.message}
             <br><a href="./verify-email.html" style="color:inherit;font-weight:600;text-decoration:underline;">Resend verification link →</a></div>`;
         } else {
-          alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+          alertBox.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>${data.message}</div>`;
         }
         btn.disabled = false;
         btn.textContent = 'Login';
@@ -209,7 +210,7 @@
       }
 
       if (!data.user) {
-        alertBox.innerHTML = `<div class="alert alert-error">⚠ Invalid response from server</div>`;
+        alertBox.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>Invalid response from server</div>`;
         btn.disabled = false;
         btn.textContent = 'Login';
         return;
@@ -217,7 +218,7 @@
 
       doRedirect(data.user);
     } catch (err) {
-      alertBox.innerHTML = `<div class="alert alert-error">⚠ ${err.message || 'Network error. Please try again.'}</div>`;
+      alertBox.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>${err.message || 'Network error. Please try again.'}</div>`;
       btn.disabled = false;
       btn.textContent = 'Login';
     }
@@ -243,7 +244,7 @@
       const data = await res.json();
 
       if (!res.ok) {
-        alertBox.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+        alertBox.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>${data.message}</div>`;
         btn.disabled = false;
         btn.textContent = 'Verify Code';
         return;
@@ -252,7 +253,7 @@
       pending2FATempToken = null;
       doRedirect(data.user);
     } catch (err) {
-      alertBox.innerHTML = `<div class="alert alert-error">⚠ Network error. Please try again.</div>`;
+      alertBox.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>Network error. Please try again.</div>`;
       btn.disabled = false;
       btn.textContent = 'Verify Code';
     }

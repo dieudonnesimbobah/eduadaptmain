@@ -43,10 +43,10 @@ const TRANSLATIONS = {
     'course.desc':        'Description',
     'course.category':    'Category',
     'course.level':       'Difficulty Level',
-    'theme.dark':         '🌙 Dark',
-    'theme.light':        '☀ Light',
-    'lang.switch':        '🇫🇷 Français',
-    'home.hero_label':    '🇨🇲 Designed for Cameroon',
+    'theme.dark':         '<i class="fas fa-moon"></i> Dark',
+    'theme.light':        '<i class="fas fa-sun"></i> Light',
+    'lang.switch':        '<i class="fas fa-globe"></i> Français',
+    'home.hero_label':    '<i class="fas fa-location-dot"></i> Designed for Cameroon',
     'home.hero_h1':       'Adaptive Learning That Works for',
     'home.hero_h1_span':  'Everyone',
     'home.hero_p':        'EduAdapt delivers high-quality education that automatically adjusts to your network conditions and learning pace — ensuring inclusive, uninterrupted access to knowledge across Cameroon.',
@@ -121,20 +121,20 @@ const TRANSLATIONS = {
     'ins.avg_progress':   'Avg. Student Progress',
     'ins.add_lesson':     '+ Add Lesson',
     'ins.upload_video':   'Upload Lesson',
-    'player.video':       '🎬 Video',
-    'player.audio':       '🔊 Audio',
-    'player.pdf':         '📄 Transcript PDF',
+    'player.video':       'Video',
+    'player.audio':       'Audio',
+    'player.pdf':         'Transcript PDF',
     'player.quality':     'Quality:',
     'player.prev':        '← Previous',
     'player.next':        'Next →',
     'player.overview':    'Overview',
     'player.resources':   'Resources',
     'player.quiz':        'Quiz',
-    'player.download':    '⬇ Download Transcript PDF',
+    'player.download':    'Download Transcript PDF',
     'player.network':     'NETWORK STATUS',
     'player.progress':    'Course Progress',
-    'player.free_lesson': '🆓 Free Preview',
-    'player.locked':      '🔒 Paid Lesson',
+    'player.free_lesson': 'Free Preview',
+    'player.locked':      'Paid Lesson',
     'pay.title':          'Complete Payment',
     'pay.course':         'Course',
     'pay.amount':         'Amount',
@@ -145,7 +145,7 @@ const TRANSLATIONS = {
     'pay.phone_hint':     'Enter your MTN or Orange number (e.g. 677000000)',
     'pay.confirm':        'Pay Now',
     'pay.processing':     'Processing payment...',
-    'pay.success':        '✅ Payment successful! You are now enrolled.',
+    'pay.success':        'Payment successful! You are now enrolled.',
     'pay.free_enroll':    'Enroll Free',
     'pay.currency':       'XAF',
     'adm.overview':       'Administrative Overview',
@@ -385,10 +385,10 @@ const TRANSLATIONS = {
     'course.desc':        'Description',
     'course.category':    'Catégorie',
     'course.level':       'Niveau de difficulté',
-    'theme.dark':         '🌙 Sombre',
-    'theme.light':        '☀ Clair',
-    'lang.switch':        '🇬🇧 English',
-    'home.hero_label':    '🇨🇲 Conçu pour le Cameroun',
+    'theme.dark':         '<i class="fas fa-moon"></i> Sombre',
+    'theme.light':        '<i class="fas fa-sun"></i> Clair',
+    'lang.switch':        '<i class="fas fa-globe"></i> English',
+    'home.hero_label':    '<i class="fas fa-location-dot"></i> Conçu pour le Cameroun',
     'home.hero_h1':       "L'apprentissage adaptatif qui fonctionne pour",
     'home.hero_h1_span':  'Tout le monde',
     'home.hero_p':        "EduAdapt offre une éducation de qualité qui s'adapte automatiquement à votre connexion et à votre rythme d'apprentissage.",
@@ -463,20 +463,20 @@ const TRANSLATIONS = {
     'ins.avg_progress':   'Progression moyenne',
     'ins.add_lesson':     '+ Ajouter une leçon',
     'ins.upload_video':   'Télécharger la leçon',
-    'player.video':       '🎬 Vidéo',
-    'player.audio':       '🔊 Audio',
-    'player.pdf':         '📄 PDF Transcrit',
+    'player.video':       'Vidéo',
+    'player.audio':       'Audio',
+    'player.pdf':         'PDF Transcrit',
     'player.quality':     'Qualité :',
     'player.prev':        '← Précédent',
     'player.next':        'Suivant →',
     'player.overview':    'Aperçu',
     'player.resources':   'Ressources',
     'player.quiz':        'Quiz',
-    'player.download':    '⬇ Télécharger le PDF',
+    'player.download':    'Télécharger le PDF',
     'player.network':     'STATUT RÉSEAU',
     'player.progress':    'Progression du cours',
-    'player.free_lesson': '🆓 Aperçu gratuit',
-    'player.locked':      '🔒 Leçon payante',
+    'player.free_lesson': 'Aperçu gratuit',
+    'player.locked':      'Leçon payante',
     'pay.title':          'Finaliser le paiement',
     'pay.course':         'Cours',
     'pay.amount':         'Montant',
@@ -487,7 +487,7 @@ const TRANSLATIONS = {
     'pay.phone_hint':     'Entrez votre numéro MTN ou Orange (ex: 677000000)',
     'pay.confirm':        'Payer maintenant',
     'pay.processing':     'Traitement du paiement...',
-    'pay.success':        '✅ Paiement réussi ! Vous êtes maintenant inscrit.',
+    'pay.success':        'Paiement réussi ! Vous êtes maintenant inscrit.',
     'pay.free_enroll':    "S'inscrire gratuitement",
     'pay.currency':       'FCFA',
     'adm.overview':       'Vue administrative',
@@ -711,9 +711,9 @@ const ThemeManager = {
   updateButtons(t) {
     const lang = LangManager.get();
     document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-      btn.textContent = t === 'dark'
-        ? (TRANSLATIONS[lang]['theme.light'] || '☀ Light')
-        : (TRANSLATIONS[lang]['theme.dark']  || '🌙 Dark');
+      btn.innerHTML = t === 'dark'
+        ? (TRANSLATIONS[lang]['theme.light'] || '<i class="fas fa-sun"></i> Light')
+        : (TRANSLATIONS[lang]['theme.dark']  || '<i class="fas fa-moon"></i> Dark');
     });
   },
   init() { this.apply(this.get()); this.updateButtons(this.get()); }
@@ -744,7 +744,7 @@ const LangManager = {
   toggle() { this.set(this.get() === 'en' ? 'fr' : 'en'); },
   updateButtons(lang) {
     document.querySelectorAll('.lang-switcher-btn').forEach(btn => {
-      btn.textContent = TRANSLATIONS[lang]['lang.switch'] || (lang === 'en' ? '🇫🇷 Français' : '🇬🇧 English');
+      btn.innerHTML = TRANSLATIONS[lang]['lang.switch'] || (lang === 'en' ? '<i class="fas fa-globe"></i> Français' : '<i class="fas fa-globe"></i> English');
     });
   },
   init() { this.apply(this.get()); this.updateButtons(this.get()); }

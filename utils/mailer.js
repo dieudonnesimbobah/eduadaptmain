@@ -56,7 +56,7 @@ const sendInstructorApprovedEmail = async ({ email, fullName }) => {
   const loginUrl = `${APP_URL}/login.html`;
   return sendMail({
     to:      email,
-    subject: '🎉 Your EduAdapt Instructor Account Has Been Approved!',
+    subject: 'Your EduAdapt Instructor Account Has Been Approved!',
     html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -98,7 +98,7 @@ const sendInstructorApprovedEmail = async ({ email, fullName }) => {
     <p>Adaptive E-Learning for Inclusive Education in Cameroon</p>
   </div>
   <div class="body">
-    <span class="badge">✅ Account Approved</span>
+    <span class="badge">Account Approved</span>
     <h2>Congratulations, ${fullName}!</h2>
     <p>
       Great news — your instructor application on <strong>EduAdapt</strong> has been

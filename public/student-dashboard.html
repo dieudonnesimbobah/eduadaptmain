@@ -6,6 +6,7 @@
   <title>Student Dashboard | EduAdapt</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -105,7 +106,7 @@
           <div>
             <h1 class="page-title">
               <span data-i18n="std.welcome">Welcome back,</span>
-              <span class="user-display-name">Student</span> 👋
+              <span class="user-display-name">Student</span>
             </h1>
             <p class="page-subtitle">Your adaptive learning journey continues today.</p>
           </div>
@@ -393,7 +394,7 @@
   <div class="modal-card" style="max-width:460px;">
     <div class="modal-header">
       <h3 id="payment-modal-title" data-i18n="pay.title">Complete Payment</h3>
-      <button class="modal-close" onclick="closePaymentModal()" aria-label="Close payment modal">✕</button>
+      <button class="modal-close" onclick="closePaymentModal()" aria-label="Close payment modal"><i class="fas fa-times"></i></button>
     </div>
 
     <!-- Course summary -->
@@ -415,14 +416,14 @@
              role="radio" aria-checked="true" tabindex="0"
              onclick="selectProvider('mtn')" style="padding:1rem;cursor:pointer;"
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProvider('mtn');}">
-          <div style="font-size:1.5rem;" aria-hidden="true">📱</div>
+          <div style="font-size:1.5rem;" aria-hidden="true"><i class="fas fa-mobile-screen"></i></div>
           <div style="font-weight:700;font-size:0.85rem;margin-top:4px;" data-i18n="pay.mtn">MTN Mobile Money</div>
         </div>
         <div class="role-card" id="pay-orange-btn"
              role="radio" aria-checked="false" tabindex="0"
              onclick="selectProvider('orange')" style="padding:1rem;cursor:pointer;"
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectProvider('orange');}">
-          <div style="font-size:1.5rem;" aria-hidden="true">🟠</div>
+          <div style="font-size:1.5rem;" aria-hidden="true"><i class="fas fa-circle" style="color:#ff7900;"></i></div>
           <div style="font-weight:700;font-size:0.85rem;margin-top:4px;" data-i18n="pay.orange">Orange Money</div>
         </div>
       </div>
@@ -448,7 +449,7 @@
     </div>
 
     <p style="font-size:0.75rem;color:var(--gray-400);text-align:center;margin-top:0.75rem;">
-      🔒 Secured by Fapshi. You will receive a prompt on your phone to confirm.
+      <i class="fas fa-lock"></i> Secured by Fapshi. You will receive a prompt on your phone to confirm.
     </p>
   </div>
 </div>
@@ -506,13 +507,13 @@
     const safeTitle = String(c.title || '').replace(/"/g, '&quot;');
     const thumb = c.thumbnail
       ? '<img src="' + c.thumbnail + '" alt="' + safeTitle + '" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"/>'
-      : '📚';
+      : '<i class="fas fa-book-open"></i>';
 
     // Price tag
     const isFree = c.isFree || !c.price || c.price === 0;
     const priceTag = isFree
-      ? '<div style="font-size:0.82rem;font-weight:700;color:var(--green);margin-top:4px;">🆓 ' + (window.t ? t('common.free') : 'Free') + '</div>'
-      : '<div style="font-size:0.82rem;font-weight:700;color:var(--blue-primary);margin-top:4px;">💰 ' + c.price.toLocaleString() + ' XAF</div>';
+      ? '<div style="font-size:0.82rem;font-weight:700;color:var(--green);margin-top:4px;"><i class="fas fa-tag"></i> ' + (window.t ? t('common.free') : 'Free') + '</div>'
+      : '<div style="font-size:0.82rem;font-weight:700;color:var(--blue-primary);margin-top:4px;"><i class="fas fa-coins"></i> ' + c.price.toLocaleString() + ' XAF</div>';
 
     const action = enrolled
       ? '<a href="./student-course.html?courseId=' + c._id + '" class="btn btn-primary btn-sm btn-block" style="margin-top:1rem;" data-i18n="std.continue_btn">Continue →</a>'
@@ -597,7 +598,7 @@
     const bg = { info: 'var(--blue-lighter)', success: 'var(--green-light)', error: 'var(--red-light)' };
     const fg = { info: 'var(--blue-dark)', success: 'var(--green)', error: 'var(--red)' };
     el.style.cssText = 'display:block;padding:0.75rem;border-radius:8px;font-size:0.875rem;background:' + bg[type] + ';color:' + fg[type] + ';';
-    el.textContent = msg;
+    el.innerHTML = msg;
   };
 
   const confirmPayment = async () => {
@@ -619,7 +620,7 @@
       if (!res.ok) { setPayStatus(data.message || 'Payment failed.', 'error'); btn.disabled = false; btn.textContent = window.t ? t('pay.confirm') : 'Pay Now'; return; }
 
       pendingPayment.transId = data.transId;
-      setPayStatus('📱 Check your phone! Confirm the Mobile Money prompt within 2 minutes.', 'info');
+      setPayStatus('<i class="fas fa-mobile-screen"></i> Check your phone! Confirm the Mobile Money prompt within 2 minutes.', 'info');
       btn.textContent = 'Confirming...';
 
       let attempts = 0;
@@ -631,7 +632,7 @@
 
           if (vData.status === 'successful') {
             clearInterval(poll);
-            setPayStatus(window.t ? t('pay.success') : '✅ Payment successful! You are now enrolled.', 'success');
+            setPayStatus(window.t ? t('pay.success') : 'Payment successful! You are now enrolled.', 'success');
             enrolledCourseIds.add(String(pendingPayment.courseId));
             setTimeout(() => { closePaymentModal(); loadDashboard(); loadBrowseCourses(); showToast('Enrolled successfully!', 'success'); }, 1800);
           } else if (vData.status === 'failed') {
@@ -705,7 +706,7 @@
     try {
       const enrollments = await refreshEnrolledCourseIds();
       if (!enrollments.length) {
-        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div>'
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-book-open"></i></div>'
           + '<p>' + (window.t ? t('std.no_enrolled') : 'No enrolled courses yet.') + ' '
           + '<span style="color:var(--blue-primary);cursor:pointer;" onclick="showSection(\'browse\')">'
           + (window.t ? t('std.browse_cta') : 'Browse courses →') + '</span></p></div>';
@@ -723,7 +724,7 @@
     try {
       const enrollments = await apiGet('/api/student/enrollments');
       if (!enrollments.length) {
-        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>You have not enrolled in any courses yet.</p></div>'; return;
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-book-open"></i></div><p>You have not enrolled in any courses yet.</p></div>'; return;
       }
       const cards = enrollments.filter(e => e.courseId && e.courseId._id).map(e => courseCard(e.courseId, true));
       grid.innerHTML = cards.length ? cards.join('') : '<p class="text-gray">No course details available.</p>';
@@ -756,7 +757,7 @@
       const courses = r.courses || r;
 
       if (!courses.length) {
-        grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No courses found. Try a different search.</p></div>';
+        grid.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-magnifying-glass"></i></div><p>No courses found. Try a different search.</p></div>';
         return;
       }
       grid.innerHTML = courses.map(c => courseCard(c, enrolledCourseIds.has(String(c._id)))).join('');
@@ -784,7 +785,7 @@
     try {
       const enrollments = await apiGet('/api/student/enrollments');
       if (!enrollments.length) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><p>Enroll in courses to track progress.</p></div>'; return;
+        list.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-chart-bar"></i></div><p>Enroll in courses to track progress.</p></div>'; return;
       }
       const rows = await Promise.all(enrollments.map(async (e) => {
         if (!e.courseId || !e.courseId._id) return '';
@@ -896,6 +897,11 @@
   };
 
   // ── Feedback / Review ─────────────────────────────────────────────────────
+  const renderStars = (rating, max = 5) =>
+    Array.from({length: max}, (_, i) =>
+      `<i class="fa${i < rating ? 's' : 'r'} fa-star" style="color:${i < rating ? '#f59e0b' : 'var(--gray-300)'}"></i>`
+    ).join('');
+
   const RATING_LABELS = { 1:'Poor', 2:'Below Average', 3:'Average', 4:'Good', 5:'Excellent' };
   let _selectedRating = 0;
 
@@ -926,9 +932,9 @@
       _updateStars(r.rating);
       document.getElementById('review-category').value = r.category || 'overall';
       document.getElementById('review-comment').value  = r.comment  || '';
-      const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const stars = renderStars(r.rating);
       area.innerHTML = `<div style="padding:0.75rem;background:var(--gray-50);border-radius:8px;border:1px solid var(--gray-200);">
-        <div style="font-size:1.25rem;color:#f59e0b;letter-spacing:2px;">${stars}</div>
+        <div style="font-size:1.25rem;letter-spacing:2px;">${stars}</div>
         <div style="font-size:0.8rem;color:var(--gray-500);margin-top:4px;">${RATING_LABELS[r.rating]} • ${r.category}</div>
         ${r.comment ? `<p style="margin-top:0.5rem;font-size:0.875rem;">"${r.comment}"</p>` : ''}
         <div style="font-size:0.75rem;color:var(--gray-400);margin-top:0.5rem;">Submitted ${formatDate(r.createdAt)}</div>
@@ -942,17 +948,17 @@
       const s = await apiGet('/api/reviews/summary');
       if (!s.total) { area.innerHTML = '<p class="text-gray">No ratings yet — be the first!</p>'; return; }
       const filled = Math.round(s.avgRating);
-      const stars  = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+      const stars  = renderStars(filled);
       area.innerHTML = `<div style="text-align:center;margin-bottom:1rem;">
         <div style="font-size:2.5rem;font-weight:800;color:#f59e0b;">${s.avgRating}</div>
-        <div style="font-size:1.25rem;color:#f59e0b;letter-spacing:2px;">${stars}</div>
+        <div style="font-size:1.25rem;letter-spacing:2px;">${stars}</div>
         <div style="font-size:0.8rem;color:var(--gray-500);margin-top:2px;">${s.total} review${s.total !== 1 ? 's' : ''}</div>
       </div>` +
       [5,4,3,2,1].map(n => {
         const count = s.distribution?.[n] ?? 0;
         const pct   = s.total ? Math.round((count / s.total) * 100) : 0;
         return `<div class="rating-bar-row">
-          <span class="rating-bar-label">${n} ★</span>
+          <span class="rating-bar-label">${n} <i class="fas fa-star" style="color:#f59e0b;font-size:0.75rem;"></i></span>
           <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
           <span class="rating-bar-count">${count}</span>
         </div>`;

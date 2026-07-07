@@ -6,6 +6,7 @@
   <title>Course Player | EduAdapt</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     .player-sidebar { background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;align-items:center;padding:1rem 0;gap:0.25rem;position:fixed;left:0;top:0;bottom:0;width:80px;z-index:10; }
     .player-sidebar a { width:72px;padding:0.5rem 0;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.2rem;font-size:0.6rem;font-weight:600;letter-spacing:0.02em;text-transform:uppercase;color:var(--gray-500);text-decoration:none;transition:background 0.2s; }
@@ -128,10 +129,10 @@
         <p style="color:var(--gray-400);margin-bottom:1.5rem;font-size:0.8rem;">Download it to study offline or when your connection is limited.</p>
         <div id="transcript-actions" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
           <button class="btn btn-primary btn-lg" onclick="downloadTranscript()" data-i18n="player.download">
-            ⬇ Download Transcript PDF
+            Download Transcript PDF
           </button>
           <a id="pdf-download-link" href="#" download class="btn btn-secondary btn-lg hidden">
-            ⬇ Download Uploaded Notes
+            Download Uploaded Notes
           </a>
         </div>
         <div id="transcript-status" style="margin-top:1rem;font-size:0.82rem;color:var(--gray-500);"></div>
@@ -250,7 +251,7 @@
     list.innerHTML = lessons.map((l, i) => {
       const isFree   = l.isFree;
       const isActive = i === currentLessonIndex;
-      const icon     = isActive ? '▶' : (i < currentLessonIndex ? '✓' : (isFree ? '🆓' : '🔒'));
+      const icon     = isActive ? '▶' : (i < currentLessonIndex ? '&#10003;' : (isFree ? '<i class="fas fa-tag"></i>' : '<i class="fas fa-lock"></i>'));
       const statusText = isActive ? 'Now playing' : (i < currentLessonIndex ? 'Completed' : (isFree ? 'Free preview' : 'Locked'));
       return `<div class="lesson-item ${isActive ? 'active' : ''}" id="li-${i}"
                    role="button" tabindex="0"
@@ -321,13 +322,13 @@
       const a    = document.createElement('a');
       a.href = url; a.download = lesson.title.replace(/[^a-z0-9]/gi, '_') + '-transcript.pdf'; a.click();
       URL.revokeObjectURL(url);
-      status.textContent = '✅ Transcript downloaded!';
+      status.textContent = 'Transcript downloaded!';
     } catch (e) {
-      status.textContent = '⚠ ' + e.message;
+      status.textContent = e.message;
       showToast(e.message, 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = window.t ? t('player.download') : '⬇ Download Transcript PDF';
+      btn.textContent = window.t ? t('player.download') : 'Download Transcript PDF';
     }
   };
 
@@ -354,7 +355,7 @@
     const qc = document.getElementById('quiz-container');
 
     const scoreColor = pct => pct >= 70 ? 'var(--green)' : pct >= 50 ? '#f59e0b' : 'var(--red)';
-    const scoreIcon  = pct => pct >= 70 ? '🎉' : pct >= 50 ? '👍' : '📖';
+    const scoreIcon  = pct => pct >= 70 ? '<i class="fas fa-party-horn"></i>' : pct >= 50 ? '<i class="fas fa-thumbs-up"></i>' : '<i class="fas fa-book-open"></i>';
 
     const prevHtml = prevResult
       ? '<div style="margin-bottom:1.25rem;padding:1rem;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-50);">'

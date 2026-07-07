@@ -6,6 +6,7 @@
   <title>EduAdapt | Adaptive E-Learning for Inclusive Education in Cameroon</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     .how-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2rem; }
     .how-step { text-align:center;padding:2rem; }
@@ -119,7 +120,7 @@
 <section>
   <div class="hero">
     <div class="hero-content">
-      <span class="hero-label" data-i18n="home.hero_label">🇨🇲 Designed for Cameroon</span>
+      <span class="hero-label" data-i18n-html="home.hero_label"><i class="fas fa-location-dot"></i> Designed for Cameroon</span>
       <h1>
         <span data-i18n="home.hero_h1">Adaptive Learning That Works for</span>
         <br/><span style="color:var(--blue-primary);" data-i18n="home.hero_h1_span">Everyone</span>
@@ -195,7 +196,7 @@
 
         <!-- Floating badge: Quiz -->
         <rect x="88" y="265" width="52" height="24" rx="12" fill="#00897b"/>
-        <text x="114" y="281" font-size="11" fill="white" font-family="Arial" text-anchor="middle" font-weight="bold">Quiz ✓</text>
+        <text x="114" y="281" font-size="11" fill="white" font-family="Arial" text-anchor="middle" font-weight="bold">Quiz ✔</text>
 
         <!-- Student character (right side) -->
         <circle cx="330" cy="200" r="28" fill="#1e3a5f"/>
@@ -236,32 +237,32 @@
   </div>
   <div class="features-grid">
     <div class="feature-card">
-      <div class="feature-icon">📶</div>
+      <div class="feature-icon"><i class="fas fa-wifi"></i></div>
       <h3 class="feature-title">Adaptive Video Quality</h3>
       <p class="feature-desc">Lessons stream at 360p, 480p, or 720p based on your bandwidth.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">🔊</div>
+      <div class="feature-icon"><i class="fas fa-volume-high"></i></div>
       <h3 class="feature-title">Audio Mode</h3>
       <p class="feature-desc">When video isn't an option, switch to audio-only lessons.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">📄</div>
+      <div class="feature-icon"><i class="fas fa-file-lines"></i></div>
       <h3 class="feature-title">PDF Transcripts</h3>
       <p class="feature-desc">Download AI-generated lesson transcripts for offline study.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">📊</div>
+      <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
       <h3 class="feature-title">QoE Monitoring</h3>
       <p class="feature-desc">Real-time quality of experience tracking recommends the best content mode.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">📱</div>
+      <div class="feature-icon"><i class="fas fa-mobile-screen"></i></div>
       <h3 class="feature-title">Mobile Money Payments</h3>
       <p class="feature-desc">Pay for courses with MTN or Orange Mobile Money in XAF.</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">✅</div>
+      <div class="feature-icon"><i class="fas fa-circle-check"></i></div>
       <h3 class="feature-title">Verified Instructors</h3>
       <p class="feature-desc">All instructors are verified and approved before their courses go live.</p>
     </div>
@@ -399,8 +400,12 @@
 
     // Summary
     const filled = Math.round(data.avgRating);
+    const renderStars = (rating, max = 5) =>
+      Array.from({length: max}, (_, i) =>
+        `<i class="fa${i < rating ? 's' : 'r'} fa-star" style="color:${i < rating ? '#f59e0b' : 'var(--gray-300)'}"></i>`
+      ).join('');
     document.getElementById('rev-avg-score').textContent = data.avgRating;
-    document.getElementById('rev-avg-stars').textContent = '★'.repeat(filled) + '☆'.repeat(5 - filled);
+    document.getElementById('rev-avg-stars').innerHTML   = renderStars(filled);
     document.getElementById('rev-avg-count').textContent = data.total + ' review' + (data.total !== 1 ? 's' : '');
     summary.style.display = 'flex';
 
@@ -408,7 +413,7 @@
     grid.innerHTML = data.reviews.map(r => {
       const initial  = (r.userName || 'U')[0].toUpperCase();
       const roleCls  = r.userRole === 'instructor' ? ' instructor' : '';
-      const stars    = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+      const stars    = renderStars(r.rating);
       const catLabel = CATEGORY_LABELS[r.category] || r.category;
       const date     = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
       const name     = r.userName.length > 22 ? r.userName.slice(0, 22) + '…' : r.userName;
@@ -512,7 +517,7 @@ async function loadHomeCourses(page = 1) {
     }
 
     if (!courses.length) {
-      grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div>'
+      grid.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-book-open"></i></div>'
         + '<p>No courses found. <a href="./register.html">Sign up for more!</a></p></div>';
       return;
     }
@@ -521,11 +526,11 @@ async function loadHomeCourses(page = 1) {
     grid.innerHTML = courses.map(c => {
       const isFree   = c.isFree || !c.price || c.price === 0;
       const priceTag = isFree
-        ? `<div class="price-tag free">🆓 ${lang === 'fr' ? 'Gratuit' : 'Free'}</div>`
-        : `<div class="price-tag">💰 ${(c.price || 0).toLocaleString()} XAF</div>`;
+        ? `<div class="price-tag free"><i class="fas fa-tag"></i> ${lang === 'fr' ? 'Gratuit' : 'Free'}</div>`
+        : `<div class="price-tag"><i class="fas fa-coins"></i> ${(c.price || 0).toLocaleString()} XAF</div>`;
       const thumb = c.thumbnail
         ? `<img src="${c.thumbnail}" alt="${c.title}" style="width:100%;height:100%;object-fit:cover;"/>`
-        : '📚';
+        : '<i class="fas fa-book-open"></i>';
       return `
         <div class="course-card">
           <div class="course-card-thumb">${thumb}</div>
@@ -537,7 +542,7 @@ async function loadHomeCourses(page = 1) {
             </p>
             ${priceTag}
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem;font-size:0.8rem;color:var(--gray-500);">
-              <span>👥 ${c.enrollmentCount || 0} ${lang === 'fr' ? 'inscrits' : 'enrolled'}</span>
+              <span><i class="fas fa-users"></i> ${c.enrollmentCount || 0} ${lang === 'fr' ? 'inscrits' : 'enrolled'}</span>
               <span class="badge badge-blue">${c.difficultyLevel || 'beginner'}</span>
             </div>
             <a href="./register.html" class="btn btn-primary btn-sm btn-block" style="margin-top:1rem;">
@@ -550,7 +555,7 @@ async function loadHomeCourses(page = 1) {
     renderCoursePagination(data.pages || 1, page);
 
   } catch (err) {
-    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div>'
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-book-open"></i></div>'
       + '<p>Courses loading. <a href="./register.html">Sign up to access all courses.</a></p></div>';
   }
 }

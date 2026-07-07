@@ -113,8 +113,8 @@ function renderDashboardWidgets() {
             <div class="approval-sub">by ${esc(c.instructorId?.fullName || 'Unknown')}</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
-            <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')">✓</button>
-            <button class="btn btn-sm btn-danger"  onclick="openRejectModal('course','${c._id}','${esc(c.title)}')">✕</button>
+            <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')"><i class="fas fa-check"></i></button>
+            <button class="btn btn-sm btn-danger"  onclick="openRejectModal('course','${c._id}','${esc(c.title)}')"><i class="fas fa-times"></i></button>
           </div>
         </div>`).join('');
 
@@ -131,8 +131,8 @@ function renderDashboardWidgets() {
             ${i.verificationDocument ? `<a class="form-hint" href="${resolveUrl(i.verificationDocument)}" target="_blank" style="color:var(--blue-primary);">View Document ↗</a>` : ''}
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
-            <button class="btn btn-sm btn-success" onclick="approveInstructor('${i._id}')">✓</button>
-            <button class="btn btn-sm btn-danger"  onclick="openRejectModal('instructor','${i._id}','${esc(i.fullName)}')">✕</button>
+            <button class="btn btn-sm btn-success" onclick="approveInstructor('${i._id}')"><i class="fas fa-check"></i></button>
+            <button class="btn btn-sm btn-danger"  onclick="openRejectModal('instructor','${i._id}','${esc(i.fullName)}')"><i class="fas fa-times"></i></button>
           </div>
         </div>`).join('');
 }
@@ -174,8 +174,8 @@ function renderUserTable(users, tbodyId, filter) {
       <td>
         ${u.role !== 'admin' ? `
           <button class="btn-icon" title="${u.isActive ? 'Deactivate' : 'Activate'}"
-            onclick="toggleUserStatus('${u._id}',${u.isActive})">${u.isActive ? '🚫' : '✅'}</button>
-          <button class="btn-icon" title="Delete" onclick="deleteUser('${u._id}')">🗑️</button>
+            onclick="toggleUserStatus('${u._id}',${u.isActive})"><i class="fas ${u.isActive ? 'fa-ban' : 'fa-circle-check'}"></i></button>
+          <button class="btn-icon" title="Delete" onclick="deleteUser('${u._id}')"><i class="fas fa-trash"></i></button>
         ` : '<span style="color:var(--gray-400);">–</span>'}
       </td>
     </tr>`).join('');
@@ -333,7 +333,7 @@ function renderCourses(filter = 'all') {
       <td><span class="badge badge-secondary">${c.difficultyLevel || '–'}</span></td>
       <td><span class="badge ${statusBadge(c.approvalStatus)}">${c.approvalStatus}</span></td>
       <td>
-        <button class="btn-icon" title="View Lessons" onclick="viewCourseLessons('${c._id}','${esc(c.title)}')">📋</button>
+        <button class="btn-icon" title="View Lessons" onclick="viewCourseLessons('${c._id}','${esc(c.title)}')"><i class="fas fa-list"></i></button>
         ${c.approvalStatus === 'pending' ? `
           <button class="btn btn-sm btn-success" onclick="approveCourse('${c._id}')">Approve</button>
           <button class="btn btn-sm btn-danger"  onclick="openRejectModal('course','${c._id}','${esc(c.title)}')">Reject</button>
@@ -569,6 +569,12 @@ function roleBadge(r) {
   if (r==='instructor') return 'badge-info';
   return 'badge-secondary';
 }
+// ─── Star rating helper ───────────────────────────────────────────────────────
+const renderStars = (rating, max = 5) =>
+  Array.from({length: max}, (_, i) =>
+    `<i class="fa${i < rating ? 's' : 'r'} fa-star" style="color:${i < rating ? '#f59e0b' : 'var(--gray-300)'}"></i>`
+  ).join('');
+
 // ─── Reviews ──────────────────────────────────────────────────────────────────
 const CATEGORY_LABELS = {
   overall: 'Overall',
@@ -595,7 +601,7 @@ async function loadReviews() {
 function renderReviewSummary(s) {
   const total = s.total || 0;
   document.getElementById('rev-stat-total').textContent = total;
-  document.getElementById('rev-stat-avg').textContent   = total ? s.avgRating + ' ★' : '–';
+  document.getElementById('rev-stat-avg').textContent   = total ? s.avgRating : '–';
   document.getElementById('rev-stat-5star').textContent = s.distribution?.[5] ?? 0;
   const low = (s.distribution?.[1] ?? 0) + (s.distribution?.[2] ?? 0);
   document.getElementById('rev-stat-low').textContent   = low;
@@ -606,7 +612,7 @@ function renderReviewSummary(s) {
     const count = s.distribution?.[star] ?? 0;
     const pct   = total ? Math.round((count / total) * 100) : 0;
     return `<div class="rating-bar-row">
-      <span class="rating-bar-label">${star} ★</span>
+      <span class="rating-bar-label">${star} <i class="fas fa-star" style="color:#f59e0b;font-size:0.75rem;"></i></span>
       <div class="rating-bar-track"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
       <span class="rating-bar-count">${count}</span>
     </div>`;
@@ -620,7 +626,7 @@ function renderReviewsTable(reviews) {
     return;
   }
   tbody.innerHTML = reviews.map(r => {
-    const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+    const stars = renderStars(r.rating);
     const user  = r.userId || {};
     return `<tr>
       <td><strong>${esc(user.fullName || '–')}</strong><div style="font-size:0.78rem;color:var(--gray-500);">${esc(user.email || '')}</div></td>
@@ -629,7 +635,7 @@ function renderReviewsTable(reviews) {
       <td>${esc(CATEGORY_LABELS[r.category] || r.category)}</td>
       <td style="max-width:260px;word-break:break-word;">${esc(r.comment || '–')}</td>
       <td>${formatDate(r.createdAt)}</td>
-      <td><button class="btn-icon" title="Delete review" onclick="deleteReview('${r._id}')">🗑️</button></td>
+      <td><button class="btn-icon" title="Delete review" onclick="deleteReview('${r._id}')"><i class="fas fa-trash"></i></button></td>
     </tr>`;
   }).join('');
 }

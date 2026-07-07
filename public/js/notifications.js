@@ -82,6 +82,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 1.1rem; flex-shrink: 0; background: var(--gray-100);
     }
+    .notif-icon i { font-size: inherit; }
     .notif-icon.enrollment     { background: #dcfce7; }
     .notif-icon.course_approved { background: #dcfce7; }
     .notif-icon.course_rejected { background: #fee2e2; }
@@ -132,16 +133,16 @@
 
   // ── Icon map ────────────────────────────────────────────────────────────────
   const ICONS = {
-    enrollment:           '👤',
-    course_approved:      '✅',
-    course_rejected:      '❌',
-    lesson_added:         '🎬',
-    quiz_available:       '📝',
-    payment_received:     '💰',
-    withdrawal_approved:  '✅',
-    withdrawal_rejected:  '❌',
-    new_course:           '📚',
-    new_instructor:       '🎓',
+    enrollment:           '<i class="fas fa-user"></i>',
+    course_approved:      '<i class="fas fa-circle-check"></i>',
+    course_rejected:      '<i class="fas fa-circle-xmark"></i>',
+    lesson_added:         '<i class="fas fa-film"></i>',
+    quiz_available:       '<i class="fas fa-pen-to-square"></i>',
+    payment_received:     '<i class="fas fa-coins"></i>',
+    withdrawal_approved:  '<i class="fas fa-circle-check"></i>',
+    withdrawal_rejected:  '<i class="fas fa-circle-xmark"></i>',
+    new_course:           '<i class="fas fa-book-open"></i>',
+    new_instructor:       '<i class="fas fa-chalkboard-user"></i>',
   };
 
   // ── State ───────────────────────────────────────────────────────────────────
@@ -260,7 +261,7 @@
     if (!list) return;
 
     if (!notifications.length) {
-      list.innerHTML = '<div class="notif-empty"><div class="icon">🔔</div><p>No notifications yet.</p></div>';
+      list.innerHTML = '<div class="notif-empty"><div class="icon"><i class="fas fa-bell"></i></div><p>No notifications yet.</p></div>';
       return;
     }
 
@@ -272,7 +273,7 @@
            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();notifClick('${n._id}','${n.link||''}');}"
            aria-label="${esc(n.title)}${!n.read ? ' (unread)' : ''}: ${esc(n.message)}"
            data-id="${n._id}">
-        <div class="notif-icon ${n.type}" aria-hidden="true">${ICONS[n.type] || '🔔'}</div>
+        <div class="notif-icon ${n.type}" aria-hidden="true">${ICONS[n.type] || '<i class="fas fa-bell"></i>'}</div>
         <div class="notif-body">
           <div class="notif-title">${esc(n.title)}</div>
           <div class="notif-msg">${esc(n.message)}</div>

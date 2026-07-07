@@ -6,6 +6,7 @@
   <title>Instructor Dashboard | EduAdapt</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     /* Pricing toggle */
     .toggle-row {
@@ -478,7 +479,7 @@
   <div class="modal-card" style="max-width:560px;max-height:90vh;overflow-y:auto;">
     <div class="modal-header">
       <h3 id="create-course-title" data-i18n="course.create">Create New Course</h3>
-      <button class="modal-close" onclick="closeModal('create-course-modal')" aria-label="Close create course dialog" data-i18n="common.close">✕</button>
+      <button class="modal-close" onclick="closeModal('create-course-modal')" aria-label="Close create course dialog" data-i18n="common.close"><i class="fas fa-times"></i></button>
     </div>
     <form id="create-course-form" onsubmit="submitCreateCourse(event)" aria-label="Create new course form">
       <div class="form-group">
@@ -511,7 +512,7 @@
       <!-- ── PRICING SECTION ── -->
       <div style="border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1.25rem;background:var(--gray-50);">
         <div style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-500);margin-bottom:0.75rem;">
-          💰 Course Pricing
+          <i class="fas fa-coins"></i> Course Pricing
         </div>
 
         <!--
@@ -522,7 +523,7 @@
         <label class="toggle-row">
           <input type="checkbox" id="course-is-paid" onchange="toggleCoursePricing()" />
           <div>
-            <div class="toggle-label" id="course-pricing-label">🆓 This course is FREE</div>
+            <div class="toggle-label" id="course-pricing-label"><i class="fas fa-tag"></i> This course is FREE</div>
             <div class="toggle-hint" id="course-pricing-hint">Students can enroll without paying. Check to make it paid.</div>
           </div>
         </label>
@@ -555,7 +556,7 @@
   <div class="modal-card" style="max-width:580px;max-height:90vh;overflow-y:auto;">
     <div class="modal-header">
       <h3 id="add-lesson-modal-title">Add New Lesson</h3>
-      <button class="modal-close" onclick="closeModal('add-lesson-modal')" aria-label="Close add lesson dialog">✕</button>
+      <button class="modal-close" onclick="closeModal('add-lesson-modal')" aria-label="Close add lesson dialog"><i class="fas fa-times"></i></button>
     </div>
     <form id="add-lesson-form" onsubmit="submitAddLesson(event)" aria-label="Add new lesson form">
       <input type="hidden" id="lesson-course-id" />
@@ -575,17 +576,17 @@
       <!-- ── FREE PREVIEW TOGGLE ── -->
       <div style="border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1.25rem;background:var(--gray-50);">
         <div style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-500);margin-bottom:0.75rem;">
-          🔓 Lesson Access
+          <i class="fas fa-unlock"></i> Lesson Access
         </div>
         <label class="toggle-row">
           <input type="checkbox" id="lesson-is-free" />
           <div>
-            <div class="toggle-label">🆓 Free Preview Lesson</div>
+            <div class="toggle-label"><i class="fas fa-tag"></i> Free Preview Lesson</div>
             <div class="toggle-hint">Students can watch this lesson without paying — great for lesson 1 or 2</div>
           </div>
         </label>
         <div style="margin-top:0.5rem;padding:0.5rem 0.75rem;background:var(--blue-lighter);border-radius:6px;font-size:0.78rem;color:var(--blue-dark);">
-          💡 Tip: Mark the first 1–2 lessons as free previews so students can try before they pay.
+          <i class="fas fa-lightbulb"></i> Tip: Mark the first 1–2 lessons as free previews so students can try before they pay.
         </div>
       </div>
 
@@ -629,7 +630,7 @@
   <div class="modal-card" style="max-width:600px;max-height:90vh;overflow-y:auto;">
     <div class="modal-header">
       <h3 id="create-quiz-modal-title">Create Quiz</h3>
-      <button class="modal-close" onclick="closeModal('create-quiz-modal')" aria-label="Close create quiz dialog">✕</button>
+      <button class="modal-close" onclick="closeModal('create-quiz-modal')" aria-label="Close create quiz dialog"><i class="fas fa-times"></i></button>
     </div>
     <form id="create-quiz-form" onsubmit="submitCreateQuiz(event)">
       <input type="hidden" id="quiz-course-id-input" />
@@ -655,7 +656,7 @@
   <div class="modal-card" style="max-width:720px;">
     <div class="modal-header">
       <h3 id="view-lesson-title">Lesson</h3>
-      <button class="modal-close" onclick="closeModal('view-lesson-modal')" aria-label="Close view lesson dialog">✕</button>
+      <button class="modal-close" onclick="closeModal('view-lesson-modal')" aria-label="Close view lesson dialog"><i class="fas fa-times"></i></button>
     </div>
     <div id="view-lesson-body">
       <video id="view-lesson-video" controls style="width:100%;border-radius:8px;background:#000;"></video>
@@ -689,10 +690,10 @@ function toggleCoursePricing() {
   priceGrp.style.display = isPaid ? 'block' : 'none';
 
   if (isPaid) {
-    label.textContent = '💳 This course is PAID';
+    label.innerHTML   = '<i class="fas fa-credit-card"></i> This course is PAID';
     hint.textContent  = 'Students must pay before enrolling. Uncheck to make it free.';
   } else {
-    label.textContent = '🆓 This course is FREE';
+    label.innerHTML   = '<i class="fas fa-tag"></i> This course is FREE';
     hint.textContent  = 'Students can enroll without paying. Check to make it paid.';
     const priceInput = document.getElementById('course-price');
     if (priceInput) priceInput.value = '';

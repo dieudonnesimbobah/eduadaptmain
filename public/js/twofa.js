@@ -117,7 +117,7 @@ window.start2FASetup = async function () {
       `<strong>Can't scan?</strong> Enter this key manually: <code style="background:var(--gray-100);padding:2px 6px;border-radius:4px;">${data.manualKey}</code>`;
   } catch (err) {
     document.getElementById('twofa-qr-wrap').innerHTML =
-      `<span style="color:var(--red);">⚠ ${err.message}</span>`;
+      `<span style="color:var(--red);"><i class="fas fa-triangle-exclamation"></i>${err.message}</span>`;
   }
 };
 
@@ -135,11 +135,11 @@ window.confirmEnable2FA = async function () {
   alertEl.innerHTML = '';
 
   if (!secret) {
-    alertEl.innerHTML = '<div class="alert alert-error">⚠ QR code not loaded. Please wait and try again.</div>';
+    alertEl.innerHTML = '<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>QR code not loaded. Please wait and try again.</div>';
     return;
   }
   if (code.length < 6) {
-    alertEl.innerHTML = '<div class="alert alert-error">⚠ Enter the 6-digit code from your authenticator app.</div>';
+    alertEl.innerHTML = '<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>Enter the 6-digit code from your authenticator app.</div>';
     return;
   }
 
@@ -153,7 +153,7 @@ window.confirmEnable2FA = async function () {
     });
     const data = await res.json();
     if (!res.ok) {
-      alertEl.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+      alertEl.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>${data.message}</div>`;
       btn.disabled = false;
       btn.textContent = 'Activate 2FA';
       return;
@@ -162,7 +162,7 @@ window.confirmEnable2FA = async function () {
     if (typeof showToast === 'function') showToast(data.message, 'success');
     load2FAStatus(); // re-render card
   } catch {
-    alertEl.innerHTML = '<div class="alert alert-error">⚠ Network error. Please try again.</div>';
+    alertEl.innerHTML = '<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>Network error. Please try again.</div>';
     btn.disabled = false;
     btn.textContent = 'Activate 2FA';
   }
@@ -182,7 +182,7 @@ window.confirmDisable2FA = async function () {
   alertEl.innerHTML = '';
 
   if (!password || code.length < 6) {
-    alertEl.innerHTML = '<div class="alert alert-error">⚠ Enter your password and the 6-digit authenticator code.</div>';
+    alertEl.innerHTML = '<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>Enter your password and the 6-digit authenticator code.</div>';
     return;
   }
 
@@ -196,7 +196,7 @@ window.confirmDisable2FA = async function () {
     });
     const data = await res.json();
     if (!res.ok) {
-      alertEl.innerHTML = `<div class="alert alert-error">⚠ ${data.message}</div>`;
+      alertEl.innerHTML = `<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>${data.message}</div>`;
       btn.disabled = false;
       btn.textContent = 'Confirm Disable';
       return;
@@ -204,7 +204,7 @@ window.confirmDisable2FA = async function () {
     if (typeof showToast === 'function') showToast(data.message, 'success');
     load2FAStatus();
   } catch {
-    alertEl.innerHTML = '<div class="alert alert-error">⚠ Network error. Please try again.</div>';
+    alertEl.innerHTML = '<div class="alert alert-error"><i class="fas fa-triangle-exclamation"></i>Network error. Please try again.</div>';
     btn.disabled = false;
     btn.textContent = 'Confirm Disable';
   }

@@ -38,7 +38,7 @@ const applyAdaptiveRecommendation = () => {
   // Update the info banner so the student can see the recommendation
   const banner = document.getElementById('adaptive-banner');
   if (banner) {
-    banner.textContent = '📡 ' + decision;
+    banner.innerHTML = '<i class="fas fa-satellite-dish"></i> ' + decision;
     banner.classList.remove('hidden');
   }
 

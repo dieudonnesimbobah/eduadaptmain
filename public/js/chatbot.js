@@ -250,7 +250,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
             aria-label="Open AI chat assistant EduBot"
             aria-expanded="false"
             aria-controls="edubot-window">
-      🤖
+      <i class="fas fa-robot"></i>
       <div class="badge" id="edubot-badge" aria-hidden="true">1</div>
     </button>
 
@@ -260,14 +260,14 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
          aria-label="EduBot AI Study Assistant"
          aria-live="off">
       <div id="edubot-header">
-        <div class="avatar" aria-hidden="true">🤖</div>
+        <div class="avatar" aria-hidden="true"><i class="fas fa-robot"></i></div>
         <div class="info">
           <div class="name">EduBot</div>
           <div class="status">● Online — here to help</div>
         </div>
         <button class="close-btn" id="edubot-clear" aria-label="Clear chat history" title="Clear chat"
-          style="font-size:0.75rem;margin-right:4px;">🗑</button>
-        <button class="close-btn" id="edubot-close" aria-label="Close EduBot chat">✕</button>
+          style="font-size:0.75rem;margin-right:4px;"><i class="fas fa-trash"></i></button>
+        <button class="close-btn" id="edubot-close" aria-label="Close EduBot chat"><i class="fas fa-times"></i></button>
       </div>
 
       <div id="edubot-messages"
@@ -281,13 +281,13 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
                 aria-label="Enable text-to-speech for AI responses"
                 aria-pressed="false"
                 style="background:none;border:1px solid #e2e8f0;border-radius:20px;padding:4px 10px;font-size:0.75rem;cursor:pointer;color:#64748b;white-space:nowrap;flex-shrink:0;">
-          🔊 Read aloud
+          <i class="fas fa-volume-high"></i> Read aloud
         </button>
         <textarea id="edubot-input"
                   placeholder="Ask me anything…"
                   aria-label="Type your question to the AI assistant"
                   rows="1"></textarea>
-        <button id="edubot-send" aria-label="Send message to AI assistant">➤</button>
+        <button id="edubot-send" aria-label="Send message to AI assistant"><i class="fas fa-paper-plane"></i></button>
       </div>
     </div>
   `;
@@ -368,7 +368,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
     ttsBtn.addEventListener('click', () => {
       ttsEnabled = !ttsEnabled;
       ttsBtn.setAttribute('aria-pressed', String(ttsEnabled));
-      ttsBtn.textContent = ttsEnabled ? '🔊 Reading: ON' : '🔊 Read aloud';
+      ttsBtn.innerHTML   = ttsEnabled ? '<i class="fas fa-volume-high"></i> Reading: ON' : '<i class="fas fa-volume-high"></i> Read aloud';
     });
   }
 
@@ -382,7 +382,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
       'How do I approve a course?',
     ];
     addBotMessage(
-      "👋 Hi! I'm **EduBot**, your EduAdapt assistant. I can help you navigate the platform, fix issues, and explain features.\n\nWhat would you like to know?",
+      "Hi! I'm **EduBot**, your EduAdapt assistant. I can help you navigate the platform, fix issues, and explain features.\n\nWhat would you like to know?",
       suggestions
     );
   };
@@ -492,7 +492,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
 
     } catch (e) {
       hideTyping();
-      addBotMessage('⚠ Sorry, I\'m having trouble connecting right now. Please try again in a moment.');
+      addBotMessage('<i class="fas fa-triangle-exclamation"></i> Sorry, I\'m having trouble connecting right now. Please try again in a moment.');
       console.error('EduBot error:', e);
     } finally {
       isTyping    = false;
