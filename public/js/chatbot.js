@@ -120,9 +120,10 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
       position:absolute; top:-4px; right:-4px;
       background:#ef4444; color:#fff; border-radius:50%;
       width:18px; height:18px; font-size:0.65rem; font-weight:700;
-      display:flex; align-items:center; justify-content:center;
+      align-items:center; justify-content:center;
       display:none;
     }
+    #edubot-fab .badge.visible { display:flex; }
 
     #edubot-window {
       position:fixed; bottom:92px; right:24px; z-index:9998;
@@ -250,7 +251,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
             aria-label="Open AI chat assistant EduBot"
             aria-expanded="false"
             aria-controls="edubot-window">
-      <i class="fas fa-robot"></i>
+      <span class="material-symbols-outlined" style="font-size:1.6rem;" aria-hidden="true">smart_toy</span>
       <div class="badge" id="edubot-badge" aria-hidden="true">1</div>
     </button>
 
@@ -328,7 +329,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
     isOpen = true;
     win.classList.add('open');
     fab.setAttribute('aria-expanded', 'true');
-    badge.style.display = 'none';
+    badge.classList.remove('visible');
     input.focus();
     if (!historyRestored) {
       historyRestored = true;
@@ -520,7 +521,7 @@ Always be helpful, encouraging, and keep answers short (2–5 sentences max unle
   // ── Show badge after 3s on pages where chat hasn't been opened ─────────────
   setTimeout(() => {
     if (!isOpen && messages.length === 0) {
-      badge.style.display = 'flex';
+      badge.classList.add('visible');
     }
   }, 3000);
 

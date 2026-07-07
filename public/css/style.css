@@ -685,6 +685,16 @@ tr:hover td { background: var(--gray-50); }
 .toast.warning { background: #d97706; }
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: none; opacity: 1; } }
 
+/* ─── Font Awesome global alignment ─────────────────────────────────────────── */
+.fas, .far, .fab, .fa-solid, .fa-regular, .fa-brands {
+  vertical-align: -0.125em; /* FA standard: keeps icons baseline-aligned with text */
+  line-height: 1;
+}
+button .fas, button .far, button .fa-solid,
+td .fas, td .far,
+.badge .fas, .badge .far,
+.btn .fas, .btn .far { vertical-align: middle; }
+
 /* ─── Loading spinner ────────────────────────────────────────────────────────── */
 .spinner {
   width: 24px; height: 24px;
