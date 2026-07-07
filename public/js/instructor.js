@@ -336,7 +336,7 @@ const CLOUDINARY_FOLDERS = {
   material: 'eduadapt/lessons',
 };
 
-const CHUNK_SIZE = 6 * 1024 * 1024; // 6 MB chunks
+const CHUNK_SIZE = 25 * 1024 * 1024; // 25 MB chunks — fewer round trips = faster uploads
 
 async function uploadToCloudinary(file, folder, onProgress) {
   const sigRes = await authFetch('/api/instructor/upload-signature', {
@@ -436,26 +436,37 @@ async function submitAddLesson(event) {
   if (!courseId)  { showToast('No course selected.',    'error'); return; }
   if (!videoFile) { showToast('Video file is required.','error'); return; }
 
+  const MAX_SIZE = 500 * 1024 * 1024; // 500 MB
+  if (videoFile.size > MAX_SIZE) {
+    showToast('Video file is too large. Maximum size is 500 MB.', 'error');
+    return;
+  }
+
+  const fileMB = (videoFile.size / (1024 * 1024)).toFixed(1);
   const btn        = document.getElementById('add-lesson-btn');
   const progressEl = document.getElementById('lesson-upload-progress');
   btn.disabled     = true;
   btn.textContent  = 'Uploading...';
   progressEl.style.display = '';
   resetUploadUI();
+  setUploadStatus('Preparing upload (' + fileMB + ' MB)… Please keep this tab open.');
 
   const uploadStart = Date.now();
 
   try {
     // Step 1: upload video
-    setUploadStatus('Uploading video...');
+    setUploadStatus('Uploading video (' + fileMB + ' MB)… Please keep this tab open.');
     const videoResult = await uploadToCloudinary(
       videoFile, CLOUDINARY_FOLDERS.video,
       (pct) => {
         setUploadBar(pct);
-        const elapsed  = (Date.now() - uploadStart) / 1000;
-        const speedMBs = elapsed > 0 ? ((pct / 100 * videoFile.size) / (1024*1024) / elapsed).toFixed(1) : '–';
-        const remaining = pct > 0 && elapsed > 0 ? Math.round((100 - pct) / pct * elapsed) : '–';
-        setUploadStatus('Uploading video... ' + pct + '%  (' + speedMBs + ' MB/s' + (remaining !== '–' ? ' · ~' + remaining + 's left' : '') + ')');
+        const elapsed   = (Date.now() - uploadStart) / 1000;
+        const speedMBs  = elapsed > 1 ? ((pct / 100 * videoFile.size) / (1024 * 1024) / elapsed).toFixed(1) : '–';
+        const remaining = pct > 2 && elapsed > 1 ? Math.round((100 - pct) / pct * elapsed) : null;
+        const timeLeft  = remaining !== null
+          ? (remaining >= 60 ? Math.round(remaining / 60) + ' min left' : remaining + 's left')
+          : 'calculating…';
+        setUploadStatus('Uploading video… ' + pct + '% · ' + speedMBs + ' MB/s · ' + timeLeft);
       }
     );
     if (!videoResult?.secure_url) throw new Error('Video upload failed — no URL returned.');

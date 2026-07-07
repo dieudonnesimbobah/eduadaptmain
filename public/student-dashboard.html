@@ -11,10 +11,6 @@
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <div id="sr-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
-<div id="accessibility-toolbar" role="toolbar" aria-label="Accessibility options">
-  <button onclick="increaseFontSize()" aria-label="Increase font size">A+</button>
-  <button onclick="decreaseFontSize()" aria-label="Decrease font size">A-</button>
-</div>
 
 <div class="dashboard-layout">
 
@@ -1001,26 +997,7 @@
   });
   window.addEventListener('resize', () => { if (window.innerWidth > 768) closeSidebar(); });
 
-  // ── Accessibility toolbar ─────────────────────────────────────────────────
-  (function initA11yToolbar() {
-    const savedSize = localStorage.getItem('fontSize');
-    if (savedSize) document.body.style.fontSize = savedSize;
-  })();
 
-  window.increaseFontSize = () => {
-    const current = parseFloat(getComputedStyle(document.body).fontSize);
-    const next = Math.min(current + 2, 24) + 'px';
-    document.body.style.fontSize = next;
-    localStorage.setItem('fontSize', next);
-    srAnnounce('Font size increased');
-  };
-  window.decreaseFontSize = () => {
-    const current = parseFloat(getComputedStyle(document.body).fontSize);
-    const next = Math.max(current - 2, 12) + 'px';
-    document.body.style.fontSize = next;
-    localStorage.setItem('fontSize', next);
-    srAnnounce('Font size decreased');
-  };
 
   // Sync star aria-checked on click
   document.querySelectorAll('#review-stars .star').forEach(star => {
