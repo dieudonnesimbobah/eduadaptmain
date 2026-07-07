@@ -682,6 +682,7 @@ tr:hover td { background: var(--gray-50); }
 }
 .toast.success { background: var(--green); }
 .toast.error { background: var(--red); }
+.toast.warning { background: #d97706; }
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: none; opacity: 1; } }
 
 /* ─── Loading spinner ────────────────────────────────────────────────────────── */

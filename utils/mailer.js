@@ -33,26 +33,28 @@ const verifyMailer = async () => {
 
 const APP_URL = process.env.APP_URL || 'http://localhost:5001';
 
-// ── Send a generic email (fire-and-forget — errors logged, never thrown) ──────
+// ── Send a generic email — returns true on success, false on failure ────────────
 const sendMail = async ({ to, subject, html }) => {
   if (!process.env.MAIL_USER || !process.env.MAIL_PASS) {
     console.warn('[mailer] MAIL_USER / MAIL_PASS not set — skipping email to', to);
-    return;
+    return false;
   }
   const transporter = buildTransporter();
   const FROM = `"EduAdapt" <${process.env.MAIL_FROM || process.env.MAIL_USER}>`;
   try {
     await transporter.sendMail({ from: FROM, to, subject, html });
     console.log(`[mailer] ✅ Email sent → ${to} | ${subject}`);
+    return true;
   } catch (e) {
     console.error('[mailer] Failed to send email:', e.message);
+    return false;
   }
 };
 
 // ── Instructor account approved ───────────────────────────────────────────────
 const sendInstructorApprovedEmail = async ({ email, fullName }) => {
   const loginUrl = `${APP_URL}/login.html`;
-  await sendMail({
+  return sendMail({
     to:      email,
     subject: '🎉 Your EduAdapt Instructor Account Has Been Approved!',
     html: `
@@ -133,7 +135,7 @@ const sendInstructorApprovedEmail = async ({ email, fullName }) => {
 
 // ── Instructor account rejected ───────────────────────────────────────────────
 const sendInstructorRejectedEmail = async ({ email, fullName, reason }) => {
-  await sendMail({
+  return sendMail({
     to:      email,
     subject: 'Your EduAdapt Instructor Application — Update',
     html: `

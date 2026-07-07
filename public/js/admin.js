@@ -291,8 +291,12 @@ function renderInstructors(filter = 'all') {
 
 async function approveInstructor(id) {
   try {
-    await apiPatch('/api/admin/instructors/' + id + '/approve', {});
-    showToast('Instructor approved!', 'success');
+    const data = await apiPatch('/api/admin/instructors/' + id + '/approve', {});
+    if (data && data.emailSent === false) {
+      showToast('Instructor approved! (Email notification failed to send — check SMTP settings.)', 'warning');
+    } else {
+      showToast('Instructor approved! Notification email sent.', 'success');
+    }
     await loadInstructors(); await loadStats();
     renderInstructors(instructorFilter); renderDashboardWidgets();
   } catch(e) { showToast(e.message || 'Failed.', 'error'); }
@@ -426,8 +430,12 @@ async function confirmReject() {
   const reason = document.getElementById('reject-reason').value.trim();
   try {
     if (rejectTarget.type === 'instructor') {
-      await apiPatch('/api/admin/instructors/' + rejectTarget.id + '/reject', { reason });
-      showToast('Instructor rejected.', 'success');
+      const data = await apiPatch('/api/admin/instructors/' + rejectTarget.id + '/reject', { reason });
+      if (data && data.emailSent === false) {
+        showToast('Instructor rejected. (Email notification failed to send — check SMTP settings.)', 'warning');
+      } else {
+        showToast('Instructor rejected. Notification email sent.', 'success');
+      }
       await loadInstructors(); renderInstructors(instructorFilter);
     } else {
       await apiPatch('/api/admin/courses/' + rejectTarget.id + '/reject', { reason });

@@ -69,10 +69,9 @@ const approveInstructor = async (req, res) => {
       description: `Admin approved instructor: ${instructor.email}`, ipAddress: req.ip,
     });
 
-    // Send approval email (non-blocking — error logged internally)
-    sendInstructorApprovedEmail({ email: instructor.email, fullName: instructor.fullName });
+    const emailSent = await sendInstructorApprovedEmail({ email: instructor.email, fullName: instructor.fullName });
 
-    res.json({ message: 'Instructor approved', instructor });
+    res.json({ message: 'Instructor approved', instructor, emailSent });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -95,10 +94,9 @@ const rejectInstructor = async (req, res) => {
       description: `Admin rejected instructor: ${instructor.email}`, ipAddress: req.ip,
     });
 
-    // Send rejection email (non-blocking — error logged internally)
-    sendInstructorRejectedEmail({ email: instructor.email, fullName: instructor.fullName, reason });
+    const emailSent = await sendInstructorRejectedEmail({ email: instructor.email, fullName: instructor.fullName, reason });
 
-    res.json({ message: 'Instructor rejected', instructor });
+    res.json({ message: 'Instructor rejected', instructor, emailSent });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
