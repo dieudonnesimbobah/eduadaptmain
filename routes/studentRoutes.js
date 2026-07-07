@@ -5,7 +5,7 @@ const {
   getDashboard, getAvailableCourses, getCourse, enrollInCourse,
   getMyEnrollments, getCourseLessons, getLesson, updateProgress,
   getProgress, submitQuiz, getRecommendations,
-  getQuizzesForStudent, getMyQuizResults,
+  getQuizzesForStudent, getMyQuizResults, downloadLesson,
 } = require('../controllers/studentController');
 const Course     = require('../models/Course');
 const Enrollment = require('../models/Enrollment');
@@ -72,7 +72,8 @@ router.get('/courses/:id',               ...studentAuth, getCourse);
 router.post('/courses/:courseId/enroll', ...studentAuth, enrollInCourse);
 router.get('/enrollments',               ...studentAuth, getMyEnrollments);
 router.get('/courses/:courseId/lessons', ...studentAuth, getCourseLessons);
-router.get('/lessons/:lessonId',         ...studentAuth, getLesson);
+router.get('/lessons/:lessonId',          ...studentAuth, getLesson);
+router.get('/lessons/:lessonId/download', ...studentAuth, downloadLesson);
 router.post('/progress',                 ...studentAuth, updateProgress);
 router.get('/progress/:courseId',        ...studentAuth, getProgress);
 router.get('/courses/:courseId/quizzes', ...studentAuth, getQuizzesForStudent);

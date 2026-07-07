@@ -304,9 +304,29 @@ const getRecommendations = async (req, res) => {
   }
 };
 
+const downloadLesson = async (req, res) => {
+  try {
+    const lesson = await Lesson.findById(req.params.lessonId);
+    if (!lesson) return res.status(404).json({ message: 'Lesson not found' });
+
+    const enrollment = await Enrollment.findOne({ studentId: req.user._id, courseId: lesson.courseId });
+    if (!enrollment) return res.status(403).json({ message: 'You are not enrolled in this course' });
+
+    if (!lesson.videoOriginal) {
+      return res.status(404).json({ message: 'No video available for this lesson' });
+    }
+
+    // Insert fl_attachment into the Cloudinary URL to force a file download
+    const downloadUrl = lesson.videoOriginal.replace('/video/upload/', '/video/upload/fl_attachment/');
+    res.redirect(downloadUrl);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getDashboard, getAvailableCourses, getCourse, enrollInCourse,
   getMyEnrollments, getCourseLessons, getLesson,
   updateProgress, getProgress, submitQuiz, getRecommendations,
-  getQuizzesForStudent, getMyQuizResults,
+  getQuizzesForStudent, getMyQuizResults, downloadLesson,
 };

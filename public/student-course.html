@@ -100,6 +100,13 @@
         <button class="pill-btn quality-btn" data-quality="720p" aria-pressed="false" aria-label="Switch to 720p quality">720p</button>
         <span style="font-size:0.72rem;color:var(--gray-400);margin-left:4px;" aria-hidden="true">(auto-adjusts to your connection)</span>
       </div>
+      <div style="margin-top:0.75rem;">
+        <button id="btn-download-video" class="btn btn-secondary btn-sm" onclick="downloadLessonVideo()" style="display:none;">
+          <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:middle;">download</span>
+          Download for Offline
+        </button>
+        <span style="font-size:0.75rem;color:var(--gray-400);margin-left:8px;" id="download-hint"></span>
+      </div>
     </div>
 
     <!-- AUDIO SECTION -->
@@ -426,6 +433,17 @@
     const pane = document.getElementById('tab-' + name);
     if (pane) pane.classList.add('active');
     document.querySelectorAll('.tab-btn').forEach(b => { if (b.textContent.toLowerCase().includes(name.toLowerCase())) b.classList.add('active'); });
+  };
+
+  window.downloadLessonVideo = () => {
+    const btn = document.getElementById('btn-download-video');
+    const lessonId = btn && btn.dataset.lessonId;
+    if (!lessonId) return;
+    const hint = document.getElementById('download-hint');
+    if (hint) hint.textContent = 'Starting download…';
+    // Open the auth-protected download endpoint — browser will download the file
+    window.location.href = resolveApiUrl('/api/student/lessons/' + lessonId + '/download');
+    setTimeout(() => { if (hint) hint.textContent = 'Save to watch without internet'; }, 3000);
   };
 
   window.sidebarNav = (name) => {

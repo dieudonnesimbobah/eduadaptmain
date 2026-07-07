@@ -215,6 +215,20 @@ const loadLesson = (lesson) => {
     if (noRes) noRes.style.display = mats.length ? 'none' : 'block';
   }
 
+  // Show/hide offline download button
+  const dlBtn  = document.getElementById('btn-download-video');
+  const dlHint = document.getElementById('download-hint');
+  if (dlBtn) {
+    if (lesson.videoOriginal) {
+      dlBtn.style.display = 'inline-flex';
+      dlBtn.dataset.lessonId = lesson._id;
+      if (dlHint) dlHint.textContent = 'Save to watch without internet';
+    } else {
+      dlBtn.style.display = 'none';
+      if (dlHint) dlHint.textContent = '';
+    }
+  }
+
   // Always start in VIDEO mode — never auto-switch on load
   switchMode('video', currentQuality);
 };
